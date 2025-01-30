@@ -4,7 +4,7 @@ import 'package:flutter_kit/ui_library/theme/neutral_colors.dart';
 import 'package:flutter_kit/ui_library/widgets/loading_indicator.dart';
 
 class PrimaryButton extends StatefulWidget {
-  final Widget text;
+  final String text;
   final Future<void> Function() onPressed;
   final double? width;
   final EdgeInsets? padding;
@@ -47,7 +47,12 @@ class _PrimaryButtonState extends State<PrimaryButton> with LoadingStateMixin {
                           horizontal: 16,
                           vertical: 12,
                         ),
-                    child: widget.text,
+                    child: Text(
+                      widget.text,
+                      style: TextStyle(
+                        color: theme.colorScheme.onPrimary,
+                      ),
+                    ),
                   ),
                 ),
                 if (loading)

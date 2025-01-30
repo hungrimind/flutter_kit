@@ -74,7 +74,7 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                     const SizedBox(height: 32),
                     PrimaryButton(
-                      text: const Text('Login'),
+                      text: 'Login',
                       width: double.infinity,
                       onPressed: () async {
                         try {
