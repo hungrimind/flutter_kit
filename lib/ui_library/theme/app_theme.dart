@@ -24,7 +24,7 @@ class AppTheme {
       scaffoldBackgroundColor: neutralColors.neutral50,
       appBarTheme: AppBarTheme(
         elevation: 0,
-        backgroundColor: neutralColors.neutral50,
+        backgroundColor: Colors.transparent,
         foregroundColor: neutralColors.neutral950,
       ),
       dividerTheme: DividerThemeData(
