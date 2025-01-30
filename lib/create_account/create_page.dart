@@ -73,7 +73,7 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
                     ),
                     const SizedBox(height: 32),
                     PrimaryButton(
-                      text: 'Create Account',
+                      text: const Text('Create Account'),
                       width: double.infinity,
                       onPressed: () async {
                         createAccountViewModel.createUser(nameController.text);
