@@ -1,8 +1,8 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_kit/abstractions/sqlite_abstraction.dart';
-import 'package:flutter_kit/user.dart';
+import 'package:flutter_kit/auth/user.dart';
+import 'package:flutter_kit/core/abstractions/sqlite_abstraction.dart';
 import 'package:uuid/uuid.dart';
 
 class UserService {
@@ -27,7 +27,6 @@ class UserService {
   }
 
   void createUser(String name) {
-    _listenToUser(name);
     _sqliteAbstraction.createUser(User(name: name, uid: Uuid().v4()));
   }
 

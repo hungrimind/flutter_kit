@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_kit/ui_library/mixins/loading_state_mixin.dart';
-import 'package:flutter_kit/ui_library/theme/neutral_colors.dart';
-import 'package:flutter_kit/ui_library/widgets/loading_indicator.dart';
+import 'package:flutter_kit/core/ui/mixins/loading_state_mixin.dart';
+import 'package:flutter_kit/core/ui/theme/neutral_colors.dart';
+import 'package:flutter_kit/core/ui/widgets/loading_indicator.dart';
 
 class SecondaryButton extends StatefulWidget {
   final Widget text;
@@ -27,8 +27,6 @@ class _SecondaryButtonState extends State<SecondaryButton>
     with LoadingStateMixin {
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
     return ValueListenableBuilder<bool>(
       valueListenable: isLoading,
       builder: (context, loading, child) {
