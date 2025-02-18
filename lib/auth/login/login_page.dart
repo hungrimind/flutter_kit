@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_kit/create_account/create_page.dart';
-import 'package:flutter_kit/ui_library/buttons/primary_button.dart';
-import 'package:flutter_kit/ui_library/buttons/secondary_button.dart';
-import 'package:flutter_kit/user_service.dart';
-import 'package:flutter_kit/utils/locator.dart';
+import 'package:flutter_kit/auth/create_account/create_page.dart';
+import 'package:flutter_kit/auth/user_service.dart';
+import 'package:flutter_kit/core/ui/buttons/primary_button.dart';
+import 'package:flutter_kit/core/ui/buttons/secondary_button.dart';
+import 'package:flutter_kit/core/utils/locator.dart';
 
 import 'login_view_model.dart';
 
@@ -18,7 +18,7 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   late final LoginViewModel loginViewModel = LoginViewModel(
-    userService: locator<UserService>(),
+    userService: locator.get<UserService>(),
   );
 
   late final TextEditingController nameController = TextEditingController();

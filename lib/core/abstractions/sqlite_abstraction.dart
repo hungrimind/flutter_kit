@@ -1,4 +1,4 @@
-import 'package:flutter_kit/user.dart';
+import 'package:flutter_kit/auth/user.dart';
 import 'package:sqlite3/wasm.dart';
 
 class SqliteAbstraction {

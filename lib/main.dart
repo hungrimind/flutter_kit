@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_kit/abstractions/sqlite_abstraction.dart';
+import 'package:flutter_kit/auth/login/login_page.dart';
+import 'package:flutter_kit/auth/user_service.dart';
+import 'package:flutter_kit/core/abstractions/sqlite_abstraction.dart';
+import 'package:flutter_kit/core/ui/theme/app_theme.dart';
+import 'package:flutter_kit/core/utils/locator.dart';
 import 'package:flutter_kit/home/home_page.dart';
-import 'package:flutter_kit/login/login_page.dart';
-import 'package:flutter_kit/ui_library/theme/app_theme.dart';
-import 'package:flutter_kit/user_service.dart';
-import 'package:flutter_kit/utils/locator.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   setupLocator();
 
-  await locator<SqliteAbstraction>().loadSqlite();
-  locator<UserService>().checkForSession();
+  await locator.get<SqliteAbstraction>().loadSqlite();
+  locator.get<UserService>().checkForSession();
   runApp(const MyApp());
 }
 

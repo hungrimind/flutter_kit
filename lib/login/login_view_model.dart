@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_kit/user.dart';
-import 'package:flutter_kit/user_service.dart';
+import 'package:flutter_kit/auth/user.dart';
+import 'package:flutter_kit/auth/user_service.dart';
 
 class LoginViewModel {
   LoginViewModel({required UserService userService})
