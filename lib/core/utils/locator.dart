@@ -7,53 +7,42 @@ final locator = ServiceLocator.instance;
 void setupLocator() {
   locator.registerSingleton(() => SqliteAbstraction());
 
-  locator.registerSingleton(
-    () => UserService(
-      sqliteAbstraction: locator.get<SqliteAbstraction>(),
-    ),
-  );
+  locator.registerSingleton(() => UserService(
+        sqliteAbstraction: locator.get<SqliteAbstraction>(),
+      ));
 }
 
 class ServiceLocator {
   ServiceLocator._();
   static final ServiceLocator instance = ServiceLocator._();
 
-  final Map<Type, _ServiceFactory> _factories = {};
-  final Map<Type, Object> _singletons = {};
+  final Map<Type, Lazy<Object>> _lazySingletons = {};
 
-  void registerFactory<T extends Object>(T Function() factory) {
-    _factories[T] = _ServiceFactory(factory, singleton: false);
-  }
-
-  void registerSingleton<T extends Object>(T Function() factory) {
-    _factories[T] = _ServiceFactory(factory, singleton: true);
+  void registerSingleton<T extends Object>(T Function() create) {
+    _lazySingletons[T] = Lazy<Object>(create);
   }
 
   T get<T extends Object>() {
-    final factory = _factories[T];
-    if (factory == null) {
-      throw Exception('No factory registered for type $T');
+    final lazy = _lazySingletons[T];
+    if (lazy == null) {
+      throw Exception('No singleton registered for type $T');
     }
-
-    if (factory.singleton) {
-      return (_singletons[T] ??= factory.create()) as T;
-    }
-
-    return factory.create() as T;
+    return lazy.value as T;
   }
 
   void reset() {
-    _factories.clear();
-    _singletons.clear();
+    _lazySingletons.clear();
   }
 
   @visibleForTesting
-  bool isRegistered<T extends Object>() => _factories.containsKey(T);
+  bool isRegistered<T extends Object>() => _lazySingletons.containsKey(T);
 }
 
-class _ServiceFactory {
-  final Object Function() create;
-  final bool singleton;
+class Lazy<T> {
+  Lazy(this._create);
 
-  const _ServiceFactory(this.create, {required this.singleton});
+  final T Function() _create;
+  T? _value;
+
+  T get value => _value ??= _create();
 }
