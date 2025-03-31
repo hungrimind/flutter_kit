@@ -1,15 +1,9 @@
 import 'package:flutter/foundation.dart';
-import 'package:flutter_kit/auth/user_service.dart';
-import 'package:flutter_kit/core/abstractions/sqlite_abstraction.dart';
 
 final locator = ServiceLocator.instance;
 
 void setupLocator() {
-  locator.registerSingleton(() => SqliteAbstraction());
-
-  locator.registerSingleton(() => UserService(
-        sqliteAbstraction: locator.get<SqliteAbstraction>(),
-      ));
+  // Register your services here
 }
 
 class ServiceLocator {
