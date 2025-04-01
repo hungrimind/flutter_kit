@@ -2,11 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_kit/core/ui/theme/app_theme.dart';
 import 'package:flutter_kit/core/utils/locator.dart';
 import 'package:flutter_kit/home/home_view.dart';
+import 'package:flutter_kit/core/services/logging_service.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   setupLocator();
+  
+  // Initialize logging
+  locator.get<LoggingService>().initializeLogging();
 
   runApp(const MyApp());
 }
