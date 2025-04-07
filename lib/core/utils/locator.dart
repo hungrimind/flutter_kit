@@ -2,11 +2,13 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_kit/core/http/http_abstraction.dart';
 import 'package:flutter_kit/core/http/http_interceptor.dart';
 import 'package:flutter_kit/core/services/logging_service.dart';
+import 'package:flutter_kit/core/services/toast_service.dart';
 
 final locator = ServiceLocator.instance;
 
 void setupLocator() {
   locator.registerSingleton<LoggingService>(() => LoggingService());
+  locator.registerSingleton<ToastService>(() => ToastService());
 
   // Create HttpAbstraction with logging interceptor
   locator.registerSingleton<HttpAbstraction>(() {

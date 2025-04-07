@@ -1,12 +1,19 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter_kit/core/http/http_abstraction.dart';
+import 'package:flutter_kit/core/services/toast_service.dart';
+import 'package:flutter_kit/core/utils/locator.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 /// Manages the dog image gallery for the home screen
 class HomeViewModel {
-  HomeViewModel({required HttpAbstraction http}) : _http = http;
   final HttpAbstraction _http;
+  final ToastService _toastService;
+
+  HomeViewModel({
+    required HttpAbstraction http,
+  }) : _http = http,
+       _toastService = locator.get<ToastService>();
   
   /// The current dog image URL as a ValueNotifier
   final ValueNotifier<String?> currentDogImageUrl = ValueNotifier<String?>(null);
@@ -19,6 +26,10 @@ class HomeViewModel {
   
   /// Error message if image fetching fails
   final ValueNotifier<String?> errorMessage = ValueNotifier<String?>(null);
+
+  void showToast(String message) {
+    _toastService.show(message);
+  }
 
   /// Fetches a random dog image from the Dog API
   Future<void> fetchRandomDogImage() async {

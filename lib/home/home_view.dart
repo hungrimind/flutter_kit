@@ -47,6 +47,11 @@ class _HomeViewState extends State<HomeView> {
           ),
         ],
       ),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () => _viewModel.showToast('Hello from Toast! 🎉'),
+        label: const Text('Show Toast'),
+        icon: const Icon(Icons.message),
+      ),
       body: SafeArea(
         child: isWideScreen 
           ? WideLayoutWidget(viewModel: _viewModel)

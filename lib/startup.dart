@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_kit/core/constants/project_info.dart';
 import 'package:flutter_kit/core/router/router.dart';
 import 'package:flutter_kit/core/ui/theme/app_theme.dart';
+import 'package:flutter_kit/core/widgets/toast_overlay.dart';
 import 'package:flutter_kit/startup_view_model.dart';
 
 class StartupView extends StatefulWidget {
@@ -38,9 +39,11 @@ class _StartupViewState extends State<StartupView> {
               debugShowCheckedModeBanner: false,
               theme: AppTheme.buildTheme(Brightness.light),
               darkTheme: AppTheme.buildTheme(Brightness.dark),
-              home: Scaffold(
-                body: Center(
-                  child: CircularProgressIndicator(),
+              home: ToastOverlay(
+                child: Scaffold(
+                  body: Center(
+                    child: CircularProgressIndicator(),
+                  ),
                 ),
               ),
             ),
@@ -50,15 +53,18 @@ class _StartupViewState extends State<StartupView> {
               debugShowCheckedModeBanner: false,
               theme: AppTheme.buildTheme(Brightness.light),
               darkTheme: AppTheme.buildTheme(Brightness.dark),
+              builder: (context, child) => ToastOverlay(child: child!),
             ),
           AppInitializationError(message: final error) => MaterialApp(
               title: ProjectInfo.appName,
               debugShowCheckedModeBanner: false,
               theme: AppTheme.buildTheme(Brightness.light),
               darkTheme: AppTheme.buildTheme(Brightness.dark),
-              home: Scaffold(
-                body: Center(
-                  child: Text('Error initializing app: $error'),
+              home: ToastOverlay(
+                child: Scaffold(
+                  body: Center(
+                    child: Text('Error initializing app: $error'),
+                  ),
                 ),
               ),
             ),
