@@ -43,6 +43,7 @@ dependencies:
   cronet_http: ^1.3.3
   cupertino_http: ^2.1.0
   fetch_client: ^1.1.3
+  go_router: ^14.8.1
 
 dev_dependencies:
   flutter_test:

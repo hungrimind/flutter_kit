@@ -4,11 +4,13 @@ import 'package:flutter/foundation.dart';
 import 'package:logging/logging.dart';
 
 class LoggingService {
-  // constructor inject any logging service you want to use
+  LoggingService() {
+    _initializeLogging();
+  }
 
   late StreamSubscription _loggerSubscription;
 
-  void initializeLogging() {
+  void _initializeLogging() {
     Logger.root.level = Level.ALL; // Adjust this based on your needs
 
     _loggerSubscription = Logger.root.onRecord.listen((record) {
