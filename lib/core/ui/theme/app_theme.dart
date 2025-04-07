@@ -47,7 +47,7 @@ class AppTheme {
       ],
       useMaterial3: true,
       splashFactory: NoSplash.splashFactory,
-      highlightColor: Colors.white.withOpacity(0.1),
+      highlightColor: Colors.white.withValues(alpha: .1),
       dropdownMenuTheme: DropdownMenuThemeData(
         textStyle: TextStyle(color: neutralColors.neutral950),
         menuStyle: MenuStyle(

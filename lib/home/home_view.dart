@@ -35,7 +35,7 @@ class _HomeViewState extends State<HomeView> {
     final isWideScreen = MediaQuery.of(context).size.width > 800;
     
     return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.background,
+      backgroundColor: Theme.of(context).colorScheme.surface,
       appBar: AppBar(
         title: const Text('Doggo Gallery'),
         elevation: 0,
@@ -226,7 +226,7 @@ class _HoverElevatedButtonState extends State<_HoverElevatedButton> {
           style: ElevatedButton.styleFrom(
             minimumSize: const Size.fromHeight(50),
             backgroundColor: _isHovered 
-                ? Theme.of(context).colorScheme.primary.withOpacity(0.9)
+                ? Theme.of(context).colorScheme.primary.withValues(alpha: .9)
                 : Theme.of(context).colorScheme.primary,
             foregroundColor: Theme.of(context).colorScheme.onPrimary,
             shape: RoundedRectangleBorder(
@@ -258,7 +258,7 @@ class FeaturedImageWidget extends StatelessWidget {
         borderRadius: BorderRadius.circular(16.0),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.1),
+            color: Colors.black.withValues(alpha: .1),
             blurRadius: 10,
             spreadRadius: 1,
           ),
@@ -275,7 +275,7 @@ class FeaturedImageWidget extends StatelessWidget {
                   Icon(
                     Icons.pets, 
                     size: 64, 
-                    color: Theme.of(context).colorScheme.primary.withOpacity(0.5)
+                    color: Theme.of(context).colorScheme.primary.withValues(alpha: .5)
                   ),
                   const SizedBox(height: 16),
                   Text(
@@ -286,7 +286,7 @@ class FeaturedImageWidget extends StatelessWidget {
                   Text(
                     'Tap the "Fetch New Doggo" button',
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
+                      color: Theme.of(context).colorScheme.onSurface.withValues(alpha: .6),
                     ),
                   ),
                 ],
@@ -337,7 +337,7 @@ class FeaturedImageWidget extends StatelessWidget {
                               textAlign: TextAlign.center,
                               style: TextStyle(
                                 fontSize: 12,
-                                color: Theme.of(context).colorScheme.error.withOpacity(0.8),
+                                color: Theme.of(context).colorScheme.error.withValues(alpha: .8),
                               ),
                             ),
                           ],
@@ -359,7 +359,7 @@ class FeaturedImageWidget extends StatelessWidget {
                       right: 0,
                       child: Container(
                         padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-                        color: Theme.of(context).colorScheme.error.withOpacity(0.8),
+                        color: Theme.of(context).colorScheme.error.withValues(alpha: .8),
                         child: Text(
                           errorMessage,
                           style: const TextStyle(color: Colors.white),
@@ -400,7 +400,7 @@ class GalleryWidget extends StatelessWidget {
                 Icon(
                   Icons.photo_library_outlined,
                   size: 48,
-                  color: Theme.of(context).colorScheme.onSurface.withOpacity(0.3),
+                  color: Theme.of(context).colorScheme.onSurface.withValues(alpha: .3),
                 ),
                 const SizedBox(height: 16),
                 Text(
@@ -408,7 +408,7 @@ class GalleryWidget extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 16,
                     fontStyle: FontStyle.italic,
-                    color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
+                    color: Theme.of(context).colorScheme.onSurface.withValues(alpha: .5),
                   ),
                 ),
               ],
@@ -535,8 +535,8 @@ class _GalleryItemWidgetState extends State<GalleryItemWidget> {
             boxShadow: [
               BoxShadow(
                 color: _isHovered 
-                    ? Theme.of(context).colorScheme.primary.withOpacity(0.3)
-                    : Colors.black.withOpacity(0.1),
+                    ? Theme.of(context).colorScheme.primary.withValues(alpha: .3)
+                    : Colors.black.withValues(alpha: .1),
                 blurRadius: _isHovered ? 8 : 5,
                 spreadRadius: _isHovered ? 2 : 1,
               ),
@@ -590,7 +590,7 @@ class _GalleryItemWidgetState extends State<GalleryItemWidget> {
                   if (_isHovered)
                     Positioned.fill(
                       child: Container(
-                        color: Colors.black.withOpacity(0.2),
+                        color: Colors.black.withValues(alpha: .2),
                         child: Center(
                           child: Icon(
                             Icons.touch_app,
