@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_kit/startup.dart';
+import 'package:flutter_kit/startup/startup.dart';
 
 
 void main() {

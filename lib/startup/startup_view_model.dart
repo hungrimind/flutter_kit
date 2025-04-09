@@ -15,8 +15,9 @@ class AppInitialized extends AppState {
 }
 
 class AppInitializationError extends AppState {
-  final String message;
-  const AppInitializationError(this.message);
+  final Object error;
+  final StackTrace stackTrace;
+  const AppInitializationError(this.error, this.stackTrace);
 }
 
 /// ViewModel responsible for handling app startup and initialization
@@ -24,14 +25,19 @@ class StartupViewModel {
   final appStateNotifier = ValueNotifier<AppState>(const InitializingApp());
 
   Future<void> initializeApp() async {
+    appStateNotifier.value = const InitializingApp();
     try {
       setupLocator();
-      await Future.delayed(const Duration(seconds: 1));
       
       appStateNotifier.value = const AppInitialized();
-    } catch (e) {
-      appStateNotifier.value = AppInitializationError(e.toString());
+    } catch (e, st) {
+      appStateNotifier.value = AppInitializationError(e, st);
     }
+  }
+
+  Future<void> retryInitialization() async {
+    locator.reset();
+    await initializeApp();
   }
 
   void dispose() {
