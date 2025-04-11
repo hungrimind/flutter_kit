@@ -1,88 +1,59 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_web_plugins/flutter_web_plugins.dart';
-import 'core/navigation/app_router.dart';
+import 'package:nav2demo/core/locator.dart';
+import 'package:nav2demo/core/navigation/route_information_parser.dart';
+import 'package:nav2demo/core/navigation/router_delegate.dart';
+import 'package:nav2demo/core/navigation/router_service.dart';
+// Import your Delegate, Parser, Notifier, and other necessary files
 
 void main() {
-  // Configure url strategy for web
+  setupLocator();
   setUrlStrategy(PathUrlStrategy());
   runApp(const MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final appRouter = AppRouter();
-    final routeInformationParser = AppRouteInformationParser();
+  State<MyApp> createState() => _MyAppState();
+}
 
+class _MyAppState extends State<MyApp> {
+  late AppRouterDelegate _routerDelegate;
+  late AppRouteInformationParser _routeInformationParser;
+  // BackButtonDispatcher is often implicitly handled by MaterialApp.router
+  // when using PopNavigatorRouterDelegateMixin, but you can provide your own if needed.
+  // late PlatformBackButtonDispatcher _backButtonDispatcher; // Example
+
+  @override
+  void initState() {
+    super.initState();
+    _routeInformationParser = AppRouteInformationParser();
+    // Pass the SINGLE instance of the notifier to the delegate
+    _routerDelegate = AppRouterDelegate(
+      locator.get<RouterService>().navigationState,
+    );
+    // _backButtonDispatcher = PlatformBackButtonDispatcher(); // If customizing
+  }
+
+  @override
+  void dispose() {
+    _routerDelegate.dispose(); // Dispose the delegate to remove listener
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return MaterialApp.router(
-      title: 'Navigator 2.0 Raw Demo',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
-      routerConfig: RouterConfig<RouteConfig>(
-        routeInformationParser: routeInformationParser,
-        routerDelegate: appRouter,
-        routeInformationProvider: PlatformRouteInformationProvider(
-          initialRouteInformation: const RouteInformation(location: '/'),
-        ),
-      ),
+      title: 'Flutter Navigator 2.0 Demo',
+      routeInformationParser: _routeInformationParser,
+      routerDelegate: _routerDelegate,
+      // Optional: Provide a custom back button dispatcher if needed.
+      // If not provided, MaterialApp.router usually sets one up that works
+      // with PopNavigatorRouterDelegateMixin. RootBackButtonDispatcher is common.
+      // backButtonDispatcher: RootBackButtonDispatcher(),
+      debugShowCheckedModeBanner: false,
     );
   }
 }
-
-/// Parses route information from the platform
-class AppRouteInformationParser extends RouteInformationParser<RouteConfig> {
-  @override
-  Future<RouteConfig> parseRouteInformation(
-    RouteInformation routeInformation,
-  ) async {
-    final uri = Uri.parse(routeInformation.location ?? '/');
-    final pathSegments = uri.pathSegments;
-
-    if (pathSegments.isEmpty) {
-      return const RouteConfig(route: AppRoute.home);
-    }
-
-    switch (pathSegments[0]) {
-      case 'page2':
-        if (pathSegments.length > 1 && pathSegments[1] == 'details') {
-          return const RouteConfig(route: AppRoute.page2Details);
-        }
-        return const RouteConfig(route: AppRoute.page2);
-      case 'page3':
-        if (pathSegments.length > 1) {
-          return RouteConfig(
-            route: AppRoute.page3WithId,
-            params: {'id': pathSegments[1]},
-          );
-        }
-        return const RouteConfig(route: AppRoute.page3);
-      default:
-        return const RouteConfig(route: AppRoute.home);
-    }
-  }
-
-  @override
-  RouteInformation? restoreRouteInformation(RouteConfig configuration) {
-    switch (configuration.route) {
-      case AppRoute.home:
-        return const RouteInformation(location: '/');
-      case AppRoute.page2:
-        return const RouteInformation(location: '/page2');
-      case AppRoute.page2Details:
-        return const RouteInformation(location: '/page2/details');
-      case AppRoute.page3:
-        return const RouteInformation(location: '/page3');
-      case AppRoute.page3WithId:
-        return RouteInformation(
-          location: '/page3/${configuration.params['id']}',
-        );
-    }
-  }
-}
-
-// This is a simple implementation using go_router package
-// For a more complex implementation with custom RouterDelegate, see the commented code below
