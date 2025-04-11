@@ -22,24 +22,19 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   late AppRouterDelegate _routerDelegate;
   late AppRouteInformationParser _routeInformationParser;
-  // BackButtonDispatcher is often implicitly handled by MaterialApp.router
-  // when using PopNavigatorRouterDelegateMixin, but you can provide your own if needed.
-  // late PlatformBackButtonDispatcher _backButtonDispatcher; // Example
 
   @override
   void initState() {
     super.initState();
     _routeInformationParser = AppRouteInformationParser();
-    // Pass the SINGLE instance of the notifier to the delegate
     _routerDelegate = AppRouterDelegate(
       locator.get<RouterService>().navigationState,
     );
-    // _backButtonDispatcher = PlatformBackButtonDispatcher(); // If customizing
   }
 
   @override
   void dispose() {
-    _routerDelegate.dispose(); // Dispose the delegate to remove listener
+    _routerDelegate.dispose();
     super.dispose();
   }
 
@@ -49,10 +44,6 @@ class _MyAppState extends State<MyApp> {
       title: 'Flutter Navigator 2.0 Demo',
       routeInformationParser: _routeInformationParser,
       routerDelegate: _routerDelegate,
-      // Optional: Provide a custom back button dispatcher if needed.
-      // If not provided, MaterialApp.router usually sets one up that works
-      // with PopNavigatorRouterDelegateMixin. RootBackButtonDispatcher is common.
-      // backButtonDispatcher: RootBackButtonDispatcher(),
       debugShowCheckedModeBanner: false,
     );
   }

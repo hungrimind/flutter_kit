@@ -47,16 +47,29 @@ class HomeScreen extends StatelessWidget {
   }
 }
 
-class BooksScreen extends StatelessWidget {
+class BooksScreen extends StatefulWidget {
   final RouterService routerService;
   const BooksScreen({super.key, required this.routerService});
+
+  @override
+  State<BooksScreen> createState() => _BooksScreenState();
+}
+
+class _BooksScreenState extends State<BooksScreen> {
+  int counter = 0;
+
+  incrementCounter() {
+    setState(() {
+      counter++;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     // Example book IDs
     final bookIds = ['1', 'the-hobbit', '42'];
     return Scaffold(
-      appBar: AppBar(title: const Text('Books')),
+      appBar: AppBar(title: Text('Books + $counter')),
       body: ListView.builder(
         itemCount: bookIds.length,
         itemBuilder: (context, index) {
@@ -65,13 +78,17 @@ class BooksScreen extends StatelessWidget {
             title: Text('Book $bookId'),
             onTap: () {
               // Update state to navigate to details
-              routerService.navigateTo(
+              widget.routerService.navigateTo(
                 AppRoute.bookDetails,
                 selectedBookId: bookId,
               );
             },
           );
         },
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: incrementCounter,
+        child: const Icon(Icons.add),
       ),
     );
   }
