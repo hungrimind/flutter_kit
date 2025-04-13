@@ -8,10 +8,20 @@ class RouterService {
 
   get navigationState => _navigationState;
 
-  /// Navigate to a new route
-  void navigateTo(AppRoute route, {String? selectedBookId}) {
+  /// Navigate to a new route by its name
+  void navigateTo(String routeName, {String? selectedBookId}) {
+    // Optional: You could look up the routeName in routeConfigs here
+    // if you needed to validate it or access other AppRoute properties,
+    // but for simply updating the state, the name is sufficient.
+    // AppRoute? route = routeConfigs[routeName];
+    // if (route == null) {
+    //   debugPrint("Warning: Attempted to navigate to unknown route name: $routeName");
+    //   // Decide how to handle: return, throw, or navigate to a default/404 state
+    //   // For now, we allow it, letting the RouterDelegate handle unknown states.
+    // }
+
     _navigationState.value = NavigationState(
-      currentRoute: route,
+      routeName: routeName, // Use the provided routeName string
       selectedBookId: selectedBookId,
     );
   }

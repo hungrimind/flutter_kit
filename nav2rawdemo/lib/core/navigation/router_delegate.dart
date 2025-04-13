@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'package:nav2demo/core/locator.dart';
 import 'package:nav2demo/core/navigation/navigation_state.dart';
+import 'package:nav2demo/core/config/route_config.dart';
 import 'package:nav2demo/core/navigation/router_service.dart';
 import 'package:nav2demo/pages/screens.dart';
 
@@ -31,10 +32,10 @@ class AppRouterDelegate extends RouterDelegate<NavigationState>
       ),
     );
 
-    switch (state.currentRoute) {
-      case AppRoute.home:
+    switch (state.routeName) {
+      case RouteNames.home:
         break;
-      case AppRoute.books:
+      case RouteNames.books:
         pages.add(
           MaterialPage(
             key: ValueKey('BooksPage'),
@@ -42,7 +43,7 @@ class AppRouterDelegate extends RouterDelegate<NavigationState>
           ),
         );
         break;
-      case AppRoute.bookDetails:
+      case RouteNames.bookDetails:
         pages.add(
           MaterialPage(
             key: ValueKey('BooksPage'),
@@ -58,7 +59,7 @@ class AppRouterDelegate extends RouterDelegate<NavigationState>
           );
         }
         break;
-      case AppRoute.settings:
+      case RouteNames.settings:
         pages.add(
           const MaterialPage(
             key: ValueKey('SettingsPage'),
@@ -66,7 +67,7 @@ class AppRouterDelegate extends RouterDelegate<NavigationState>
           ),
         );
         break;
-      case AppRoute.unknown:
+      case RouteNames.unknown:
       default:
         pages.add(
           const MaterialPage(
@@ -76,7 +77,7 @@ class AppRouterDelegate extends RouterDelegate<NavigationState>
         );
         break;
     }
-    if (state.isUnknown && state.currentRoute != AppRoute.unknown) {
+    if (state.isUnknown && state.routeName != RouteNames.unknown) {
       pages.add(
         const MaterialPage(
           key: ValueKey('UnknownPage'),
@@ -94,27 +95,27 @@ class AppRouterDelegate extends RouterDelegate<NavigationState>
           final currentState = _navigationStateNotifier.value;
 
           if (pageKey == const ValueKey('BooksPage') &&
-              currentState.currentRoute == AppRoute.books) {
+              currentState.routeName == RouteNames.books) {
             _navigationStateNotifier.value = currentState.copyWith(
-              currentRoute: AppRoute.home,
+              routeName: RouteNames.home,
             );
           } else if (pageKey is ValueKey &&
               pageKey.value.toString().startsWith('BookDetailsPage_') &&
-              currentState.currentRoute == AppRoute.bookDetails) {
+              currentState.routeName == RouteNames.bookDetails) {
             _navigationStateNotifier.value = currentState.copyWith(
-              currentRoute: AppRoute.books,
-              clearSelectedBookId: true,
+              routeName: RouteNames.books,
+              selectedBookId: null,
             );
           } else if (pageKey == const ValueKey('SettingsPage') &&
-              currentState.currentRoute == AppRoute.settings) {
+              currentState.routeName == RouteNames.settings) {
             _navigationStateNotifier.value = currentState.copyWith(
-              currentRoute: AppRoute.home,
+              routeName: RouteNames.home,
             );
           } else if (pageKey == const ValueKey('UnknownPage') &&
-              (currentState.currentRoute == AppRoute.unknown ||
+              (currentState.routeName == RouteNames.unknown ||
                   currentState.isUnknown)) {
             _navigationStateNotifier.value = currentState.copyWith(
-              currentRoute: AppRoute.home,
+              routeName: RouteNames.home,
               isUnknown: false,
             );
           }
@@ -130,21 +131,21 @@ class AppRouterDelegate extends RouterDelegate<NavigationState>
     // Determine the previous state based on the current state
     NavigationState? previousState;
 
-    if (currentState.currentRoute == AppRoute.bookDetails) {
+    if (currentState.routeName == RouteNames.bookDetails) {
       // Popping BookDetails goes back to Books list
       previousState = currentState.copyWith(
-        currentRoute: AppRoute.books,
-        clearSelectedBookId: true,
+        routeName: RouteNames.books,
+        selectedBookId: null,
       );
-    } else if (currentState.currentRoute == AppRoute.books ||
-        currentState.currentRoute == AppRoute.settings) {
+    } else if (currentState.routeName == RouteNames.books ||
+        currentState.routeName == RouteNames.settings) {
       // Popping Books or Settings goes back to Home
-      previousState = currentState.copyWith(currentRoute: AppRoute.home);
-    } else if (currentState.currentRoute == AppRoute.unknown ||
+      previousState = currentState.copyWith(routeName: RouteNames.home);
+    } else if (currentState.routeName == RouteNames.unknown ||
         currentState.isUnknown) {
       // Popping Unknown page goes back to Home
       previousState = currentState.copyWith(
-        currentRoute: AppRoute.home,
+        routeName: RouteNames.home,
         isUnknown: false,
       );
     }

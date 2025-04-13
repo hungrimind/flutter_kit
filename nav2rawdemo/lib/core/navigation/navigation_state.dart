@@ -1,36 +1,57 @@
 import 'package:flutter/foundation.dart'; // For ValueNotifier
+import 'package:flutter/material.dart';
+import 'package:nav2demo/core/config/route_config.dart'; // Added for debugPrint
 
-// Represents the different logical routes/states in our app
-enum AppRoute { home, books, bookDetails, settings, unknown }
+// Define a class for route configuration
+class AppRoute {
+  final String
+  name; // Unique identifier for the route (e.g., 'home', 'bookDetails')
+  final String path; // URL path pattern (e.g., '/books/:id')
+  // Builder now accepts parameters extracted from the path
+  final NavigationState Function(Map<String, String> params) builder;
+
+  const AppRoute({
+    required this.name,
+    required this.path,
+    required this.builder,
+  });
+}
+
+// Updated list using RouteConfig with names
+
+// --- Typed Route Names ---
+// Provides static constants for type-safe access to route names
 
 // Holds the current navigation state
 @immutable // Good practice for state objects
 class NavigationState {
-  final AppRoute currentRoute;
+  final String? routeName; // Unique name identifying the route configuration
   final String? selectedBookId; // For routes like /books/:id
   final bool isUnknown; // Flag for 404 routes
 
-  // Constructor for a known route
-  const NavigationState({required this.currentRoute, this.selectedBookId})
-    : isUnknown = false;
+  // Main constructor
+  const NavigationState({
+    this.routeName,
+    this.selectedBookId,
+    this.isUnknown = false,
+  });
 
-  // Constructor for an unknown route
+  // Constructor for an unknown route (404)
   const NavigationState.unknown()
-    : currentRoute = AppRoute.unknown,
+    : routeName = null, // No specific route name for unknown
       selectedBookId = null,
       isUnknown = true;
 
-  // Initial state
+  // Initial state (e.g., home route)
   const NavigationState.initial()
-    : currentRoute = AppRoute.home,
+    : routeName = RouteNames.home, // Use constant for initial route
       selectedBookId = null,
       isUnknown = false;
 
   // Helper for creating copies with modifications
   NavigationState copyWith({
-    AppRoute? currentRoute,
-    String? selectedBookId, // Allow clearing the book ID
-    bool? clearSelectedBookId, // Explicit flag to clear bookId
+    String? routeName,
+    String? selectedBookId,
     bool? isUnknown,
   }) {
     final bool finalIsUnknown = isUnknown ?? this.isUnknown;
@@ -38,14 +59,11 @@ class NavigationState {
       return const NavigationState.unknown();
     }
 
-    final String? finalSelectedBookId =
-        (clearSelectedBookId ?? false)
-            ? null
-            : (selectedBookId ?? this.selectedBookId);
-
+    final String? finalSelectedBookId = (selectedBookId ?? this.selectedBookId);
     return NavigationState(
-      currentRoute: currentRoute ?? this.currentRoute,
+      routeName: routeName ?? this.routeName,
       selectedBookId: finalSelectedBookId,
+      // isUnknown is handled above
     );
   }
 
@@ -54,16 +72,16 @@ class NavigationState {
       identical(this, other) ||
       other is NavigationState &&
           runtimeType == other.runtimeType &&
-          currentRoute == other.currentRoute &&
+          routeName == other.routeName && // Compare routeName
           selectedBookId == other.selectedBookId &&
           isUnknown == other.isUnknown;
 
   @override
   int get hashCode =>
-      currentRoute.hashCode ^ selectedBookId.hashCode ^ isUnknown.hashCode;
+      routeName.hashCode ^ selectedBookId.hashCode ^ isUnknown.hashCode;
 
   @override
   String toString() {
-    return 'NavigationState(currentRoute: $currentRoute, selectedBookId: $selectedBookId, isUnknown: $isUnknown)';
+    return 'NavigationState(routeName: $routeName, selectedBookId: $selectedBookId, isUnknown: $isUnknown)';
   }
 }

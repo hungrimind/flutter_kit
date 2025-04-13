@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:nav2demo/core/navigation/navigation_state.dart';
+import 'package:nav2demo/core/config/route_config.dart';
 import 'package:nav2demo/core/navigation/router_service.dart';
+// Removed incorrect import for route_names.dart
 // Import NavigationState, AppRoute, navigationStateNotifier
 
 // --- Example Screens ---
@@ -19,16 +21,16 @@ class HomeScreen extends StatelessWidget {
           children: [
             ElevatedButton(
               onPressed: () {
-                // Update state to navigate
-                routerService.navigateTo(AppRoute.books);
+                // Update state using typed constant
+                routerService.navigateTo(RouteNames.books);
               },
               child: const Text('Go to Books'),
             ),
             const SizedBox(height: 10),
             ElevatedButton(
               onPressed: () {
-                // Update state to navigate
-                routerService.navigateTo(AppRoute.settings);
+                // Update state using typed constant
+                routerService.navigateTo(RouteNames.settings);
               },
               child: const Text('Go to Settings'),
             ),
@@ -36,7 +38,8 @@ class HomeScreen extends StatelessWidget {
             ElevatedButton(
               // Example of navigating to a non-existent route
               onPressed: () {
-                routerService.navigateTo(AppRoute.unknown);
+                // Keep navigating to an invalid path string for 404 test
+                routerService.navigateTo('/invalid-path');
               },
               child: const Text('Go to Unknown Page (Simulate 404)'),
             ),
@@ -77,9 +80,9 @@ class _BooksScreenState extends State<BooksScreen> {
           return ListTile(
             title: Text('Book $bookId'),
             onTap: () {
-              // Update state to navigate to details
+              // Update state using typed constant
               widget.routerService.navigateTo(
-                AppRoute.bookDetails,
+                RouteNames.bookDetails, // Use typed constant
                 selectedBookId: bookId,
               );
             },
