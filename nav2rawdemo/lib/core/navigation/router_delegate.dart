@@ -14,68 +14,64 @@ class AppRouterDelegate extends RouterDelegate<AppRoute> with ChangeNotifier {
     _navigationStateNotifier.addListener(notifyListeners);
   }
 
-  @override
-  AppRoute get currentConfiguration => _navigationStateNotifier.value;
-
   var routerService = locator.get<RouterService>();
+
+  createPages() {
+    List<Page<dynamic>> pages = [];
+
+    for (var page in routerService.navigationStack.value) {
+      switch (page.name) {
+        case RouteNames.home:
+          pages.add(
+            MaterialPage(
+              key: ValueKey('HomePage'),
+              child: HomeScreen(routerService: routerService),
+            ),
+          );
+          break;
+        case RouteNames.books:
+          pages.add(
+            MaterialPage(
+              key: ValueKey('BooksPage'),
+              child: BooksScreen(routerService: routerService),
+            ),
+          );
+          break;
+        case RouteNames.bookDetails:
+          if (page.params != null) {
+            pages.add(
+              MaterialPage(
+                key: ValueKey('BookDetailsPage_${page.params}'),
+                child: BookDetailsScreen(bookId: page.params!['id']!),
+              ),
+            );
+          }
+          break;
+        case RouteNames.settings:
+          pages.add(
+            const MaterialPage(
+              key: ValueKey('SettingsPage'),
+              child: SettingsScreen(),
+            ),
+          );
+          break;
+        case RouteNames.unknown:
+        default:
+          pages.add(
+            const MaterialPage(
+              key: ValueKey('UnknownPage'),
+              child: UnknownScreen(),
+            ),
+          );
+          break;
+      }
+    }
+    return pages;
+  }
 
   @override
   Widget build(BuildContext context) {
-    final state = _navigationStateNotifier.value;
-    List<Page<dynamic>> pages = [];
-
-    pages.add(
-      MaterialPage(
-        key: ValueKey('HomePage'),
-        child: HomeScreen(routerService: routerService),
-      ),
-    );
-
-    switch (state.name) {
-      case RouteNames.home:
-        break;
-      case RouteNames.books:
-        pages.add(
-          MaterialPage(
-            key: ValueKey('BooksPage'),
-            child: BooksScreen(routerService: routerService),
-          ),
-        );
-        break;
-      case RouteNames.bookDetails:
-        pages.add(
-          MaterialPage(
-            key: ValueKey('BooksPage'),
-            child: BooksScreen(routerService: routerService),
-          ),
-        );
-        if (state.params != null) {
-          pages.add(
-            MaterialPage(
-              key: ValueKey('BookDetailsPage_${state.params}'),
-              child: BookDetailsScreen(bookId: state.params!['id']!),
-            ),
-          );
-        }
-        break;
-      case RouteNames.settings:
-        pages.add(
-          const MaterialPage(
-            key: ValueKey('SettingsPage'),
-            child: SettingsScreen(),
-          ),
-        );
-        break;
-      case RouteNames.unknown:
-      default:
-        pages.add(
-          const MaterialPage(
-            key: ValueKey('UnknownPage'),
-            child: UnknownScreen(),
-          ),
-        );
-        break;
-    }
+    List<Page<dynamic>> pages = createPages();
 
     print('pages: ${pages.map((page) => page.key)}');
     return Navigator(

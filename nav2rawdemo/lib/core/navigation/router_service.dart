@@ -11,9 +11,8 @@ class RouterService {
   final ValueNotifier<List<AppRoute>> _navigationStack =
       ValueNotifier<List<AppRoute>>([AppRoute.initial()]);
 
-  get currentRoute => _currentRoute;
   get navigationStack => _navigationStack;
-
+  get currentRoute => _currentRoute;
   void navigateTo(String routeName, {Map<String, String>? params}) {
     _currentRoute.value = routeMap
         .firstWhere(
@@ -28,8 +27,15 @@ class RouterService {
 
   void navigateBack() {
     List<AppRoute> temps = [];
+    print(
+      'navigationStack: ${_navigationStack.value.map((route) => route.name)}',
+    );
+    print("navigationStack length: ${_navigationStack.value.length}");
     if (_navigationStack.value.length > 1) {
-      temps = _navigationStack.value.sublist(_navigationStack.value.length - 2);
+      temps = _navigationStack.value.sublist(
+        0,
+        _navigationStack.value.length - 1,
+      );
     }
     print('temps: ${temps.map((route) => route.name)}');
     _navigationStack.value = temps;
