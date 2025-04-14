@@ -77,20 +77,59 @@ class AppRouterDelegate extends RouterDelegate<AppRoute> with ChangeNotifier {
       key: navigatorKey, // Navigator still needs a key
       pages: List.of(pages), // Use a copy to ensure change detection
       onDidRemovePage: (Page page) {
-        routerService.navigateBack();
+        if (routerService.justPopped) {
+          routerService.justPopped = false;
+        } else {
+          routerService.navigateBack();
+        }
       },
     );
   }
 
+  // Called by the Router when the system wants to pop the current route.
   @override
   Future<bool> popRoute() {
+    // Check if our internal router service can pop
+    if (routerService.canPop()) {
+      // If yes, trigger the pop in our state management
+      routerService.navigateBack();
+      // Return true to indicate we handled the pop.
+      return SynchronousFuture(true);
+    }
+    // If no, indicate that the navigator refused the pop.
+    // This might close the app on Android or do nothing on web/desktop.
     return SynchronousFuture(false);
   }
 
-  // setNewRoutePath remains the same
+  // Report the current route configuration back to the Router
+  @override
+  AppRoute? get currentConfiguration {
+    // If the stack is empty, return null or a default configuration
+    if (routerService.navigationStack.value.isEmpty) {
+      return null; // Or AppRoute(RouteNames.home) if you always want a default
+    }
+    // Return the configuration of the last page in the stack
+    return routerService.navigationStack.value.last;
+  }
+
+  // Called by the Router when the platform reports a new route information.
+  // This can happen from browser back/forward, typing URL, or platform calls.
   @override
   Future<void> setNewRoutePath(AppRoute configuration) async {
-    routerService.navigateTo(configuration.name, params: configuration.params);
+    final currentStack = routerService.navigationStack.value;
+
+    // Check if this looks like a browser 'back' navigation
+    if (currentStack.length > 1 &&
+        currentStack[currentStack.length - 2].name == configuration.name) {
+      print('setNewRoutePath detected back navigation, popping stack.');
+      routerService.navigateBack();
+      routerService.justPopped = true;
+    } else {
+      // Otherwise, treat as a new navigation or forward navigation.
+      // Rebuild the stack based on the configuration.
+      print('setNewRoutePath rebuilding stack for new/forward navigation.');
+      routerService.setPathStack(configuration);
+    }
     return SynchronousFuture(null);
   }
 
