@@ -7,11 +7,10 @@ import 'package:nav2demo/core/navigation/router_service.dart';
 import 'package:nav2demo/pages/screens.dart';
 
 class AppRouterDelegate extends RouterDelegate<AppRoute> with ChangeNotifier {
-  final ValueNotifier<AppRoute> _navigationStateNotifier;
   final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
-  AppRouterDelegate(this._navigationStateNotifier) {
-    _navigationStateNotifier.addListener(notifyListeners);
+  AppRouterDelegate() {
+    routerService.navigationStack.addListener(notifyListeners);
   }
 
   var routerService = locator.get<RouterService>();
@@ -91,14 +90,14 @@ class AppRouterDelegate extends RouterDelegate<AppRoute> with ChangeNotifier {
   // setNewRoutePath remains the same
   @override
   Future<void> setNewRoutePath(AppRoute configuration) async {
-    _navigationStateNotifier.value = configuration;
+    routerService.navigateTo(configuration.name, params: configuration.params);
     return SynchronousFuture(null);
   }
 
   // dispose remains the same
   @override
   void dispose() {
-    _navigationStateNotifier.removeListener(notifyListeners);
+    routerService.navigationStack.removeListener(notifyListeners);
     super.dispose();
   }
 }

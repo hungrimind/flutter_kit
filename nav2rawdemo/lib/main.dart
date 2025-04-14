@@ -27,9 +27,7 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     super.initState();
     _routeInformationParser = AppRouteInformationParser();
-    _routerDelegate = AppRouterDelegate(
-      locator.get<RouterService>().currentRoute,
-    );
+    _routerDelegate = AppRouterDelegate();
   }
 
   @override

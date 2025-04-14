@@ -52,6 +52,7 @@ class AppRouteInformationParser extends RouteInformationParser<AppRoute> {
 
   @override
   RouteInformation? restoreRouteInformation(AppRoute configuration) {
+    print('restoreRouteInformation: ${configuration.name}');
     if (configuration.name == RouteNames.unknown) {
       return RouteInformation(uri: Uri(path: '/404'));
     }

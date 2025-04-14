@@ -4,24 +4,25 @@ import 'package:nav2demo/core/navigation/navigation_state.dart';
 
 /// Service responsible for managing navigation state using MVVM pattern
 class RouterService {
-  final ValueNotifier<AppRoute> _currentRoute = ValueNotifier<AppRoute>(
-    AppRoute.initial(),
-  );
-
   final ValueNotifier<List<AppRoute>> _navigationStack =
       ValueNotifier<List<AppRoute>>([AppRoute.initial()]);
 
   get navigationStack => _navigationStack;
-  get currentRoute => _currentRoute;
-  void navigateTo(String routeName, {Map<String, String>? params}) {
-    _currentRoute.value = routeMap
-        .firstWhere(
-          (route) => route.name == routeName,
-          orElse: () => AppRoute.unknown(),
-        )
-        .copyWith(params: params);
 
-    _navigationStack.value = [..._navigationStack.value, _currentRoute.value];
+  void navigateTo(String routeName, {Map<String, String>? params}) {
+    if (routeName == _navigationStack.value.last.name) {
+      return;
+    }
+
+    _navigationStack.value = [
+      ..._navigationStack.value,
+      routeMap
+          .firstWhere(
+            (route) => route.name == routeName,
+            orElse: () => AppRoute.unknown(),
+          )
+          .copyWith(params: params),
+    ];
     print('currentStack: ${_navigationStack.value.map((route) => route.name)}');
   }
 
@@ -39,7 +40,6 @@ class RouterService {
     }
     print('temps: ${temps.map((route) => route.name)}');
     _navigationStack.value = temps;
-    _currentRoute.value = _navigationStack.value.last;
     print('currentStack: ${_navigationStack.value.map((route) => route.name)}');
   }
 }
