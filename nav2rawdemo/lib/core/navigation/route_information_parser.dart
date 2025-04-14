@@ -2,10 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:nav2demo/core/navigation/navigation_state.dart';
 import 'package:nav2demo/core/config/route_config.dart';
 
-class AppRouteInformationParser
-    extends RouteInformationParser<NavigationState> {
+class AppRouteInformationParser extends RouteInformationParser<AppRoute> {
   @override
-  Future<NavigationState> parseRouteInformation(
+  Future<AppRoute> parseRouteInformation(
     RouteInformation routeInformation,
   ) async {
     final uri = routeInformation.uri;
@@ -37,40 +36,36 @@ class AppRouteInformationParser
 
       if (match) {
         try {
-          return config.builder(params);
+          return config;
         } catch (e, stackTrace) {
           debugPrint(
             "Error executing builder for route '${config.name}': $e\n$stackTrace",
           );
-          return const NavigationState.unknown();
+          return const AppRoute.unknown();
         }
       }
     }
 
     debugPrint('Unknown route: ${routeInformation.uri}');
-    return const NavigationState.unknown();
+    return const AppRoute.unknown();
   }
 
   @override
-  RouteInformation? restoreRouteInformation(NavigationState configuration) {
-    if (configuration.isUnknown || configuration.routeName == null) {
+  RouteInformation? restoreRouteInformation(AppRoute configuration) {
+    if (configuration.name == RouteNames.unknown) {
       return RouteInformation(uri: Uri(path: '/404'));
     }
 
     // Find the route config matching the name
     final config = routeMap.firstWhere(
-      (rc) => rc.name == configuration.routeName,
+      (rc) => rc.name == configuration.name,
       orElse: () {
         // This should ideally not happen if NavigationState is valid
         debugPrint(
-          "Error: No route config found for routeName '${configuration.routeName}'",
+          "Error: No route config found for routeName '${configuration.name}'",
         );
         // Return a RouteConfig representing 404 to construct the URI
-        return AppRoute(
-          name: 'unknown',
-          path: '/404',
-          builder: (_) => NavigationState.unknown(),
-        );
+        return AppRoute.unknown();
       },
     );
 
@@ -85,7 +80,7 @@ class AppRouteInformationParser
         // --- How to get parameter values from NavigationState? ---
         // This part needs a strategy. For now, we only have selectedBookId.
         if (paramName == 'id' && config.name == 'bookDetails') {
-          value = configuration.selectedBookId;
+          value = configuration.params?['id'];
         }
         // Add more cases here if other routes have parameters stored
         // in NavigationState (e.g., settings/:section, profile/:userId)

@@ -28,7 +28,7 @@ class _MyAppState extends State<MyApp> {
     super.initState();
     _routeInformationParser = AppRouteInformationParser();
     _routerDelegate = AppRouterDelegate(
-      locator.get<RouterService>().navigationState,
+      locator.get<RouterService>().currentRoute,
     );
   }
 

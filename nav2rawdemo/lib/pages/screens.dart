@@ -83,7 +83,7 @@ class _BooksScreenState extends State<BooksScreen> {
               // Update state using typed constant
               widget.routerService.navigateTo(
                 RouteNames.bookDetails, // Use typed constant
-                selectedBookId: bookId,
+                params: {'id': bookId},
               );
             },
           );
