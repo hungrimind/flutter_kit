@@ -77,68 +77,19 @@ class AppRouterDelegate extends RouterDelegate<AppRoute> with ChangeNotifier {
         break;
     }
 
+    print('pages: ${pages.map((page) => page.key)}');
     return Navigator(
       key: navigatorKey, // Navigator still needs a key
       pages: List.of(pages), // Use a copy to ensure change detection
       onDidRemovePage: (Page page) {
-        if (page is MaterialPage) {
-          final pageKey = page.key;
-          final currentState = _navigationStateNotifier.value;
-
-          if (pageKey == const ValueKey('BooksPage') &&
-              currentState.name == RouteNames.books) {
-            _navigationStateNotifier.value = currentState.copyWith(
-              name: RouteNames.home,
-            );
-          } else if (pageKey is ValueKey &&
-              pageKey.value.toString().startsWith('BookDetailsPage_') &&
-              currentState.name == RouteNames.bookDetails) {
-            _navigationStateNotifier.value = currentState.copyWith(
-              name: RouteNames.books,
-              params: null,
-            );
-          } else if (pageKey == const ValueKey('SettingsPage') &&
-              currentState.name == RouteNames.settings) {
-            _navigationStateNotifier.value = currentState.copyWith(
-              name: RouteNames.home,
-            );
-          } else if (pageKey == const ValueKey('UnknownPage') &&
-              currentState.name == RouteNames.unknown) {
-            _navigationStateNotifier.value = currentState.copyWith(
-              name: RouteNames.home,
-            );
-          }
-        }
+        routerService.navigateBack();
       },
     );
   }
 
   @override
   Future<bool> popRoute() {
-    final currentState = _navigationStateNotifier.value;
-
-    // Determine the previous state based on the current state
-    AppRoute? previousState;
-
-    if (currentState.name == RouteNames.bookDetails) {
-      // Popping BookDetails goes back to Books list
-      previousState = currentState.copyWith(
-        name: RouteNames.books,
-        params: null,
-      );
-    } else if (currentState.name == RouteNames.books ||
-        currentState.name == RouteNames.settings) {
-      // Popping Books or Settings goes back to Home
-      previousState = currentState.copyWith(name: RouteNames.home);
-    } else if (currentState.name == RouteNames.unknown) {
-      // Popping Unknown page goes back to Home
-      previousState = currentState.copyWith(name: RouteNames.home);
-    }
-    // If currentRoute is Home, we don't define a previous state within the app.
-
-    // We are on the home page or couldn't determine a previous state.
-    // Return false to allow the default system behavior (e.g., exit app on mobile).
-    return Future.value(false);
+    return SynchronousFuture(false);
   }
 
   // setNewRoutePath remains the same

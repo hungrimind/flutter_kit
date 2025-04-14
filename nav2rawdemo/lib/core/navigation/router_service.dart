@@ -22,17 +22,18 @@ class RouterService {
         )
         .copyWith(params: params);
 
-    print('currentRoute: ${_currentRoute.value.params}');
     _navigationStack.value = [..._navigationStack.value, _currentRoute.value];
+    print('currentStack: ${_navigationStack.value.map((route) => route.name)}');
   }
 
-  /// Navigate back
   void navigateBack() {
+    List<AppRoute> temps = [];
     if (_navigationStack.value.length > 1) {
-      _navigationStack.value = _navigationStack.value.take(1).toList();
+      temps = _navigationStack.value.sublist(_navigationStack.value.length - 2);
     }
+    print('temps: ${temps.map((route) => route.name)}');
+    _navigationStack.value = temps;
     _currentRoute.value = _navigationStack.value.last;
-
-    print('currentRoute: ${_currentRoute.value.params}');
+    print('currentStack: ${_navigationStack.value.map((route) => route.name)}');
   }
 }
