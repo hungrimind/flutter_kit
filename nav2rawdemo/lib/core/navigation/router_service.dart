@@ -15,10 +15,12 @@ class RouterService {
   get navigationStack => _navigationStack;
 
   void navigateTo(String routeName, {Map<String, String>? params}) {
-    _currentRoute.value = routeMap.firstWhere(
-      (route) => route.name == routeName,
-      orElse: () => AppRoute.unknown(),
-    );
+    _currentRoute.value = routeMap
+        .firstWhere(
+          (route) => route.name == routeName,
+          orElse: () => AppRoute.unknown(),
+        )
+        .copyWith(params: params);
     _navigationStack.value = [..._navigationStack.value, _currentRoute.value];
   }
 
@@ -28,11 +30,5 @@ class RouterService {
       _navigationStack.value = _navigationStack.value.take(1).toList();
     }
     _currentRoute.value = _navigationStack.value.last;
-  }
-
-  /// Clear navigation stack
-  void clearNavigation() {
-    _currentRoute.value = AppRoute.initial();
-    _navigationStack.value = [AppRoute.initial()];
   }
 }
