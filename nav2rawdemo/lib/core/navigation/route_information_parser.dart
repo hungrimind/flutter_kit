@@ -36,7 +36,7 @@ class AppRouteInformationParser extends RouteInformationParser<AppRoute> {
 
       if (match) {
         try {
-          return config;
+          return config.copyWith(params: params);
         } catch (e, stackTrace) {
           debugPrint(
             "Error executing builder for route '${config.name}': $e\n$stackTrace",
@@ -76,12 +76,14 @@ class AppRouteInformationParser extends RouteInformationParser<AppRoute> {
     for (final segment in patternSegments) {
       if (segment.startsWith(':')) {
         final paramName = segment.substring(1);
-        String? value;
+        // Retrieve the parameter value from the configuration's params map
+        final String? value = configuration.params?[paramName];
+
         // --- How to get parameter values from NavigationState? ---
         // This part needs a strategy. For now, we only have selectedBookId.
-        if (paramName == 'id' && config.name == 'bookDetails') {
-          value = configuration.params?['id'];
-        }
+        // if (paramName == 'id' && config.name == 'bookDetails') {
+        //   value = configuration.params?['id'];
+        // }
         // Add more cases here if other routes have parameters stored
         // in NavigationState (e.g., settings/:section, profile/:userId)
         // ---------------------------------------------------------

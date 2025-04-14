@@ -21,6 +21,8 @@ class RouterService {
           orElse: () => AppRoute.unknown(),
         )
         .copyWith(params: params);
+
+    print('currentRoute: ${_currentRoute.value.params}');
     _navigationStack.value = [..._navigationStack.value, _currentRoute.value];
   }
 
@@ -30,5 +32,7 @@ class RouterService {
       _navigationStack.value = _navigationStack.value.take(1).toList();
     }
     _currentRoute.value = _navigationStack.value.last;
+
+    print('currentRoute: ${_currentRoute.value.params}');
   }
 }
