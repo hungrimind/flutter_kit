@@ -1,28 +1,106 @@
-import 'package:flutter/foundation.dart'; // For ValueNotifier
 import 'package:flutter/material.dart';
-import 'package:nav2demo/core/config/route_config.dart'; // Added for debugPrint
+import 'package:nav2demo/core/navigation/navigation_utils.dart';
 
-// Define a class for route configuration
-class AppRoute {
-  final String
-  name; // Unique identifier for the route (e.g., 'home', 'bookDetails')
-  final String path; // URL path pattern (e.g., '/books/:id')
-  final Map<String, String>? params; // Parameters for the route
+class RouteState {
+  RouteState({required this.label, required this.path, required this.builder});
 
-  const AppRoute({required this.name, required this.path, this.params});
+  final String? label;
+  final String path;
+  final Widget Function(
+    ValueKey<String>? key,
+    String? name,
+    DefaultRoute routeData,
+  )?
+  builder;
+}
 
-  const AppRoute.initial() : name = RouteNames.home, path = '/', params = null;
+class DefaultRoute extends RouteSettings {
+  final String path;
+  final String label;
+  final Map<String, String> queryParameters;
+  final Map<String, String> pathParameters;
+  final Map<String, dynamic>? metadata;
+  final String? group;
 
-  const AppRoute.unknown()
-    : name = RouteNames.unknown,
-      path = '/404',
-      params = null;
+  Uri get uri => Uri(path: path, queryParameters: queryParameters);
 
-  AppRoute copyWith({String? name, String? path, Map<String, String>? params}) {
-    return AppRoute(
-      name: name ?? this.name,
-      path: path ?? this.path,
-      params: params ?? this.params,
+  DefaultRoute({
+    required this.path,
+    this.label = '',
+    this.queryParameters = const {},
+    this.pathParameters = const {},
+    this.metadata = const {},
+    this.group,
+    super.arguments,
+  }) : super(
+         name: NavigationUtils.canonicalUri(
+           Uri(path: path, queryParameters: queryParameters).toString(),
+         ),
+       );
+
+  factory DefaultRoute.fromUrl(
+    String url, {
+    String label = '',
+    String? group,
+    Map<String, dynamic>? metadata,
+  }) {
+    Uri uri = Uri.parse(url);
+    return DefaultRoute(
+      path: uri.path,
+      queryParameters: uri.queryParameters,
+      label: label,
+      group: group,
+      metadata: metadata,
     );
   }
+
+  factory DefaultRoute.fromUri(
+    Uri uri, {
+    String label = '',
+    String? group,
+    Map<String, dynamic>? metadata,
+  }) {
+    return DefaultRoute(
+      path: uri.path,
+      queryParameters: uri.queryParameters,
+      label: label,
+      group: group,
+      metadata: metadata,
+    );
+  }
+
+  DefaultRoute copyWith({
+    String? label,
+    String? path,
+    Map<String, String>? queryParameters,
+    Map<String, String>? pathParameters,
+    Map<String, dynamic>? metadata,
+    String? group,
+    Object? arguments,
+  }) {
+    return DefaultRoute(
+      label: label ?? this.label,
+      path: path ?? this.path,
+      queryParameters: queryParameters ?? this.queryParameters,
+      pathParameters: pathParameters ?? this.pathParameters,
+      metadata: metadata ?? this.metadata,
+      group: group ?? this.group,
+      arguments: arguments ?? this.arguments,
+    );
+  }
+
+  @override
+  bool operator ==(Object other) =>
+      other is DefaultRoute &&
+      ((other.label.isNotEmpty && other.label == label) ||
+          (other.path == path && other.path.isNotEmpty && path.isNotEmpty));
+
+  @override
+  int get hashCode => label.hashCode * path.hashCode;
+
+  @override
+  String toString() =>
+      'Route(label: $label, path: $path, name: $name, queryParameters: $queryParameters, metadata: $metadata, group: $group, arguments: $arguments)';
+
+  operator [](String key) => queryParameters[key];
 }

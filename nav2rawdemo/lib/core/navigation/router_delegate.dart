@@ -4,30 +4,33 @@ import 'package:nav2demo/core/locator.dart';
 import 'package:nav2demo/core/navigation/navigation_state.dart';
 import 'package:nav2demo/core/config/route_config.dart';
 import 'package:nav2demo/core/navigation/router_service.dart';
-import 'package:nav2demo/pages/screens.dart';
 
-class AppRouterDelegate extends RouterDelegate<AppRoute> with ChangeNotifier {
+class AppRouterDelegate extends RouterDelegate<DefaultRoute> with ChangeNotifier {
   final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
   AppRouterDelegate() {
     routerService.navigationStack.addListener(notifyListeners);
   }
 
-  var routerService = locator.get<RouterService>();
+  final routerService = locator.get<RouterService>();
 
   List<Page<dynamic>> createPages() {
     List<Page<dynamic>> pages = [];
-    for (var page in locator.get<RouterService>().navigationStack.value) {
-      // Use the helper function to get the widget
-      Widget child = getWidgetForRoute(page);
+    for (var page in routerService.navigationStack.value) {
 
       pages.add(
-        MaterialPage(
-          key: ValueKey(
-            'Page_${page.name}_${page.params?['id'] ?? ''}',
-          ), // Ensure unique key for details pages
-          child: child,
-        ),
+        MaterialPage(child: page.builder.call(
+          ValueKey<String>(page.label ?? '')
+          page.label,
+          page,
+        )!),
+
+        // MaterialPage(
+        //   key: ValueKey(
+        //     'Page_${page.label}_${page.?['id'] ?? ''}',
+        //   ), // Ensure unique key for details pages
+        //   child: page.builder,
+        // ),
       );
     }
     return pages;
@@ -80,22 +83,8 @@ class AppRouterDelegate extends RouterDelegate<AppRoute> with ChangeNotifier {
   // Called by the Router when the platform reports a new route information.
   // This can happen from browser back/forward, typing URL, or platform calls.
   @override
-  Future<void> setNewRoutePath(AppRoute configuration) async {
-    final currentStack = routerService.navigationStack.value;
-
-    // Check if this looks like a browser 'back' navigation
-    if (currentStack.length > 1 &&
-        currentStack[currentStack.length - 2].name == configuration.name) {
-      print('setNewRoutePath detected back navigation, popping stack.');
-      routerService.navigateBack();
-      routerService.justPopped = true;
-    } else {
-      // Otherwise, treat as a new navigation or forward navigation.
-      // Rebuild the stack based on the configuration.
-      print('setNewRoutePath rebuilding stack for new/forward navigation.');
-      routerService.setPathStack(configuration);
-    }
-    return SynchronousFuture(null);
+  Future<void> setNewRoutePath(DefaultRoute configuration) async {
+    routerService.navigateTo(configuration.label);
   }
 
   // dispose remains the same

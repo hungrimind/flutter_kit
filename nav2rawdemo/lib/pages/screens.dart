@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:nav2demo/core/locator.dart';
-import 'package:nav2demo/core/navigation/navigation_state.dart';
-import 'package:nav2demo/core/config/route_config.dart';
 import 'package:nav2demo/core/navigation/router_service.dart';
 // Removed incorrect import for route_names.dart
 // Import NavigationState, AppRoute, navigationStateNotifier
@@ -9,6 +7,7 @@ import 'package:nav2demo/core/navigation/router_service.dart';
 // --- Example Screens ---
 
 class HomeScreen extends StatelessWidget {
+  static const String home = 'home';
   const HomeScreen({super.key});
 
   @override
@@ -22,7 +21,7 @@ class HomeScreen extends StatelessWidget {
             ElevatedButton(
               onPressed: () {
                 // Update state using typed constant
-                locator.get<RouterService>().navigateTo(RouteNames.books);
+                locator.get<RouterService>().navigateTo(BooksScreen.books);
               },
               child: const Text('Go to Books'),
             ),
@@ -30,7 +29,7 @@ class HomeScreen extends StatelessWidget {
             ElevatedButton(
               onPressed: () {
                 // Update state using typed constant
-                locator.get<RouterService>().navigateTo(RouteNames.settings);
+                locator.get<RouterService>().navigateTo(SettingsScreen.settings);
               },
               child: const Text('Go to Settings'),
             ),
@@ -51,6 +50,7 @@ class HomeScreen extends StatelessWidget {
 }
 
 class BooksScreen extends StatefulWidget {
+  static const String books = 'books';
   const BooksScreen({super.key});
 
   @override
@@ -81,7 +81,7 @@ class _BooksScreenState extends State<BooksScreen> {
             onTap: () {
               // Update state using typed constant
               locator.get<RouterService>().navigateTo(
-                RouteNames.bookDetails, // Use typed constant
+                BookDetailsScreen.bookDetails, // Use typed constant
                 params: {'id': bookId},
               );
             },
@@ -97,6 +97,7 @@ class _BooksScreenState extends State<BooksScreen> {
 }
 
 class BookDetailsScreen extends StatelessWidget {
+  static const String bookDetails = 'bookDetails';
   final String bookId;
   const BookDetailsScreen({super.key, required this.bookId});
 
@@ -110,6 +111,7 @@ class BookDetailsScreen extends StatelessWidget {
 }
 
 class SettingsScreen extends StatelessWidget {
+  static const String settings = 'settings';
   const SettingsScreen({super.key});
 
   @override
@@ -122,6 +124,7 @@ class SettingsScreen extends StatelessWidget {
 }
 
 class UnknownScreen extends StatelessWidget {
+  static const String unknown = 'unknown';
   const UnknownScreen({super.key});
 
   @override
