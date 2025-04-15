@@ -19,18 +19,19 @@ class AppRouterDelegate extends RouterDelegate<MyRouteSettings>
     List<Page<dynamic>> pages = [];
     for (MyRouteSettings page in routerService.navigationStack.value) {
       Widget child = routes
-          .firstWhere((route) => route.label == page.label)
-          .builder!(ValueKey(page.label), page.label, page);
+          .firstWhere((route) => route.path == page.path)
+          .builder!(ValueKey(page.path), page.path, page);
       pages.add(
         MaterialPage(
           key: ValueKey(
-            'Page_${page.label}_${page.queryParameters['id'] ?? ''}',
+            'Page_${page.path}',
           ), // Ensure unique key for details pages
           child: child,
           canPop: routerService.canPop(page),
         ),
       );
     }
+    print("Page Keys: ${pages.map((page) => page.key)}");
     return pages;
   }
 
@@ -57,6 +58,7 @@ class AppRouterDelegate extends RouterDelegate<MyRouteSettings>
   @override
   MyRouteSettings? get currentConfiguration {
     // If the stack is empty, return null or a default configuration
+    print("CURRENT CONFIGURATION: ${routerService.navigationStack.value}");
     if (routerService.navigationStack.value.isEmpty) {
       return null; // Or AppRoute(RouteNames.home) if you always want a default
     }
@@ -68,6 +70,7 @@ class AppRouterDelegate extends RouterDelegate<MyRouteSettings>
   // This can happen from browser back/forward, typing URL, or platform calls.
   @override
   Future<void> setNewRoutePath(MyRouteSettings configuration) async {
+    print("SETTING NEW ROUTE PATH: $configuration");
     routerService.setPathStack(configuration);
   }
 

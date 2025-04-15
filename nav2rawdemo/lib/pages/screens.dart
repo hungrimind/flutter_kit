@@ -21,7 +21,7 @@ class HomeScreen extends StatelessWidget {
             ElevatedButton(
               onPressed: () {
                 // Update state using typed constant
-                locator.get<RouterService>().navigateTo(BooksScreen.books);
+                locator.get<RouterService>().navigateTo("/books");
               },
               child: const Text('Go to Books'),
             ),
@@ -29,7 +29,7 @@ class HomeScreen extends StatelessWidget {
             ElevatedButton(
               onPressed: () {
                 // Update state using typed constant
-                locator.get<RouterService>().navigateTo(SettingsScreen.settings);
+                locator.get<RouterService>().navigateTo("/settings");
               },
               child: const Text('Go to Settings'),
             ),
@@ -80,10 +80,7 @@ class _BooksScreenState extends State<BooksScreen> {
             title: Text('Book $bookId'),
             onTap: () {
               // Update state using typed constant
-              locator.get<RouterService>().navigateTo(
-                BookDetailsScreen.bookDetails, // Use typed constant
-                queryParams: {'id': bookId},
-              );
+              locator.get<RouterService>().navigateTo("/books/$bookId");
             },
           );
         },

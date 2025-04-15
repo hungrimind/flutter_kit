@@ -8,7 +8,9 @@ class AppRouteInformationParser
     RouteInformation routeInformation,
   ) async {
     final uri = routeInformation.uri;
+    print("PARSED ROUTE URI: $uri");
     final route = MyRouteSettings.fromUri(uri);
+    print("PARSED ROUTE: $route");
     return route;
   }
 
