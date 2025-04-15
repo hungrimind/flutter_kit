@@ -9,12 +9,12 @@ class RouteState {
   final Widget Function(
     ValueKey<String>? key,
     String? name,
-    DefaultRoute routeData,
+    MyRouteSettings routeData,
   )?
   builder;
 }
 
-class DefaultRoute extends RouteSettings {
+class MyRouteSettings extends RouteSettings {
   final String path;
   final String label;
   final Map<String, String> queryParameters;
@@ -24,7 +24,7 @@ class DefaultRoute extends RouteSettings {
 
   Uri get uri => Uri(path: path, queryParameters: queryParameters);
 
-  DefaultRoute({
+  MyRouteSettings({
     required this.path,
     this.label = '',
     this.queryParameters = const {},
@@ -38,14 +38,14 @@ class DefaultRoute extends RouteSettings {
          ),
        );
 
-  factory DefaultRoute.fromUrl(
+  factory MyRouteSettings.fromUrl(
     String url, {
     String label = '',
     String? group,
     Map<String, dynamic>? metadata,
   }) {
     Uri uri = Uri.parse(url);
-    return DefaultRoute(
+    return MyRouteSettings(
       path: uri.path,
       queryParameters: uri.queryParameters,
       label: label,
@@ -54,13 +54,13 @@ class DefaultRoute extends RouteSettings {
     );
   }
 
-  factory DefaultRoute.fromUri(
+  factory MyRouteSettings.fromUri(
     Uri uri, {
     String label = '',
     String? group,
     Map<String, dynamic>? metadata,
   }) {
-    return DefaultRoute(
+    return MyRouteSettings(
       path: uri.path,
       queryParameters: uri.queryParameters,
       label: label,
@@ -69,7 +69,7 @@ class DefaultRoute extends RouteSettings {
     );
   }
 
-  DefaultRoute copyWith({
+  MyRouteSettings copyWith({
     String? label,
     String? path,
     Map<String, String>? queryParameters,
@@ -78,7 +78,7 @@ class DefaultRoute extends RouteSettings {
     String? group,
     Object? arguments,
   }) {
-    return DefaultRoute(
+    return MyRouteSettings(
       label: label ?? this.label,
       path: path ?? this.path,
       queryParameters: queryParameters ?? this.queryParameters,
@@ -91,7 +91,7 @@ class DefaultRoute extends RouteSettings {
 
   @override
   bool operator ==(Object other) =>
-      other is DefaultRoute &&
+      other is MyRouteSettings &&
       ((other.label.isNotEmpty && other.label == label) ||
           (other.path == path && other.path.isNotEmpty && path.isNotEmpty));
 

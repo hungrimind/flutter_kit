@@ -8,27 +8,28 @@ import 'package:nav2demo/pages/screens.dart';
 
 /// Service responsible for managing navigation state using MVVM pattern
 class RouterService {
-  final ValueNotifier<List<DefaultRoute>> _navigationStack =
-      ValueNotifier<List<DefaultRoute>>([
-    DefaultRoute(
-      label: HomeScreen.home,
-      path: '/',
-      pathParameters: {},
-      queryParameters: {},
-    ),
-  ]);
+  final ValueNotifier<List<MyRouteSettings>> _navigationStack =
+      ValueNotifier<List<MyRouteSettings>>([
+        MyRouteSettings(
+          label: HomeScreen.home,
+          path: '/',
+          pathParameters: {},
+          queryParameters: {},
+        ),
+      ]);
 
-  ValueNotifier<List<DefaultRoute>> get navigationStack => _navigationStack;
+  ValueNotifier<List<MyRouteSettings>> get navigationStack => _navigationStack;
 
   var justPopped = false;
 
   void navigateTo(String routeName, {Map<String, String>? queryParams}) {
     // Handle special case for home route
     if (routeName == 'home' || routeName == '/') {
-      if (_navigationStack.value.isEmpty || 
-          (_navigationStack.value.length == 1 && _navigationStack.value.first.path == '/')) {
+      if (_navigationStack.value.isEmpty ||
+          (_navigationStack.value.length == 1 &&
+              _navigationStack.value.first.path == '/')) {
         _navigationStack.value = [
-          DefaultRoute(
+          MyRouteSettings(
             label: HomeScreen.home,
             path: '/',
             pathParameters: {},
@@ -64,17 +65,14 @@ class RouterService {
       path = routeState.path;
     }
 
-    final defaultRoute = DefaultRoute(
+    final defaultRoute = MyRouteSettings(
       label: routeState.label ?? '',
       path: path,
       pathParameters: routeState.path.contains(':') ? queryParams ?? {} : {},
       queryParameters: routeState.path.contains(':') ? {} : queryParams ?? {},
     );
 
-    _navigationStack.value = [
-      ..._navigationStack.value,
-      defaultRoute,
-    ];
+    _navigationStack.value = [..._navigationStack.value, defaultRoute];
 
     print(
       'currentStack: ${_navigationStack.value.map((route) => route.label)}',
@@ -95,7 +93,7 @@ class RouterService {
 
   /// Rebuilds the navigation stack to end at the specified route.
   /// This is typically used by setNewRoutePath to handle browser history changes.
-  void setPathStack(DefaultRoute configuration) {
+  void setPathStack(MyRouteSettings configuration) {
     // Find the route state for the given path
     RouteState? routeState = routes.firstWhere(
       (r) => r.path == configuration.path,
@@ -103,7 +101,7 @@ class RouterService {
     );
 
     // Create a new route with the correct label
-    final newRoute = DefaultRoute(
+    final newRoute = MyRouteSettings(
       label: routeState.label ?? '',
       path: configuration.path,
       pathParameters: configuration.pathParameters,
@@ -112,7 +110,8 @@ class RouterService {
 
     // For the home route, we just want a single item in the stack
     if (configuration.path == '/') {
-      if (_navigationStack.value.length == 1 && _navigationStack.value.first.path == '/') {
+      if (_navigationStack.value.length == 1 &&
+          _navigationStack.value.first.path == '/') {
         return; // Already at home, no need to update
       }
       _navigationStack.value = [newRoute];
@@ -120,19 +119,19 @@ class RouterService {
     }
 
     // Check if we're already at this route
-    if (_navigationStack.value.isNotEmpty && 
+    if (_navigationStack.value.isNotEmpty &&
         _navigationStack.value.last.path == configuration.path) {
       return;
     }
 
     // For other routes, ensure we have the home route and the target route
-    if (_navigationStack.value.length == 2 && 
+    if (_navigationStack.value.length == 2 &&
         _navigationStack.value.last.path == configuration.path) {
       return; // Already at the correct state
     }
 
     _navigationStack.value = [
-      DefaultRoute(
+      MyRouteSettings(
         label: HomeScreen.home,
         path: '/',
         pathParameters: {},
@@ -142,7 +141,13 @@ class RouterService {
     ];
   }
 
-  bool canPop() {
-    return _navigationStack.value.length > 1;
+  void removePage(MyRouteSettings route) {
+    _navigationStack.value =
+        _navigationStack.value.where((r) => r != route).toList();
+  }
+
+  bool canPop(MyRouteSettings route) {
+    return _navigationStack.value.length > 1 &&
+        _navigationStack.value.last.path == route.path;
   }
 }
