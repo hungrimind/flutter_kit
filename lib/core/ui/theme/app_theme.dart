@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import 'neutral_colors.dart';
 
@@ -26,6 +27,13 @@ class AppTheme {
         elevation: 0,
         backgroundColor: Colors.transparent,
         foregroundColor: neutralColors.neutral950,
+        systemOverlayStyle: SystemUiOverlayStyle(
+          statusBarColor: Colors.transparent,
+          // For iOS: dark icons in light mode, light icons in dark mode
+          statusBarBrightness: isDark ? Brightness.dark : Brightness.light,
+          // For Android: dark icons in light mode, light icons in dark mode
+          statusBarIconBrightness: isDark ? Brightness.light : Brightness.dark,
+        ),
       ),
       dividerTheme: DividerThemeData(
         color: neutralColors.neutral200,
