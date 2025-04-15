@@ -116,12 +116,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Retry'**
   String get retry;
-
-  /// A welcome message to the user
-  ///
-  /// In en, this message translates to:
-  /// **'Welcome'**
-  String get welcome;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
