@@ -15,19 +15,36 @@ class AppRouterDelegate extends RouterDelegate<MyRouteSettings>
 
   final routerService = locator.get<RouterService>();
 
+  bool _matchRoute(String pattern, String path) {
+    final patternSegments = pattern.split('/');
+    final pathSegments = path.split('/');
+
+    if (patternSegments.length != pathSegments.length) return false;
+
+    for (var i = 0; i < patternSegments.length; i++) {
+      if (patternSegments[i].startsWith(':')) continue;
+      if (patternSegments[i] != pathSegments[i]) return false;
+    }
+
+    return true;
+  }
+
   List<Page<dynamic>> createPages() {
     List<Page<dynamic>> pages = [];
     for (MyRouteSettings page in routerService.navigationStack.value) {
       print('FIRSTWHERE---');
       Widget child = routes
-          .firstWhere((route) => route.path == page.path)
+          .firstWhere(
+            (route) => _matchRoute(route.path, page.path),
+            orElse: () => routes.firstWhere((route) => route.path == '/unknown'),
+          )
           .builder!(ValueKey(page.path), page.path, page);
       print('AFTER FIRSTWHERE---');
       pages.add(
         MaterialPage(
           key: ValueKey(
             'Page_${page.path}',
-          ), // Ensure unique key for details pages
+          ),
           child: child,
           canPop: routerService.canPop(page),
         ),
