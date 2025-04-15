@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_kit/core/router/router.dart';
 import 'package:flutter_kit/core/ui/theme/app_theme.dart';
 import 'package:flutter_kit/core/widgets/toast_overlay.dart';
+import 'package:flutter_kit/l10n/app_localizations.dart';
 import 'package:flutter_kit/l10n/translate_extension.dart';
 import 'package:flutter_kit/startup/startup_view_model.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class StartupView extends StatefulWidget {
   const StartupView({super.key});
