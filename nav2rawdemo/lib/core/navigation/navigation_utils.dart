@@ -1,3 +1,5 @@
+import 'package:nav2demo/core/navigation/navigation_state.dart';
+
 final RegExp _parameterRegExp = RegExp(r':(\w+)(\((?:\\.|[^\\()])+\))?');
 
 class NavigationUtils {
@@ -120,4 +122,97 @@ class NavigationUtils {
 
     return canon;
   }
+
+  /// Returns the first [NavigationData] that matches with [name].
+  ///
+  /// The method iterates through [routes] to find a [NavigationData] where the [name]
+  /// matches with [NavigationData.label] or [NavigationData.url] or [NavigationData.path].
+  /// It can match with either exact URL or path or with path pattern.
+  ///
+  /// If [name] does not start with '/', the method assumes it's a label and tries to find a match in [routes].
+  ///
+  /// If [name] starts with '/', the method tries exact URL match first. If it doesn't find any, it tries
+  /// exact path match, then it tries path pattern match.
+  ///
+  /// The method canonicalizes the URL path before comparing it with [NavigationData.url] and [NavigationData.path].
+  ///
+  /// Returns the first matching [NavigationData], or null if no match is found.
+  static RouteState? getNavigationDataFromName(
+      List<RouteState> routes, String name) {
+    if (name.isEmpty) return null;
+
+    RouteState? navigationData;
+    if (name.startsWith('/') == false) {
+      try {
+        navigationData = routes.firstWhere((element) =>
+            ((element.label?.isNotEmpty ?? false) && element.label == name));
+      } on StateError {
+        // ignore: empty_catches
+      }
+    } else {
+      String path = canonicalUri(Uri.tryParse(name)?.path ?? '');
+
+      // Exact URL match routing.
+      try {
+        navigationData = routes.firstWhere((element) => (element.path == name));
+      } on StateError {
+        // ignore: empty_catches
+      }
+
+      // Exact path match routing.
+      if (navigationData == null) {
+        try {
+          navigationData =
+              routes.firstWhere((element) => (element.path == path));
+        } on StateError {
+          // ignore: empty_catches
+        }
+      }
+
+      // Path pattern matching.
+      if (navigationData == null) {
+        try {
+          navigationData = routes.firstWhere((element) {
+            Map<String, String> pathParameters =
+                extractPathParametersWithPattern(path, element.path);
+            return pathParameters.isNotEmpty;
+          });
+        } on StateError {
+          // ignore: empty_catches
+        }
+      }
+    }
+
+    return navigationData;
+  }
+
+/// Reconstructs the full path from a [pattern] and path parameters.
+///
+/// This is useful for restoring the original path from a [RegExpMatch].
+///
+/// For example, A path matched a [RegExp] returned from [patternToRegExp] and
+/// produced a [RegExpMatch]. To reconstruct the path from the match, one
+/// can follow these steps:
+///
+/// 1. Get the `pathParameters` by calling [extractPathParameters] with the
+///    [RegExpMatch] and the parameters used for generating the [RegExp].
+/// 2. Call [patternToPath] with the `pathParameters` from the first step and
+///    the original `pattern` used for generating the [RegExp].
+static String patternToPath(String pattern, Map<String, String> pathParameters) {
+  final StringBuffer buffer = StringBuffer();
+  int start = 0;
+  for (final RegExpMatch match in _parameterRegExp.allMatches(pattern)) {
+    if (match.start > start) {
+      buffer.write(pattern.substring(start, match.start));
+    }
+    final String name = match[1]!;
+    buffer.write(pathParameters[name] ?? '');
+    start = match.end;
+  }
+
+  if (start < pattern.length) {
+    buffer.write(pattern.substring(start));
+  }
+  return buffer.toString();
+}
 }

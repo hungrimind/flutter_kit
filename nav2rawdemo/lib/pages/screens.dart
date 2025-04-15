@@ -82,7 +82,7 @@ class _BooksScreenState extends State<BooksScreen> {
               // Update state using typed constant
               locator.get<RouterService>().navigateTo(
                 BookDetailsScreen.bookDetails, // Use typed constant
-                params: {'id': bookId},
+                queryParams: {'id': bookId},
               );
             },
           );

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
+import 'package:nav2demo/core/config/route_config.dart';
 import 'package:nav2demo/core/locator.dart';
 import 'package:nav2demo/core/navigation/navigation_state.dart';
-import 'package:nav2demo/core/config/route_config.dart';
 import 'package:nav2demo/core/navigation/router_service.dart';
 
 class AppRouterDelegate extends RouterDelegate<DefaultRoute> with ChangeNotifier {
@@ -17,20 +17,17 @@ class AppRouterDelegate extends RouterDelegate<DefaultRoute> with ChangeNotifier
   List<Page<dynamic>> createPages() {
     List<Page<dynamic>> pages = [];
     for (var page in routerService.navigationStack.value) {
-
       pages.add(
-        MaterialPage(child: page.builder.call(
-          ValueKey<String>(page.label ?? '')
-          page.label,
-          page,
-        )!),
-
-        // MaterialPage(
-        //   key: ValueKey(
-        //     'Page_${page.label}_${page.?['id'] ?? ''}',
-        //   ), // Ensure unique key for details pages
-        //   child: page.builder,
-        // ),
+        MaterialPage(
+          key: ValueKey(
+            'Page_${page.label}_${page.queryParameters['id'] ?? ''}',
+          ), // Ensure unique key for details pages
+          child: routes.firstWhere((route) => route.label == page.label).builder!(
+            ValueKey(page.label),
+            page.label,
+            page,
+          ),
+        ),
       );
     }
     return pages;
@@ -40,16 +37,17 @@ class AppRouterDelegate extends RouterDelegate<DefaultRoute> with ChangeNotifier
   Widget build(BuildContext context) {
     List<Page<dynamic>> pages = createPages();
 
-    print('pages: ${pages.map((page) => page.key)}');
     return Navigator(
-      key: navigatorKey, // Navigator still needs a key
-      pages: List.of(pages), // Use a copy to ensure change detection
-      onDidRemovePage: (Page page) {
-        if (routerService.justPopped) {
-          routerService.justPopped = false;
-        } else {
+      key: navigatorKey,
+      pages: List.of(pages),
+      onPopPage: (route, result) {
+        if (!route.didPop(result)) {
+          return false;
+        }
+        if (routerService.canPop()) {
           routerService.navigateBack();
         }
+        return true;
       },
     );
   }
@@ -71,7 +69,7 @@ class AppRouterDelegate extends RouterDelegate<DefaultRoute> with ChangeNotifier
 
   // Report the current route configuration back to the Router
   @override
-  AppRoute? get currentConfiguration {
+  DefaultRoute? get currentConfiguration {
     // If the stack is empty, return null or a default configuration
     if (routerService.navigationStack.value.isEmpty) {
       return null; // Or AppRoute(RouteNames.home) if you always want a default
@@ -84,7 +82,7 @@ class AppRouterDelegate extends RouterDelegate<DefaultRoute> with ChangeNotifier
   // This can happen from browser back/forward, typing URL, or platform calls.
   @override
   Future<void> setNewRoutePath(DefaultRoute configuration) async {
-    routerService.navigateTo(configuration.label);
+    routerService.setPathStack(configuration);
   }
 
   // dispose remains the same
