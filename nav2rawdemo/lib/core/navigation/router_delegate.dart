@@ -25,7 +25,6 @@ class AppRouterDelegate extends RouterDelegate<AppRoute> with ChangeNotifier {
           child: switch (page.name) {
             RouteNames.home => HomeScreen(),
             RouteNames.books => BooksScreen(),
-            RouteNames.page2 => Page2Screen(),
             RouteNames.settings => SettingsScreen(),
             RouteNames.bookDetails => BookDetailsScreen(
               bookId: page.params?['id'],
