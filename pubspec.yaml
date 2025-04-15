@@ -31,6 +31,11 @@ dependencies:
   flutter:
     sdk: flutter
 
+  # Localization
+  flutter_localizations:
+    sdk: flutter
+  intl: any # This will get the pinned version of intl from flutter_localizations
+
   # Icons
   cupertino_icons: ^1.0.8
 
@@ -61,6 +66,9 @@ dev_dependencies:
 
 # The following section is specific to Flutter packages.
 flutter:
+  # Localization
+  generate: true
+
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.

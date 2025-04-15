@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_kit/core/constants/project_info.dart';
 import 'package:flutter_kit/core/router/router.dart';
 import 'package:flutter_kit/core/ui/theme/app_theme.dart';
 import 'package:flutter_kit/core/widgets/toast_overlay.dart';
+import 'package:flutter_kit/l10n/translate_extension.dart';
 import 'package:flutter_kit/startup/startup_view_model.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class StartupView extends StatefulWidget {
   const StartupView({super.key});
@@ -34,7 +35,9 @@ class _StartupViewState extends State<StartupView> {
       builder: (context, state, _) {
         return MaterialApp.router(
           routerConfig: router,
-          title: ProjectInfo.appName,
+          onGenerateTitle: (context) => context.translate.appName,
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
           debugShowCheckedModeBanner: false,
           theme: AppTheme.buildTheme(Brightness.light),
           darkTheme: AppTheme.buildTheme(Brightness.dark),
@@ -73,13 +76,13 @@ class _StartupErrorView extends StatelessWidget {
               ),
               const SizedBox(height: 16),
               Text(
-                'Oops! Something went wrong',
+                context.translate.errorGeneric,
                 style: Theme.of(context).textTheme.titleLarge,
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 8),
               Text(
-                'We encountered an error while starting the app.',
+                context.translate.errorStartingApp,
                 style: Theme.of(context).textTheme.bodyMedium,
                 textAlign: TextAlign.center,
               ),
@@ -87,7 +90,7 @@ class _StartupErrorView extends StatelessWidget {
               FilledButton.icon(
                 onPressed: onRetry,
                 icon: const Icon(Icons.refresh),
-                label: const Text('Retry'),
+                label: Text(context.translate.retry),
               ),
             ],
           ),

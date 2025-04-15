@@ -1,0 +1,19 @@
+{
+  "@@locale": "en",
+  "appName": "Flutter Kit",
+  "@appName": {
+    "description": "The name of the app"
+  },
+  "errorGeneric": "Oops! Something went wrong",
+  "@errorGeneric": {
+    "description": "The generic error message"
+  },
+  "errorStartingApp": "We encountered an error while starting the app.",
+  "@errorStartingApp": {
+    "description": "The error message when the app fails to start"
+  },
+  "retry": "Retry",
+  "@retry": {
+    "description": "The text for the retry button"
+  }
+}
