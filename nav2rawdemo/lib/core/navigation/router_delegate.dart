@@ -15,6 +15,24 @@ class AppRouterDelegate extends RouterDelegate<AppRoute> with ChangeNotifier {
 
   var routerService = locator.get<RouterService>();
 
+  List<Page<dynamic>> createPages() {
+    List<Page<dynamic>> pages = [];
+    for (var page in locator.get<RouterService>().navigationStack.value) {
+      // Use the helper function to get the widget
+      Widget child = getWidgetForRoute(page);
+
+      pages.add(
+        MaterialPage(
+          key: ValueKey(
+            'Page_${page.name}_${page.params?['id'] ?? ''}',
+          ), // Ensure unique key for details pages
+          child: child,
+        ),
+      );
+    }
+    return pages;
+  }
+
   @override
   Widget build(BuildContext context) {
     List<Page<dynamic>> pages = createPages();

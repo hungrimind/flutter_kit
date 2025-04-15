@@ -20,25 +20,27 @@ final List<AppRoute> routeMap = [
   AppRoute(name: RouteNames.unknown, path: '/unknown'),
 ];
 
-List<Page<dynamic>> createPages() {
-  List<Page<dynamic>> pages = [];
-  for (var page in locator.get<RouterService>().navigationStack.value) {
-    pages.add(
-      MaterialPage(
-        key: ValueKey('Page_${page.name}'),
-        child: switch (page.name) {
-          RouteNames.home => HomeScreen(),
-          RouteNames.books => BooksScreen(),
-          RouteNames.settings => SettingsScreen(),
-          RouteNames.bookDetails => BookDetailsScreen(
-            bookId: page.params?['id'],
-          ),
-          RouteNames.unknown => UnknownScreen(),
-          Object() => throw UnimplementedError(),
-          null => throw UnimplementedError(),
-        },
-      ),
-    );
+// Function to map route configuration to a widget
+Widget getWidgetForRoute(AppRoute page) {
+  switch (page.name) {
+    case RouteNames.home:
+      return HomeScreen();
+    case RouteNames.books:
+      return BooksScreen();
+    case RouteNames.settings:
+      return SettingsScreen();
+    case RouteNames.bookDetails:
+      final bookId = page.params?['id'];
+      if (bookId == null) {
+        // Handle the case where bookId is missing - perhaps show an error or default screen
+        print('Error: Missing bookId for bookDetails route');
+        return UnknownScreen(); // Or a specific error screen
+      }
+      return BookDetailsScreen(
+        bookId: bookId, // Now guaranteed to be non-null
+      );
+    case RouteNames.unknown:
+    default:
+      return UnknownScreen();
   }
-  return pages;
 }
