@@ -24,7 +24,7 @@ class MyRouteSettings extends RouteSettings {
     print("CREATING ROUTE SETTINGS FROM URI: $path");
     return MyRouteSettings(
       path: path,
-      name: uri.pathSegments.last,
+      name: uri.pathSegments.isEmpty ? '' : uri.pathSegments.last,
       arguments: uri.queryParameters,
     );
   }

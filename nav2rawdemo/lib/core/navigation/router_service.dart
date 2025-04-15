@@ -43,6 +43,7 @@ class RouterService {
   /// Rebuilds the navigation stack to end at the specified route.
   /// This is typically used by setNewRoutePath to handle browser history changes.
   void setPathStack(MyRouteSettings configuration) {
+    print('setting path stack: ${configuration.path}');
     // Create a new route with the correct label
     final newRoute = MyRouteSettings(path: configuration.path);
 

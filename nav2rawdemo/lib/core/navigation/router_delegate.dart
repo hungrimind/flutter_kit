@@ -18,9 +18,11 @@ class AppRouterDelegate extends RouterDelegate<MyRouteSettings>
   List<Page<dynamic>> createPages() {
     List<Page<dynamic>> pages = [];
     for (MyRouteSettings page in routerService.navigationStack.value) {
+      print('FIRSTWHERE---');
       Widget child = routes
           .firstWhere((route) => route.path == page.path)
           .builder!(ValueKey(page.path), page.path, page);
+      print('AFTER FIRSTWHERE---');
       pages.add(
         MaterialPage(
           key: ValueKey(

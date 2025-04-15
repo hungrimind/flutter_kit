@@ -17,7 +17,9 @@ class AppRouteInformationParser
   @override
   RouteInformation? restoreRouteInformation(MyRouteSettings configuration) {
     print('restoreRouteInformation: ${configuration.path}');
-    if (configuration.name?.isNotEmpty ?? false) {
+    print('restoreRouteInformation: ${configuration.uri}');
+    print('restoreRouteInformation: ${configuration.arguments}');
+    if (configuration.path.isNotEmpty) {
       return RouteInformation(
         uri: configuration.uri,
         state: configuration.arguments,
