@@ -19,51 +19,23 @@ class AppRouterDelegate extends RouterDelegate<AppRoute> with ChangeNotifier {
     List<Page<dynamic>> pages = [];
 
     for (var page in routerService.navigationStack.value) {
-      switch (page.name) {
-        case RouteNames.home:
-          pages.add(
-            MaterialPage(
-              key: ValueKey('HomePage'),
-              child: HomeScreen(routerService: routerService),
+      pages.add(
+        MaterialPage(
+          key: ValueKey('Page_${page.name}'),
+          child: switch (page.name) {
+            RouteNames.home => HomeScreen(),
+            RouteNames.books => BooksScreen(),
+            RouteNames.page2 => Page2Screen(),
+            RouteNames.settings => SettingsScreen(),
+            RouteNames.bookDetails => BookDetailsScreen(
+              bookId: page.params?['id'],
             ),
-          );
-          break;
-        case RouteNames.books:
-          pages.add(
-            MaterialPage(
-              key: ValueKey('BooksPage'),
-              child: BooksScreen(routerService: routerService),
-            ),
-          );
-          break;
-        case RouteNames.bookDetails:
-          if (page.params != null) {
-            pages.add(
-              MaterialPage(
-                key: ValueKey('BookDetailsPage_${page.params}'),
-                child: BookDetailsScreen(bookId: page.params!['id']!),
-              ),
-            );
-          }
-          break;
-        case RouteNames.settings:
-          pages.add(
-            const MaterialPage(
-              key: ValueKey('SettingsPage'),
-              child: SettingsScreen(),
-            ),
-          );
-          break;
-        case RouteNames.unknown:
-        default:
-          pages.add(
-            const MaterialPage(
-              key: ValueKey('UnknownPage'),
-              child: UnknownScreen(),
-            ),
-          );
-          break;
-      }
+            RouteNames.unknown => UnknownScreen(),
+            Object() => throw UnimplementedError(),
+            null => throw UnimplementedError(),
+          },
+        ),
+      );
     }
     return pages;
   }

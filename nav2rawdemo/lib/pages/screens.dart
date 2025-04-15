@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:nav2demo/core/locator.dart';
 import 'package:nav2demo/core/navigation/navigation_state.dart';
 import 'package:nav2demo/core/config/route_config.dart';
 import 'package:nav2demo/core/navigation/router_service.dart';
@@ -8,8 +9,7 @@ import 'package:nav2demo/core/navigation/router_service.dart';
 // --- Example Screens ---
 
 class HomeScreen extends StatelessWidget {
-  final RouterService routerService;
-  const HomeScreen({super.key, required this.routerService});
+  const HomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +22,7 @@ class HomeScreen extends StatelessWidget {
             ElevatedButton(
               onPressed: () {
                 // Update state using typed constant
-                routerService.navigateTo(RouteNames.books);
+                locator.get<RouterService>().navigateTo(RouteNames.books);
               },
               child: const Text('Go to Books'),
             ),
@@ -30,7 +30,7 @@ class HomeScreen extends StatelessWidget {
             ElevatedButton(
               onPressed: () {
                 // Update state using typed constant
-                routerService.navigateTo(RouteNames.settings);
+                locator.get<RouterService>().navigateTo(RouteNames.settings);
               },
               child: const Text('Go to Settings'),
             ),
@@ -39,7 +39,7 @@ class HomeScreen extends StatelessWidget {
               // Example of navigating to a non-existent route
               onPressed: () {
                 // Keep navigating to an invalid path string for 404 test
-                routerService.navigateTo('/invalid-path');
+                locator.get<RouterService>().navigateTo('/invalid-path');
               },
               child: const Text('Go to Unknown Page (Simulate 404)'),
             ),
@@ -51,8 +51,7 @@ class HomeScreen extends StatelessWidget {
 }
 
 class BooksScreen extends StatefulWidget {
-  final RouterService routerService;
-  const BooksScreen({super.key, required this.routerService});
+  const BooksScreen({super.key});
 
   @override
   State<BooksScreen> createState() => _BooksScreenState();
@@ -81,7 +80,7 @@ class _BooksScreenState extends State<BooksScreen> {
             title: Text('Book $bookId'),
             onTap: () {
               // Update state using typed constant
-              widget.routerService.navigateTo(
+              locator.get<RouterService>().navigateTo(
                 RouteNames.bookDetails, // Use typed constant
                 params: {'id': bookId},
               );
@@ -132,6 +131,18 @@ class UnknownScreen extends StatelessWidget {
       body: const Center(
         child: Text('404 - The requested page could not be found.'),
       ),
+    );
+  }
+}
+
+class Page2Screen extends StatelessWidget {
+  const Page2Screen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Page 2')),
+      body: const Center(child: Text('Page 2')),
     );
   }
 }
