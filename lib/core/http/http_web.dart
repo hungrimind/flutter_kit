@@ -1,4 +1,6 @@
 import 'package:http/http.dart' as http;
-import 'package:http/io_client.dart';
 
-http.Client httpClient() => IOClient();
+/// Creates a basic HTTP client for web platform
+http.Client httpClient() {
+  return http.Client();
+}
