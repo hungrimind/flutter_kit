@@ -1,5 +1,4 @@
-import 'package:fetch_client/fetch_client.dart';
 import 'package:http/http.dart' as http;
+import 'package:http/io_client.dart';
 
-/// Creates a platform-specific HTTP client for web
-http.Client httpClient() => FetchClient(mode: RequestMode.cors);
+http.Client httpClient() => IOClient();
