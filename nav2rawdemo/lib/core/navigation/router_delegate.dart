@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
-import 'package:nav2demo/core/navigation/route_config.dart';
-import 'package:nav2demo/core/navigation/internals/navigation_state.dart' show RouteData, getSegments;
-import 'package:nav2demo/core/navigation/internals/router_service.dart';
+import 'package:nav2demo/core/config/route_config.dart';
+import 'package:nav2demo/core/navigation/navigation_state.dart' show RouteData, getSegments;
+import 'package:nav2demo/core/navigation/router_service.dart';
 
 class AppRouterDelegate extends RouterDelegate<RouteData>
     with ChangeNotifier {
-  final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
-
   AppRouterDelegate({required RouterService routerService}) : _routerService = routerService {
     _routerService.navigationStack.addListener(notifyListeners);
   }
@@ -49,7 +47,7 @@ class AppRouterDelegate extends RouterDelegate<RouteData>
       
       pages.add(
         MaterialPage(
-          key: ValueKey('Page_${routeSettings.path}'),
+          key: ValueKey('Page_${routeSettings.hashCode}'),
           child: child,
           canPop: _routerService.canPop(routeSettings),
         ),
@@ -61,7 +59,6 @@ class AppRouterDelegate extends RouterDelegate<RouteData>
   @override
   Widget build(BuildContext context) {
     return Navigator(
-      // key: navigatorKey,
       pages: createPages(),
       onDidRemovePage: (page) {
         _routerService.pop();

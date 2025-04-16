@@ -1,4 +1,4 @@
-import 'package:nav2demo/core/navigation/internals/navigation_state.dart';
+import 'package:nav2demo/core/navigation/navigation_state.dart';
 import 'package:nav2demo/pages/screens.dart';
 
 /// The routes in your application.

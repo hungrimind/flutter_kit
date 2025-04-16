@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 import 'package:nav2demo/core/locator.dart';
-import 'package:nav2demo/core/navigation/internals/route_information_parser.dart';
-import 'package:nav2demo/core/navigation/internals/router_delegate.dart';
-import 'package:nav2demo/core/navigation/internals/router_service.dart';
+import 'package:nav2demo/core/navigation/route_information_parser.dart';
+import 'package:nav2demo/core/navigation/router_delegate.dart';
+import 'package:nav2demo/core/navigation/router_service.dart';
+import 'package:nav2demo/core/navigation/url_strategy/url_strategy.dart';
+
 // Import your Delegate, Parser, Notifier, and other necessary files
 
 void main() {
   setupLocator();
-  setUrlStrategy(PathUrlStrategy());
+  configureUrlStrategy();
   runApp(const MyApp());
 }
 
