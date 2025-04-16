@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:nav2demo/core/locator.dart';
-import 'package:nav2demo/core/navigation/router_service.dart';
+import 'package:nav2demo/core/navigation/internals/router_service.dart';
 // Removed incorrect import for route_names.dart
 // Import NavigationState, AppRoute, navigationStateNotifier
 
@@ -21,7 +21,7 @@ class HomeScreen extends StatelessWidget {
             ElevatedButton(
               onPressed: () {
                 // Update state using typed constant
-                locator.get<RouterService>().navigateTo("/books");
+                locator.get<RouterService>().push("/books");
               },
               child: const Text('Go to Books'),
             ),
@@ -29,7 +29,7 @@ class HomeScreen extends StatelessWidget {
             ElevatedButton(
               onPressed: () {
                 // Update state using typed constant
-                locator.get<RouterService>().navigateTo("/settings");
+                locator.get<RouterService>().push("/settings");
               },
               child: const Text('Go to Settings'),
             ),
@@ -38,7 +38,7 @@ class HomeScreen extends StatelessWidget {
               // Example of navigating to a non-existent route
               onPressed: () {
                 // Keep navigating to an invalid path string for 404 test
-                locator.get<RouterService>().navigateTo('/invalid-path');
+                locator.get<RouterService>().push('/invalid-path');
               },
               child: const Text('Go to Unknown Page (Simulate 404)'),
             ),
@@ -80,7 +80,7 @@ class _BooksScreenState extends State<BooksScreen> {
             title: Text('Book $bookId'),
             onTap: () {
               // Update state using typed constant
-              locator.get<RouterService>().navigateTo("/books/$bookId");
+              locator.get<RouterService>().push("/books/$bookId");
             },
           );
         },

@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
-import 'package:nav2demo/core/config/route_config.dart';
+import 'package:nav2demo/core/navigation/route_config.dart';
 import 'package:nav2demo/core/locator.dart';
-import 'package:nav2demo/core/navigation/navigation_state.dart';
-import 'package:nav2demo/core/navigation/router_service.dart';
+import 'package:nav2demo/core/navigation/internals/navigation_state.dart' show ResolvedRoute, getSegments;
+import 'package:nav2demo/core/navigation/internals/router_service.dart';
 
-class AppRouterDelegate extends RouterDelegate<MyRouteSettings>
+class AppRouterDelegate extends RouterDelegate<ResolvedRoute>
     with ChangeNotifier {
   final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
@@ -16,8 +16,9 @@ class AppRouterDelegate extends RouterDelegate<MyRouteSettings>
   final routerService = locator.get<RouterService>();
 
   bool _matchRoute(String pattern, String path) {
-    final patternSegments = pattern.split('/');
-    final pathSegments = path.split('/');
+    final pathUri = Uri.parse(path);
+    final pathSegments = getSegments(pathUri.path);
+    final patternSegments = getSegments(pattern);
 
     if (patternSegments.length != pathSegments.length) return false;
 
@@ -31,26 +32,30 @@ class AppRouterDelegate extends RouterDelegate<MyRouteSettings>
 
   List<Page<dynamic>> createPages() {
     List<Page<dynamic>> pages = [];
-    for (MyRouteSettings page in routerService.navigationStack.value) {
-      print('FIRSTWHERE---');
-      Widget child = routes
-          .firstWhere(
-            (route) => _matchRoute(route.path, page.path),
-            orElse: () => routes.firstWhere((route) => route.path == '/unknown'),
-          )
-          .builder!(ValueKey(page.path), page.path, page);
-      print('AFTER FIRSTWHERE---');
+    for (ResolvedRoute routeSettings in routerService.navigationStack.value) {
+      final matchedRoute = routes.firstWhere(
+        (route) => _matchRoute(route.path, routeSettings.path),
+        orElse: () => routes.firstWhere((route) => route.path == '/404'),
+      );
+      
+      final resolvedRouteWithPattern = ResolvedRoute(
+        path: routeSettings.path,
+        routePattern: matchedRoute.path,
+      );
+      
+      Widget child = matchedRoute.builder!(
+        ValueKey(routeSettings.path),
+        resolvedRouteWithPattern,
+      );
+      
       pages.add(
         MaterialPage(
-          key: ValueKey(
-            'Page_${page.path}',
-          ),
+          key: ValueKey('Page_${routeSettings.path}'),
           child: child,
-          canPop: routerService.canPop(page),
+          canPop: routerService.canPop(routeSettings),
         ),
       );
     }
-    print("Page Keys: ${pages.map((page) => page.key)}");
     return pages;
   }
 
@@ -62,34 +67,28 @@ class AppRouterDelegate extends RouterDelegate<MyRouteSettings>
       key: navigatorKey,
       pages: List.of(pages),
       onDidRemovePage: (page) {
-        routerService.navigateBack();
+        routerService.pop();
       },
     );
   }
 
   @override
   Future<bool> popRoute() {
-    print("POP ROUTE CALLED!!!");
     return SynchronousFuture(false);
   }
 
-  // Report the current route configuration back to the Router
   @override
-  MyRouteSettings? get currentConfiguration {
-    // If the stack is empty, return null or a default configuration
-    print("CURRENT CONFIGURATION: ${routerService.navigationStack.value}");
+  ResolvedRoute? get currentConfiguration {
     if (routerService.navigationStack.value.isEmpty) {
-      return null; // Or AppRoute(RouteNames.home) if you always want a default
+      return null;
     }
-    // Return the configuration of the last page in the stack
     return routerService.navigationStack.value.last;
   }
 
   // Called by the Router when the platform reports a new route information.
   // This can happen from browser back/forward, typing URL, or platform calls.
   @override
-  Future<void> setNewRoutePath(MyRouteSettings configuration) async {
-    print("SETTING NEW ROUTE PATH: $configuration");
+  Future<void> setNewRoutePath(ResolvedRoute configuration) async {
     routerService.setPathStack(configuration);
   }
 
