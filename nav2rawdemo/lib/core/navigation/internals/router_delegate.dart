@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'package:nav2demo/core/navigation/route_config.dart';
-import 'package:nav2demo/core/navigation/internals/navigation_state.dart' show ResolvedRoute, getSegments;
+import 'package:nav2demo/core/navigation/internals/navigation_state.dart' show RouteData, getSegments;
 import 'package:nav2demo/core/navigation/internals/router_service.dart';
 
-class AppRouterDelegate extends RouterDelegate<ResolvedRoute>
+class AppRouterDelegate extends RouterDelegate<RouteData>
     with ChangeNotifier {
   final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
@@ -31,18 +31,18 @@ class AppRouterDelegate extends RouterDelegate<ResolvedRoute>
 
   List<Page<dynamic>> createPages() {
     List<Page<dynamic>> pages = [];
-    for (ResolvedRoute routeSettings in _routerService.navigationStack.value) {
+    for (RouteData routeSettings in _routerService.navigationStack.value) {
       final matchedRoute = routes.firstWhere(
         (route) => _matchRoute(route.path, routeSettings.path),
         orElse: () => routes.firstWhere((route) => route.path == '/404'),
       );
       
-      final resolvedRouteWithPattern = ResolvedRoute(
+      final resolvedRouteWithPattern = RouteData(
         path: routeSettings.path,
         routePattern: matchedRoute.path,
       );
       
-      Widget child = matchedRoute.builder!(
+      Widget child = matchedRoute.builder(
         ValueKey(routeSettings.path),
         resolvedRouteWithPattern,
       );
@@ -60,11 +60,9 @@ class AppRouterDelegate extends RouterDelegate<ResolvedRoute>
 
   @override
   Widget build(BuildContext context) {
-    List<Page<dynamic>> pages = createPages();
-
     return Navigator(
-      key: navigatorKey,
-      pages: List.of(pages),
+      // key: navigatorKey,
+      pages: createPages(),
       onDidRemovePage: (page) {
         _routerService.pop();
       },
@@ -77,7 +75,7 @@ class AppRouterDelegate extends RouterDelegate<ResolvedRoute>
   }
 
   @override
-  ResolvedRoute? get currentConfiguration {
+  RouteData? get currentConfiguration {
     if (_routerService.navigationStack.value.isEmpty) {
       return null;
     }
@@ -87,8 +85,8 @@ class AppRouterDelegate extends RouterDelegate<ResolvedRoute>
   // Called by the Router when the platform reports a new route information.
   // This can happen from browser back/forward, typing URL, or platform calls.
   @override
-  Future<void> setNewRoutePath(ResolvedRoute configuration) async {
-    _routerService.setPathStack(configuration);
+  Future<void> setNewRoutePath(RouteData configuration) async {
+    _routerService.replaceAllWithRoute(configuration);
   }
 
   // dispose remains the same

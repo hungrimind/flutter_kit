@@ -6,21 +6,21 @@ import 'package:nav2demo/core/navigation/route_config.dart';
 class RouterService {
   RouterService() {
     _navigationStack.value = [
-      ResolvedRoute(path: routes.firstWhere((route) => route.path == '/').path),
+      RouteData(path: routes.firstWhere((route) => route.path == '/').path),
     ];
   }
 
-  final ValueNotifier<List<ResolvedRoute>> _navigationStack =
-      ValueNotifier<List<ResolvedRoute>>([]);
+  final ValueNotifier<List<RouteData>> _navigationStack =
+      ValueNotifier<List<RouteData>>([]);
 
-  ValueNotifier<List<ResolvedRoute>> get navigationStack => _navigationStack;
+  ValueNotifier<List<RouteData>> get navigationStack => _navigationStack;
 
   void push(String path) {
     if (path == _navigationStack.value.last.path) {
       return;
     }
 
-    final defaultRoute = ResolvedRoute(path: path);
+    final defaultRoute = RouteData.fromUri(Uri.parse(path));
 
     _navigationStack.value = [..._navigationStack.value, defaultRoute];
   }
@@ -37,33 +37,41 @@ class RouterService {
   }
 
   void replaceAll(String path) {
-    _navigationStack.value = [ResolvedRoute(path: path)];
+    _navigationStack.value = [RouteData.fromUri(Uri.parse(path))];
   }
 
   void popUntil(String path) {
-    final index = _navigationStack.value.indexWhere((r) => r.path == path);
-    if (index == -1) {
+    if (!_existsInStack(path)) {
       return;
     }
 
-    _navigationStack.value = _navigationStack.value.sublist(0, index + 1);
+    _navigationStack.value = _navigationStack.value.sublist(
+      0,
+      _navigationStack.value.indexWhere((r) => r.path == path) + 1,
+    );
   }
 
   /// Rebuilds the navigation stack to end at the specified route.
   /// This is typically used by setNewRoutePath to handle browser history changes.
-  void setPathStack(ResolvedRoute configuration) {
-    final newRoute = ResolvedRoute(path: configuration.path);
-
-    _navigationStack.value = [newRoute];
+  void replaceAllWithRoute(RouteData resolvedRoute) {
+    _navigationStack.value = [resolvedRoute];
   }
 
-  void removePage(ResolvedRoute route) {
+  void remove(String path) {
+    if (!_existsInStack(path)) {
+      return;
+    }
+
     _navigationStack.value =
-        _navigationStack.value.where((r) => r != route).toList();
+        _navigationStack.value.where((r) => r.path != path).toList();
   }
 
-  bool canPop(ResolvedRoute route) {
+  bool canPop(RouteData route) {
     return _navigationStack.value.length > 1 &&
         _navigationStack.value.last.path == route.path;
+  }
+
+  bool _existsInStack(String path) {
+    return _navigationStack.value.any((r) => r.path == path);
   }
 }

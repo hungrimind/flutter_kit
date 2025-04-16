@@ -4,15 +4,12 @@ class RouteEntry {
   RouteEntry({required this.path, required this.builder});
 
   final String path;
-  final Widget Function(
-    ValueKey<String>? key,
-    ResolvedRoute resolvedRoute,
-  )?
+  final Widget Function(ValueKey<String>? key, RouteData resolvedRoute)
   builder;
 }
 
-class ResolvedRoute extends RouteSettings {
-  const ResolvedRoute({required this.path, this.routePattern});
+class RouteData extends RouteSettings {
+  const RouteData({required this.path, this.routePattern});
 
   final String path;
   final String? routePattern;
@@ -23,11 +20,11 @@ class ResolvedRoute extends RouteSettings {
 
   Map<String, String> get pathParameters {
     if (routePattern == null) return {};
-    
+
     final params = <String, String>{};
     final pathSegments = getSegments(uri.path);
     final patternSegments = getSegments(routePattern!);
-    
+
     if (patternSegments.length != pathSegments.length) return params;
 
     for (var i = 0; i < patternSegments.length; i++) {
@@ -40,27 +37,20 @@ class ResolvedRoute extends RouteSettings {
     return params;
   }
 
-  factory ResolvedRoute.fromUri(Uri uri, {String? routePattern}) {
-    return ResolvedRoute(path: uri.toString(), routePattern: routePattern);
+  factory RouteData.fromUri(Uri uri, {String? routePattern}) {
+    return RouteData(path: uri.toString(), routePattern: routePattern);
   }
 
-  ResolvedRoute copyWith({String? path}) {
-    return ResolvedRoute(path: path ?? this.path, routePattern: routePattern);
+  RouteData copyWith({String? path}) {
+    return RouteData(path: path ?? this.path, routePattern: routePattern);
   }
 
   @override
   String toString() {
-    return 'ResolvedRoute(path: $path)';
+    return 'RouteData(path: $path)';
   }
 }
 
 /// Splits a path into segments, filtering out empty segments
-List<String> getSegments(String path) => path.split('/').where((s) => s.isNotEmpty).toList();
-
-class RouteGuard {
-  const RouteGuard({
-    this.redirect,
-  });
-
-  final String? Function(ResolvedRoute route)? redirect;
-}
+List<String> getSegments(String path) =>
+    path.split('/').where((s) => s.isNotEmpty).toList();

@@ -8,41 +8,41 @@ import 'package:nav2demo/pages/screens.dart';
 final List<RouteEntry> routes = [
   RouteEntry(
     path: '/',
-    builder: (key, route) {
+    builder: (key, routeData) {
       return HomeScreen();
     },
   ),
   RouteEntry(
     path: '/books',
-    builder: (key, route) {
+    builder: (key, routeData) {
       return BooksScreen();
     },
   ),
   RouteEntry(
     path: '/books/:bookId',
-    builder: (key, route) {
-      print(route.pathParameters);
+    builder: (key, routeData) {
+      print(routeData.pathParameters);
       
       // just got this working too
-      print(route.queryParameters);
-      return BookDetailsScreen(bookId: route.pathParameters['bookId'] ?? '');
+      print(routeData.queryParameters);
+      return BookDetailsScreen(bookId: routeData.pathParameters['bookId'] ?? '');
     },
   ),
   RouteEntry(
     path: '/books/:bookId/owners/:ownerId',
-    builder: (key, route) {
-      return BookDetailsScreen(bookId: route.pathParameters['bookId'] ?? '');
+    builder: (key, routeData) {
+      return BookDetailsScreen(bookId: routeData.pathParameters['bookId'] ?? '');
     },
   ),
   RouteEntry(
     path: '/settings',
-    builder: (key, route) {
+    builder: (key, routeData) {
       return SettingsScreen();
     },
   ),
   RouteEntry(
     path: '/404',
-    builder: (key, route) {
+    builder: (key, routeData) {
       return UnknownScreen();
     },
   ),
