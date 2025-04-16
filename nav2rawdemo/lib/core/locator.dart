@@ -1,5 +1,5 @@
 import 'package:flutter/foundation.dart';
-import 'package:nav2demo/core/navigation/router_service.dart';
+import 'package:nav2demo/navigation/router_service.dart';
 
 final locator = ServiceLocator.instance;
 

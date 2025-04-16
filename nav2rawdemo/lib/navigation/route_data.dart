@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:nav2demo/core/navigation/utils.dart';
+import 'package:nav2demo/navigation/utils.dart';
 
 class RouteEntry {
   RouteEntry({required this.path, required this.builder});
 
   final String path;
-  final Widget Function(ValueKey<String>? key, RouteData resolvedRoute)
+  final Widget Function(ValueKey<String>? key, RouteData routeData)
   builder;
 }
 
@@ -40,10 +40,6 @@ class RouteData extends RouteSettings {
 
   factory RouteData.fromUri(Uri uri, {String? routePattern}) {
     return RouteData(path: uri.toString(), routePattern: routePattern);
-  }
-
-  RouteData copyWith({String? path}) {
-    return RouteData(path: path ?? this.path, routePattern: routePattern);
   }
 
   @override

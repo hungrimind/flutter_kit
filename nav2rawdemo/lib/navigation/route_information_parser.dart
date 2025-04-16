@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:nav2demo/core/navigation/route_data.dart';
+import 'package:nav2demo/navigation/route_data.dart';
 
 class AppRouteInformationParser
     extends RouteInformationParser<RouteData> {

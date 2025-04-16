@@ -1,4 +1,4 @@
-import 'package:nav2demo/core/navigation/route_data.dart';
+import 'package:nav2demo/navigation/route_data.dart';
 
 abstract class NavigationObserver {
   void onPush(RouteData route);

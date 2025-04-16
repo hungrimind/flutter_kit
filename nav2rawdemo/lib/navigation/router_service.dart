@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:nav2demo/core/navigation/route_data.dart';
+import 'package:nav2demo/navigation/route_data.dart';
 import 'package:nav2demo/core/config/route_config.dart';
-import 'package:nav2demo/core/navigation/navigation_observable.dart';
-import 'package:nav2demo/core/navigation/utils.dart';
+import 'package:nav2demo/navigation/navigation_observable.dart';
+import 'package:nav2demo/navigation/utils.dart';
 
 /// Service responsible for managing navigation state using MVVM pattern
 class RouterService with ObservableRouter {

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:nav2demo/core/locator.dart';
-import 'package:nav2demo/core/navigation/router_service.dart';
+import 'package:nav2demo/navigation/router_service.dart';
 // Removed incorrect import for route_names.dart
 // Import NavigationState, AppRoute, navigationStateNotifier
 

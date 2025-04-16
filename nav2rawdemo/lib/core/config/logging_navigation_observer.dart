@@ -1,7 +1,7 @@
 // ignore_for_file: avoid_print
 
-import 'package:nav2demo/core/navigation/route_data.dart';
-import 'package:nav2demo/core/navigation/navigation_observable.dart';
+import 'package:nav2demo/navigation/route_data.dart';
+import 'package:nav2demo/navigation/navigation_observable.dart';
 
 class LoggingNavigationObserver implements NavigationObserver {
   @override
