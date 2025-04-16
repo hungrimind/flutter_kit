@@ -56,3 +56,11 @@ class ResolvedRoute extends RouteSettings {
 
 /// Splits a path into segments, filtering out empty segments
 List<String> getSegments(String path) => path.split('/').where((s) => s.isNotEmpty).toList();
+
+class RouteGuard {
+  const RouteGuard({
+    this.redirect,
+  });
+
+  final String? Function(ResolvedRoute route)? redirect;
+}

@@ -1,20 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:nav2demo/core/navigation/internals/navigation_state.dart';
+import 'package:nav2demo/core/navigation/route_config.dart';
 
 /// Service responsible for managing navigation state using MVVM pattern
 class RouterService {
-  final ValueNotifier<List<ResolvedRoute>> _navigationStack =
-      ValueNotifier<List<ResolvedRoute>>([]);
-
-  ValueNotifier<List<ResolvedRoute>> get navigationStack => _navigationStack;
-  late final List<RouteEntry> routes;
-
-  void init(List<RouteEntry> routes) {
-    this.routes = routes;
+  RouterService() {
     _navigationStack.value = [
       ResolvedRoute(path: routes.firstWhere((route) => route.path == '/').path),
     ];
   }
+
+  final ValueNotifier<List<ResolvedRoute>> _navigationStack =
+      ValueNotifier<List<ResolvedRoute>>([]);
+
+  ValueNotifier<List<ResolvedRoute>> get navigationStack => _navigationStack;
 
   void push(String path) {
     if (path == _navigationStack.value.last.path) {

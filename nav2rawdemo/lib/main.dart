@@ -4,7 +4,6 @@ import 'package:nav2demo/core/locator.dart';
 import 'package:nav2demo/core/navigation/internals/route_information_parser.dart';
 import 'package:nav2demo/core/navigation/internals/router_delegate.dart';
 import 'package:nav2demo/core/navigation/internals/router_service.dart';
-import 'package:nav2demo/core/navigation/route_config.dart';
 // Import your Delegate, Parser, Notifier, and other necessary files
 
 void main() {
@@ -27,10 +26,8 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
-    final routerService = locator.get<RouterService>();
-    routerService.init(routes);
     _routeInformationParser = AppRouteInformationParser();
-    _routerDelegate = AppRouterDelegate(routerService: routerService);
+    _routerDelegate = AppRouterDelegate(routerService: locator.get<RouterService>());
   }
 
   @override
