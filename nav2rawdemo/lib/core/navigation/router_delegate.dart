@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'package:nav2demo/core/config/route_config.dart';
-import 'package:nav2demo/core/navigation/navigation_state.dart' show RouteData, getSegments;
+import 'package:nav2demo/core/navigation/route_data.dart' show RouteData;
 import 'package:nav2demo/core/navigation/router_service.dart';
+import 'package:nav2demo/core/navigation/utils.dart';
 
 class AppRouterDelegate extends RouterDelegate<RouteData>
     with ChangeNotifier {
@@ -12,26 +13,13 @@ class AppRouterDelegate extends RouterDelegate<RouteData>
 
   final RouterService _routerService;
 
-  bool _matchRoute(String pattern, String path) {
-    final pathUri = Uri.parse(path);
-    final pathSegments = getSegments(pathUri.path);
-    final patternSegments = getSegments(pattern);
 
-    if (patternSegments.length != pathSegments.length) return false;
-
-    for (var i = 0; i < patternSegments.length; i++) {
-      if (patternSegments[i].startsWith(':')) continue;
-      if (patternSegments[i] != pathSegments[i]) return false;
-    }
-
-    return true;
-  }
 
   List<Page<dynamic>> createPages() {
     List<Page<dynamic>> pages = [];
     for (RouteData routeSettings in _routerService.navigationStack.value) {
       final matchedRoute = routes.firstWhere(
-        (route) => _matchRoute(route.path, routeSettings.path),
+        (route) => matchRoute(route.path, routeSettings.path),
         orElse: () => routes.firstWhere((route) => route.path == '/404'),
       );
       

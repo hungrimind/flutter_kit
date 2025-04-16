@@ -1,4 +1,4 @@
-import 'package:nav2demo/core/navigation/navigation_state.dart';
+import 'package:nav2demo/core/navigation/route_data.dart';
 import 'package:nav2demo/pages/screens.dart';
 
 /// The routes in your application.
@@ -21,10 +21,6 @@ final List<RouteEntry> routes = [
   RouteEntry(
     path: '/books/:bookId',
     builder: (key, routeData) {
-      print(routeData.pathParameters);
-      
-      // just got this working too
-      print(routeData.queryParameters);
       return BookDetailsScreen(bookId: routeData.pathParameters['bookId'] ?? '');
     },
   ),

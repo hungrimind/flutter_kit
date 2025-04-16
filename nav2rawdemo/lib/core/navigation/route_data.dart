@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:nav2demo/core/navigation/utils.dart';
 
 class RouteEntry {
   RouteEntry({required this.path, required this.builder});
@@ -50,7 +51,3 @@ class RouteData extends RouteSettings {
     return 'RouteData(path: $path)';
   }
 }
-
-/// Splits a path into segments, filtering out empty segments
-List<String> getSegments(String path) =>
-    path.split('/').where((s) => s.isNotEmpty).toList();

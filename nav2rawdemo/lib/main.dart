@@ -4,12 +4,18 @@ import 'package:nav2demo/core/navigation/route_information_parser.dart';
 import 'package:nav2demo/core/navigation/router_delegate.dart';
 import 'package:nav2demo/core/navigation/router_service.dart';
 import 'package:nav2demo/core/navigation/url_strategy/url_strategy.dart';
+import 'package:nav2demo/core/navigation/logging_navigation_observer.dart';
 
 // Import your Delegate, Parser, Notifier, and other necessary files
 
 void main() {
   setupLocator();
   configureUrlStrategy();
+  
+  // Add navigation observer
+  final routerService = locator.get<RouterService>();
+  routerService.addObserver(LoggingNavigationObserver());
+  
   runApp(const MyApp());
 }
 
