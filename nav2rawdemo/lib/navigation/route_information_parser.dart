@@ -2,10 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:nav2demo/navigation/route_data.dart';
 import 'package:nav2demo/navigation/utils.dart';
 
-class AppRouteInformationParser
-    extends RouteInformationParser<RouteData> {
+class AppRouteInformationParser extends RouteInformationParser<RouteData> {
   AppRouteInformationParser({required this.routes});
-  
+
   final List<RouteEntry> routes;
 
   @override
@@ -24,7 +23,7 @@ class AppRouteInformationParser
     if (configuration.pathWithParams.isNotEmpty) {
       return RouteInformation(
         uri: configuration.uri,
-        state: configuration.arguments,
+        state: configuration.pathParameters,
       );
     }
 

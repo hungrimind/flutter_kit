@@ -8,7 +8,7 @@ class RouteEntry {
   final Widget Function(ValueKey<String>? key, RouteData routeData) builder;
 }
 
-class RouteData extends RouteSettings {
+class RouteData {
   const RouteData({required this.uri, required this.routePattern});
 
   final Uri uri;
