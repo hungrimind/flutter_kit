@@ -5,11 +5,9 @@ import 'package:nav2demo/navigation/route_data.dart' show RouteData;
 import 'package:nav2demo/navigation/router_service.dart';
 import 'package:nav2demo/navigation/utils.dart';
 
-class AppRouterDelegate extends RouterDelegate<RouteData>
-    with ChangeNotifier {
-  AppRouterDelegate({required RouterService routerService}) : _routerService = routerService {
-    _routerService.navigationStack.addListener(notifyListeners);
-  }
+class AppRouterDelegate extends RouterDelegate<RouteData> {
+  AppRouterDelegate({required RouterService routerService})
+    : _routerService = routerService;
 
   final RouterService _routerService;
 
@@ -20,17 +18,17 @@ class AppRouterDelegate extends RouterDelegate<RouteData>
         (route) => matchRoute(route.path, routeSettings.path),
         orElse: () => routes.firstWhere((route) => route.path == '/404'),
       );
-      
+
       final resolvedRouteWithPattern = RouteData(
         path: routeSettings.path,
         routePattern: matchedRoute.path,
       );
-      
+
       Widget child = matchedRoute.builder(
         ValueKey(routeSettings.path),
         resolvedRouteWithPattern,
       );
-      
+
       pages.add(
         MaterialPage(
           key: ValueKey('Page_${routeSettings.hashCode}'),
@@ -72,10 +70,13 @@ class AppRouterDelegate extends RouterDelegate<RouteData>
     _routerService.replaceAllWithRoute(configuration);
   }
 
-  // dispose remains the same
   @override
-  void dispose() {
-    _routerService.navigationStack.removeListener(notifyListeners);
-    super.dispose();
+  void addListener(VoidCallback listener) {
+    _routerService.navigationStack.addListener(listener);
+  }
+
+  @override
+  void removeListener(VoidCallback listener) {
+    _routerService.navigationStack.removeListener(listener);
   }
 }
