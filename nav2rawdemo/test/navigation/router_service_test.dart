@@ -46,6 +46,16 @@ void main() {
           path: '/404',
           builder: (key, routeData) => const NotFoundPage(),
         ),
+        RouteEntry(
+          path: '/pop-scope',
+          builder: (key, routeData) {
+            final canPop = routeData.queryParameters['canPop'] != 'false';
+            return PopScopePage(
+              key: key,
+              canPop: canPop,
+            );
+          },
+        ),
       ];
 
       // Initialize router service with test routes
@@ -188,6 +198,47 @@ void main() {
         });
       });
     });
+
+    group('PopScope Tests', () {
+      testWidgets('Should allow pop when canPop is true', (tester) async {
+        await tester.pumpWidget(createTestApp());
+        await tester.pumpAndSettle();
+
+        // Navigate to PopScope page
+        routerService.push('/pop-scope');
+        await tester.pumpAndSettle();
+
+        expect(find.byType(PopScopePage), findsOneWidget);
+        expect(routerService.navigationStack.value.length, 2);
+
+        // Trigger pop through Navigator
+        await tester.pageBack();
+        await tester.pumpAndSettle();
+
+        expect(find.byType(HomePage), findsOneWidget);
+        expect(routerService.navigationStack.value.length, 1);
+      });
+
+      testWidgets('Should prevent pop when canPop is false', (tester) async {
+        await tester.pumpWidget(createTestApp());
+        await tester.pumpAndSettle();
+
+        // Navigate to PopScope page with canPop set to false
+        routerService.push('/pop-scope?canPop=false');
+        await tester.pumpAndSettle();
+
+        expect(find.byType(PopScopePage), findsOneWidget);
+        expect(routerService.navigationStack.value.length, 2);
+
+        // Attempt to pop through Navigator
+        await tester.pageBack();
+        await tester.pumpAndSettle();
+
+        // Verify pop was prevented
+        expect(find.byType(PopScopePage), findsOneWidget);
+        expect(routerService.navigationStack.value.length, 2);
+      });
+    });
   });
 }
 
@@ -282,6 +333,30 @@ class NotFoundPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return const Scaffold(
       body: Center(child: Text('404')),
+    );
+  }
+}
+
+// Add PopScopePage for testing PopScope behavior
+class PopScopePage extends StatelessWidget {
+  const PopScopePage({
+    super.key,
+    this.canPop = true,
+    this.onPopInvoked,
+  });
+
+  final bool canPop;
+  final PopInvokedWithResultCallback<dynamic>? onPopInvoked;
+
+  @override
+  Widget build(BuildContext context) {
+    return PopScope(
+      canPop: canPop,
+      onPopInvokedWithResult: onPopInvoked,
+      child: Scaffold(
+        appBar: AppBar(title: const Text('Pop Scope Page')),
+        body: const Center(child: Text('Pop Scope Page')),
+      ),
     );
   }
 }

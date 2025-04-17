@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/foundation.dart';
 import 'package:nav2demo/navigation/route_data.dart' show RouteData;
 import 'package:nav2demo/navigation/router_service.dart';
 import 'package:nav2demo/navigation/utils.dart';
@@ -17,7 +16,10 @@ class AppRouterDelegate extends RouterDelegate<RouteData> {
         (route) => matchRoute(route.path, routeData.uri),
       );
 
-      Widget child = matchedRoute.builder(ValueKey(routeData.pathWithParams), routeData);
+      Widget child = matchedRoute.builder(
+        ValueKey(routeData.pathWithParams),
+        routeData,
+      );
 
       pages.add(
         MaterialPage(
@@ -41,8 +43,12 @@ class AppRouterDelegate extends RouterDelegate<RouteData> {
   }
 
   @override
-  Future<bool> popRoute() {
-    return SynchronousFuture(false);
+  Future<bool> popRoute() async {
+    if (_routerService.navigationStack.value.length > 1) {
+      _routerService.pop();
+      return true;
+    }
+    return false;
   }
 
   @override
