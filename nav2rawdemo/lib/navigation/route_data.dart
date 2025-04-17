@@ -5,26 +5,23 @@ class RouteEntry {
   RouteEntry({required this.path, required this.builder});
 
   final String path;
-  final Widget Function(ValueKey<String>? key, RouteData routeData)
-  builder;
+  final Widget Function(ValueKey<String>? key, RouteData routeData) builder;
 }
 
 class RouteData extends RouteSettings {
-  const RouteData({required this.path, this.routePattern});
+  const RouteData({required this.uri, required this.routePattern});
 
-  final String path;
-  final String? routePattern;
+  final Uri uri;
+  final String routePattern;
 
-  Uri get uri => Uri.parse(path);
+  String get pathWithParams => uri.toString();
 
   Map<String, String> get queryParameters => uri.queryParameters;
 
   Map<String, String> get pathParameters {
-    if (routePattern == null) return {};
-
     final params = <String, String>{};
-    final pathSegments = getSegments(uri.path);
-    final patternSegments = getSegments(routePattern!);
+    final pathSegments = uri.pathSegments;
+    final patternSegments = getSegments(routePattern);
 
     if (patternSegments.length != pathSegments.length) return params;
 
@@ -38,12 +35,8 @@ class RouteData extends RouteSettings {
     return params;
   }
 
-  factory RouteData.fromUri(Uri uri, {String? routePattern}) {
-    return RouteData(path: uri.toString(), routePattern: routePattern);
-  }
-
   @override
   String toString() {
-    return 'RouteData(path: $path)';
+    return 'RouteData(uri: $uri, routePattern: $routePattern, queryParameters: $queryParameters, pathParameters: $pathParameters)';
   }
 }

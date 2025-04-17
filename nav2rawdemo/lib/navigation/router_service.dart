@@ -1,19 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:nav2demo/navigation/route_data.dart';
-import 'package:nav2demo/core/config/route_config.dart';
 import 'package:nav2demo/navigation/navigation_observable.dart';
 import 'package:nav2demo/navigation/utils.dart';
 
 /// Service responsible for managing navigation state using MVVM pattern
 class RouterService with ObservableRouter {
-  RouterService() {
-    _navigationStack.value = [
-      RouteData(path: routes.firstWhere((route) => route.path == '/').path),
-    ];
+  RouterService({required this.supportedRoutes}) {
+    _navigationStack.value = [_createRouteData('/')];
   }
 
   final _navigationStack = ValueNotifier<List<RouteData>>([]);
   ValueNotifier<List<RouteData>> get navigationStack => _navigationStack;
+
+  final List<RouteEntry> supportedRoutes;
+
+  RouteData _createRouteData(String path) {
+    final uri = Uri.parse(path);
+    return RouteData(
+      uri: uri,
+      routePattern: findMatchingRoutePattern(uri, supportedRoutes),
+    );
+  }
 
   void push(String path) {
     if (_pathNotSupported(path)) {
@@ -21,8 +28,7 @@ class RouterService with ObservableRouter {
       return;
     }
 
-    final defaultRoute = RouteData.fromUri(Uri.parse(path));
-
+    final defaultRoute = _createRouteData(path);
     _navigationStack.value = [..._navigationStack.value, defaultRoute];
     notifyPush(defaultRoute);
   }
@@ -46,7 +52,7 @@ class RouterService with ObservableRouter {
       return;
     }
 
-    final newRoute = RouteData.fromUri(Uri.parse(path));
+    final newRoute = _createRouteData(path);
     _navigationStack.value = [newRoute];
     notifyReplace(newRoute);
   }
@@ -57,7 +63,7 @@ class RouterService with ObservableRouter {
     }
 
     final indexToKeep = _navigationStack.value.indexWhere(
-      (r) => r.path == path,
+      (r) => r.pathWithParams == path,
     );
     final removedRoutes = _navigationStack.value.sublist(indexToKeep + 1);
 
@@ -72,10 +78,11 @@ class RouterService with ObservableRouter {
   /// Rebuilds the navigation stack to end at the specified route.
   /// This is typically used by setNewRoutePath to handle browser history changes.
   void replaceAllWithRoute(RouteData resolvedRoute) {
-    if (_pathNotSupported(resolvedRoute.path)) {
-      _handlePathNotSupported(resolvedRoute.path);
+    if (_pathNotSupported(resolvedRoute.pathWithParams)) {
+      _handlePathNotSupported(resolvedRoute.pathWithParams);
       return;
     }
+
 
     // For browser refreshes or direct URL access, we don't need to notify pops
     // since we're creating a fresh navigation stack
@@ -89,31 +96,34 @@ class RouterService with ObservableRouter {
     }
 
     final routeToRemove = _navigationStack.value.firstWhere(
-      (r) => r.path == path,
+      (r) => r.pathWithParams == path,
     );
     _navigationStack.value =
-        _navigationStack.value.where((r) => r.path != path).toList();
+        _navigationStack.value.where((r) => r.pathWithParams != path).toList();
     notifyRemove(routeToRemove);
   }
 
   bool canPop(RouteData route) {
     return _navigationStack.value.length > 1 &&
-        _navigationStack.value.last.path == route.path;
+        _navigationStack.value.last.pathWithParams == route.pathWithParams;
   }
 
   bool _existsInStack(String path) {
-    return _navigationStack.value.any((r) => r.path == path);
+    final uri = Uri.parse(path);
+    return _navigationStack.value.any((r) => r.uri == uri);
   }
 
   bool _pathNotSupported(String path) {
-    return !routes.any((route) => matchRoute(route.path, path));
+    final uri = Uri.parse(path);
+    return !supportedRoutes.any((route) => matchRoute(route.path, uri));
   }
 
   void _handlePathNotSupported(String path) {
+    final notFoundRoute = _createRouteData('/404');
     _navigationStack.value = [
       ..._navigationStack.value,
-      RouteData(path: '/404'),
+      notFoundRoute,
     ];
-    notifyPush(RouteData(path: '/404'));
+    notifyPush(notFoundRoute);
   }
 }

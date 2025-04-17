@@ -41,4 +41,4 @@ mixin ObservableRouter {
       observer.onRemove(route);
     }
   }
-} 
+}

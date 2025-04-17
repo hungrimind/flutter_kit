@@ -1,20 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:nav2demo/navigation/route_data.dart';
+import 'package:nav2demo/navigation/utils.dart';
 
 class AppRouteInformationParser
     extends RouteInformationParser<RouteData> {
+  AppRouteInformationParser({required this.routes});
+  
+  final List<RouteEntry> routes;
+
   @override
   Future<RouteData> parseRouteInformation(
     RouteInformation routeInformation,
   ) async {
     final uri = routeInformation.uri;
-    final route = RouteData.fromUri(uri);
-    return route;
+    return RouteData(
+      uri: uri,
+      routePattern: findMatchingRoutePattern(uri, routes),
+    );
   }
 
   @override
   RouteInformation? restoreRouteInformation(RouteData configuration) {
-    if (configuration.path.isNotEmpty) {
+    if (configuration.pathWithParams.isNotEmpty) {
       return RouteInformation(
         uri: configuration.uri,
         state: configuration.arguments,

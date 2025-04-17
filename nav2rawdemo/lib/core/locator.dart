@@ -1,10 +1,13 @@
 import 'package:flutter/foundation.dart';
+import 'package:nav2demo/core/config/route_config.dart';
 import 'package:nav2demo/navigation/router_service.dart';
 
 final locator = ServiceLocator.instance;
 
 void setupLocator() {
-  locator.registerSingleton<RouterService>(() => RouterService());
+  locator.registerSingleton<RouterService>(
+    () => RouterService(supportedRoutes: routes),
+  );
 }
 
 class ServiceLocator {
