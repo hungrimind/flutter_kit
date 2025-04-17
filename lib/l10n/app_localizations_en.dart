@@ -19,4 +19,13 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get retry => 'Retry';
+
+  @override
+  String get notFoundTitle => '404';
+
+  @override
+  String get notFoundMessage => 'Page Not Found';
+
+  @override
+  String get notFoundGoHome => 'Go Home';
 }

@@ -116,6 +116,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Retry'**
   String get retry;
+
+  /// Title shown on the 404 page
+  ///
+  /// In en, this message translates to:
+  /// **'404'**
+  String get notFoundTitle;
+
+  /// Message shown on the 404 page
+  ///
+  /// In en, this message translates to:
+  /// **'Page Not Found'**
+  String get notFoundMessage;
+
+  /// Text for the button that takes users back to home page
+  ///
+  /// In en, this message translates to:
+  /// **'Go Home'**
+  String get notFoundGoHome;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
