@@ -83,7 +83,6 @@ class RouterService with ObservableRouter {
       return;
     }
 
-
     // For browser refreshes or direct URL access, we don't need to notify pops
     // since we're creating a fresh navigation stack
     _navigationStack.value = [resolvedRoute];
@@ -120,10 +119,7 @@ class RouterService with ObservableRouter {
 
   void _handlePathNotSupported(String path) {
     final notFoundRoute = _createRouteData('/404');
-    _navigationStack.value = [
-      ..._navigationStack.value,
-      notFoundRoute,
-    ];
+    _navigationStack.value = [..._navigationStack.value, notFoundRoute];
     notifyPush(notFoundRoute);
   }
 }

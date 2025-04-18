@@ -21,10 +21,7 @@ class AppRouteInformationParser extends RouteInformationParser<RouteData> {
   @override
   RouteInformation? restoreRouteInformation(RouteData configuration) {
     if (configuration.pathWithParams.isNotEmpty) {
-      return RouteInformation(
-        uri: configuration.uri,
-        state: configuration.pathParameters,
-      );
+      return RouteInformation(uri: configuration.uri);
     }
 
     return null;
