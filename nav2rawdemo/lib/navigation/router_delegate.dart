@@ -36,8 +36,17 @@ class AppRouterDelegate extends RouterDelegate<RouteData> {
   Widget build(BuildContext context) {
     return Navigator(
       pages: createPages(),
-      onDidRemovePage: (page) {
+      // For some reason, this is deprecated but you can't replace it with onDidRemovePage.
+      // Android predictive back will for example not call "popRoute" so you must handle it here.
+      // ignore: deprecated_member_use
+      onPopPage: (route, result) {
+        if (!route.didPop(result)) {
+          return false;
+        }
+    
+        // Sync with your app state
         _routerService.pop();
+        return true;
       },
     );
   }

@@ -39,6 +39,8 @@ class RouterService with ObservableRouter {
     }
 
     final poppedRoute = _navigationStack.value.last;
+    
+    // Schedule this update for the next frame to avoid conflicts with build phase
     _navigationStack.value = _navigationStack.value.sublist(
       0,
       _navigationStack.value.length - 1,
