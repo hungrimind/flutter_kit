@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:nav2demo/navigation/route_data.dart' show RouteData;
 import 'package:nav2demo/navigation/router_service.dart';
@@ -55,9 +56,9 @@ class AppRouterDelegate extends RouterDelegate<RouteData> {
   Future<bool> popRoute() async {
     if (_routerService.navigationStack.value.length > 1) {
       _routerService.pop();
-      return true;
+      return SynchronousFuture(true);
     }
-    return false;
+    return SynchronousFuture(false);
   }
 
   @override
@@ -70,7 +71,7 @@ class AppRouterDelegate extends RouterDelegate<RouteData> {
 
   @override
   Future<void> setNewRoutePath(RouteData configuration) async {
-    _routerService.replaceAllWithRoute(configuration);
+    SynchronousFuture(_routerService.replaceAllWithRoute(configuration));
   }
 
   @override

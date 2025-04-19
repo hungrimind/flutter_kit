@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:nav2demo/navigation/route_data.dart';
 import 'package:nav2demo/navigation/utils.dart';
@@ -12,9 +13,8 @@ class AppRouteInformationParser extends RouteInformationParser<RouteData> {
     RouteInformation routeInformation,
   ) async {
     final uri = routeInformation.uri;
-    return RouteData(
-      uri: uri,
-      routePattern: findMatchingRoutePattern(uri, routes),
+    return SynchronousFuture(
+      RouteData(uri: uri, routePattern: findMatchingRoutePattern(uri, routes)),
     );
   }
 
