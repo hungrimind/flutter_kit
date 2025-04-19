@@ -30,21 +30,23 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
-    _bestRouterConfig = BestRouterConfig(routerService: locator.get<RouterService>());
+    _bestRouterConfig = BestRouterConfig(
+      routerService: locator.get<RouterService>(),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp.router(
       routerConfig: _bestRouterConfig,
-theme: ThemeData(
-    pageTransitionsTheme: const PageTransitionsTheme(
-      builders: <TargetPlatform, PageTransitionsBuilder>{
-        // Set the predictive back transitions for Android.
-        TargetPlatform.android: PredictiveBackPageTransitionsBuilder(),
-      },
-    ),
-  ),
+      theme: ThemeData(
+        pageTransitionsTheme: const PageTransitionsTheme(
+          builders: <TargetPlatform, PageTransitionsBuilder>{
+            // Set the predictive back transitions for Android.
+            TargetPlatform.android: PredictiveBackPageTransitionsBuilder(),
+          },
+        ),
+      ),
     );
   }
 }

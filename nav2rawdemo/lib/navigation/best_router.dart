@@ -14,6 +14,7 @@ class BestRouterConfig extends RouterConfig<Object> {
             uri: Uri.parse(PlatformDispatcher.instance.defaultRouteName),
           ),
         ),
+        backButtonDispatcher: RootBackButtonDispatcher(),
         routeInformationParser: AppRouteInformationParser(
           routes: routerService.supportedRoutes,
         ),
