@@ -49,9 +49,16 @@ class HomeScreen extends StatelessWidget {
   }
 }
 
+class BooksDetailsInfo {
+  final String bookId;
+  final String ownerId;
+  const BooksDetailsInfo({required this.bookId, required this.ownerId});
+}
+
 class BooksScreen extends StatefulWidget {
   static const String books = 'books';
-  const BooksScreen({super.key});
+  final BooksDetailsInfo? booksDetailsInfo;
+  const BooksScreen({super.key, this.booksDetailsInfo});
 
   @override
   State<BooksScreen> createState() => _BooksScreenState();
