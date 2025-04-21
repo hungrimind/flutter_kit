@@ -4,6 +4,8 @@ import 'package:nav2demo/navigation/route_data.dart' show RouteData;
 import 'package:nav2demo/navigation/router_service.dart';
 import 'package:nav2demo/navigation/utils.dart';
 
+GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+
 class AppRouterDelegate extends RouterDelegate<RouteData> {
   AppRouterDelegate({required RouterService routerService})
     : _routerService = routerService;
@@ -36,26 +38,25 @@ class AppRouterDelegate extends RouterDelegate<RouteData> {
   @override
   Widget build(BuildContext context) {
     return Navigator(
+      key: navigatorKey,
       pages: createPages(),
-      // For some reason, this is deprecated but you can't replace it with onDidRemovePage.
-      // Android predictive back will for example not call "popRoute" so you must handle it here.
-      // ignore: deprecated_member_use
-      onPopPage: (route, result) {
-        if (!route.didPop(result)) {
-          return false;
-        }
-    
-        // Sync with your app state
+      onDidRemovePage: (page) {
         _routerService.pop();
-        return true;
       },
+      // onPopPage: (route, result) {
+      //   if (!route.didPop(result)) {
+      //     return false;
+      //   }
+      //   _routerService.pop();
+      //   return true;
+      // },
     );
   }
 
   @override
   Future<bool> popRoute() async {
     if (_routerService.navigationStack.value.length > 1) {
-      _routerService.pop();
+      Navigator.of(navigatorKey.currentContext!).pop();
       return SynchronousFuture(true);
     }
     return SynchronousFuture(false);
