@@ -40,7 +40,7 @@ class RouterService with ObservableRouter {
     }
 
     final poppedRoute = _navigationStack.value.last;
-    
+
     // Schedule this update for the next frame to avoid conflicts with build phase
     _navigationStack.value = _navigationStack.value.sublist(
       0,
@@ -104,11 +104,6 @@ class RouterService with ObservableRouter {
     _navigationStack.value =
         _navigationStack.value.where((r) => r.pathWithParams != path).toList();
     notifyRemove(routeToRemove);
-  }
-
-  bool canPop(RouteData route) {
-    return _navigationStack.value.length > 1 &&
-        _navigationStack.value.last.pathWithParams == route.pathWithParams;
   }
 
   bool _existsInStack(String path) {

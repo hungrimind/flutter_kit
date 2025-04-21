@@ -25,11 +25,7 @@ class AppRouterDelegate extends RouterDelegate<RouteData> {
       );
 
       pages.add(
-        MaterialPage(
-          key: ValueKey('Page_${routeData.hashCode}'),
-          child: child,
-          canPop: _routerService.canPop(routeData),
-        ),
+        MaterialPage(key: ValueKey('Page_${routeData.hashCode}'), child: child),
       );
     }
     return pages;
@@ -43,13 +39,6 @@ class AppRouterDelegate extends RouterDelegate<RouteData> {
       onDidRemovePage: (page) {
         _routerService.pop();
       },
-      // onPopPage: (route, result) {
-      //   if (!route.didPop(result)) {
-      //     return false;
-      //   }
-      //   _routerService.pop();
-      //   return true;
-      // },
     );
   }
 
