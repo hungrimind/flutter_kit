@@ -1,41 +1,71 @@
 import 'package:flutter/foundation.dart';
-import 'package:flutter_kit/auth/user_service.dart';
-import 'package:flutter_kit/core/abstractions/sqlite_abstraction.dart';
+import 'package:flutter_kit/core/http/http_abstraction.dart';
+import 'package:flutter_kit/core/http/http_interceptor.dart';
+import 'package:flutter_kit/core/router/router.dart';
+import 'package:flutter_kit/core/services/logging_service.dart';
+import 'package:flutter_kit/core/services/toast_service.dart';
+import 'package:flutter_kit/navigation/router_service.dart';
 
 final locator = ServiceLocator.instance;
 
 void setupLocator() {
-  locator.registerSingleton(() => SqliteAbstraction());
+  locator
+      .registerSingleton<RouterService>(RouterService(supportedRoutes: routes));
+  locator.registerSingleton<LoggingService>(LoggingService());
+  locator.registerLazySingleton<ToastService>(() => ToastService());
 
-  locator.registerSingleton(() => UserService(
-        sqliteAbstraction: locator.get<SqliteAbstraction>(),
-      ));
+  // Create HttpAbstraction with logging interceptor
+  locator.registerLazySingleton<HttpAbstraction>(() {
+    final httpAbstraction = HttpAbstraction();
+
+    // Add logging interceptor
+    httpAbstraction.addInterceptor(
+      HttpLoggingInterceptor(
+        logBody: !kReleaseMode, // Only log bodies in debug mode
+      ),
+    );
+
+    return httpAbstraction;
+  });
 }
 
 class ServiceLocator {
   ServiceLocator._();
   static final ServiceLocator instance = ServiceLocator._();
 
+  final Map<Type, Object> _singletons = {};
   final Map<Type, Lazy<Object>> _lazySingletons = {};
 
-  void registerSingleton<T extends Object>(T Function() create) {
+  void registerSingleton<T extends Object>(T instance) {
+    _singletons[T] = instance;
+  }
+
+  void registerLazySingleton<T extends Object>(T Function() create) {
     _lazySingletons[T] = Lazy<Object>(create);
   }
 
   T get<T extends Object>() {
-    final lazy = _lazySingletons[T];
-    if (lazy == null) {
-      throw Exception('No singleton registered for type $T');
+    final singleton = _singletons[T];
+    if (singleton != null) {
+      return singleton as T;
     }
-    return lazy.value as T;
+
+    final lazy = _lazySingletons[T];
+    if (lazy != null) {
+      return lazy.value as T;
+    }
+
+    throw Exception('No singleton registered for type $T');
   }
 
   void reset() {
+    _singletons.clear();
     _lazySingletons.clear();
   }
 
   @visibleForTesting
-  bool isRegistered<T extends Object>() => _lazySingletons.containsKey(T);
+  bool isRegistered<T extends Object>() =>
+      _singletons.containsKey(T) || _lazySingletons.containsKey(T);
 }
 
 class Lazy<T> {

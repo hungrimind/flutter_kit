@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import 'neutral_colors.dart';
 
@@ -26,6 +27,13 @@ class AppTheme {
         elevation: 0,
         backgroundColor: Colors.transparent,
         foregroundColor: neutralColors.neutral950,
+        systemOverlayStyle: SystemUiOverlayStyle(
+          statusBarColor: Colors.transparent,
+          // For iOS: dark icons in light mode, light icons in dark mode
+          statusBarBrightness: isDark ? Brightness.dark : Brightness.light,
+          // For Android: dark icons in light mode, light icons in dark mode
+          statusBarIconBrightness: isDark ? Brightness.light : Brightness.dark,
+        ),
       ),
       dividerTheme: DividerThemeData(
         color: neutralColors.neutral200,
@@ -47,7 +55,7 @@ class AppTheme {
       ],
       useMaterial3: true,
       splashFactory: NoSplash.splashFactory,
-      highlightColor: Colors.white.withOpacity(0.1),
+      highlightColor: Colors.white.withValues(alpha: .1),
       dropdownMenuTheme: DropdownMenuThemeData(
         textStyle: TextStyle(color: neutralColors.neutral950),
         menuStyle: MenuStyle(

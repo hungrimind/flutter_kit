@@ -59,7 +59,7 @@ class _PrimaryButtonState extends State<PrimaryButton> with LoadingStateMixin {
                   Positioned.fill(
                     child: Container(
                       decoration: BoxDecoration(
-                        color: Colors.black.withOpacity(0.3),
+                        color: Colors.black.withValues(alpha: .3),
                         borderRadius: BorderRadius.circular(4),
                       ),
                       child: Center(
