@@ -1,8 +1,7 @@
 import 'package:flutter_kit/core/http/http_interceptor.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'http_native.dart'
-    if (dart.library.js_interop) 'http_web.dart';
+import 'http_native.dart' if (dart.library.js_interop) 'http_web.dart';
 
 /// A wrapper around the http package that allows for interceptors
 /// to be applied to requests and responses.
@@ -10,10 +9,10 @@ class HttpAbstraction {
   final http.Client _client;
   final List<HttpInterceptor> _interceptors;
 
-  HttpAbstraction({List<HttpInterceptor>? interceptors}) 
-    : _client = httpClient(),
-      _interceptors = interceptors ?? [];
-  
+  HttpAbstraction({List<HttpInterceptor>? interceptors})
+      : _client = httpClient(),
+        _interceptors = interceptors ?? [];
+
   /// Adds an interceptor to the chain
   void addInterceptor(HttpInterceptor interceptor) {
     _interceptors.add(interceptor);
@@ -32,7 +31,8 @@ class HttpAbstraction {
   Future<http.BaseResponse> _processResponse(http.BaseResponse response) async {
     var processedResponse = response;
     for (final interceptor in _interceptors.reversed) {
-      processedResponse = await interceptor.interceptResponse(processedResponse);
+      processedResponse =
+          await interceptor.interceptResponse(processedResponse);
     }
     return processedResponse;
   }
@@ -42,12 +42,13 @@ class HttpAbstraction {
     final processedRequest = await _processRequest(request);
     final streamedResponse = await _client.send(processedRequest);
     final processedResponse = await _processResponse(streamedResponse);
-    
+
     if (processedResponse is http.StreamedResponse) {
       return await http.Response.fromStream(processedResponse);
     }
-    
-    throw Exception('Unexpected response type: ${processedResponse.runtimeType}');
+
+    throw Exception(
+        'Unexpected response type: ${processedResponse.runtimeType}');
   }
 
   /// Performs an HTTP request with the given method, applying all interceptors
@@ -92,7 +93,8 @@ class HttpAbstraction {
     Object? body,
     Encoding? encoding,
   }) async {
-    return _performRequest('POST', url, headers: headers, body: body, encoding: encoding);
+    return _performRequest('POST', url,
+        headers: headers, body: body, encoding: encoding);
   }
 
   /// Performs a PUT request with interceptors
@@ -102,7 +104,8 @@ class HttpAbstraction {
     Object? body,
     Encoding? encoding,
   }) async {
-    return _performRequest('PUT', url, headers: headers, body: body, encoding: encoding);
+    return _performRequest('PUT', url,
+        headers: headers, body: body, encoding: encoding);
   }
 
   /// Performs a DELETE request with interceptors
@@ -112,7 +115,8 @@ class HttpAbstraction {
     Object? body,
     Encoding? encoding,
   }) async {
-    return _performRequest('DELETE', url, headers: headers, body: body, encoding: encoding);
+    return _performRequest('DELETE', url,
+        headers: headers, body: body, encoding: encoding);
   }
 
   /// Performs a PATCH request with interceptors
@@ -122,7 +126,8 @@ class HttpAbstraction {
     Object? body,
     Encoding? encoding,
   }) async {
-    return _performRequest('PATCH', url, headers: headers, body: body, encoding: encoding);
+    return _performRequest('PATCH', url,
+        headers: headers, body: body, encoding: encoding);
   }
 
   /// Closes the client when done

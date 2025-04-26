@@ -31,9 +31,9 @@ class _HomeViewState extends State<HomeView> {
 
   @override
   Widget build(BuildContext context) {
-    // Check if screen is wide 
+    // Check if screen is wide
     final isWideScreen = MediaQuery.of(context).size.width > 800;
-    
+
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surface,
       appBar: AppBar(
@@ -53,9 +53,9 @@ class _HomeViewState extends State<HomeView> {
         icon: const Icon(Icons.message),
       ),
       body: SafeArea(
-        child: isWideScreen 
-          ? WideLayoutWidget(viewModel: _viewModel)
-          : NormalLayoutWidget(viewModel: _viewModel),
+        child: isWideScreen
+            ? WideLayoutWidget(viewModel: _viewModel)
+            : NormalLayoutWidget(viewModel: _viewModel),
       ),
     );
   }
@@ -64,7 +64,7 @@ class _HomeViewState extends State<HomeView> {
 /// Widget for normal (narrow) screen layout
 class NormalLayoutWidget extends StatelessWidget {
   const NormalLayoutWidget({
-    super.key, 
+    super.key,
     required this.viewModel,
   });
 
@@ -76,13 +76,13 @@ class NormalLayoutWidget extends StatelessWidget {
       children: [
         // Controls
         ControlsWidget(viewModel: viewModel),
-        
+
         // Featured image section
         Expanded(
           flex: 3,
           child: FeaturedImageWidget(viewModel: viewModel),
         ),
-        
+
         // Gallery section
         Expanded(
           flex: 2,
@@ -96,7 +96,7 @@ class NormalLayoutWidget extends StatelessWidget {
 /// Widget for wide screen layout
 class WideLayoutWidget extends StatelessWidget {
   const WideLayoutWidget({
-    super.key, 
+    super.key,
     required this.viewModel,
   });
 
@@ -127,7 +127,7 @@ class WideLayoutWidget extends StatelessWidget {
             ),
           ),
         ),
-        
+
         // Gallery on the right
         Expanded(
           flex: 2,
@@ -144,7 +144,7 @@ class WideLayoutWidget extends StatelessWidget {
 /// Widget for the controls section (fetch button and loading indicator)
 class ControlsWidget extends StatelessWidget {
   const ControlsWidget({
-    super.key, 
+    super.key,
     required this.viewModel,
   });
 
@@ -167,13 +167,13 @@ class ControlsWidget extends StatelessWidget {
               label: const Text('Fetch New Doggo'),
             ),
           ),
-          
+
           // Loading indicator
           ValueListenableBuilder<bool>(
             valueListenable: viewModel.isLoading,
             builder: (context, isLoading, _) {
               if (!isLoading) return const SizedBox(height: 8);
-              
+
               return Padding(
                 padding: const EdgeInsets.only(top: 12.0),
                 child: LinearProgressIndicator(
@@ -216,16 +216,15 @@ class _HoverElevatedButtonState extends State<_HoverElevatedButton> {
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 150),
         transformAlignment: Alignment.center,
-        transform: _isHovered 
-            ? (Matrix4.identity()..scale(1.02))
-            : Matrix4.identity(),
+        transform:
+            _isHovered ? (Matrix4.identity()..scale(1.02)) : Matrix4.identity(),
         child: ElevatedButton.icon(
           onPressed: widget.onPressed,
           icon: widget.icon,
           label: widget.label,
           style: ElevatedButton.styleFrom(
             minimumSize: const Size.fromHeight(50),
-            backgroundColor: _isHovered 
+            backgroundColor: _isHovered
                 ? Theme.of(context).colorScheme.primary.withValues(alpha: .9)
                 : Theme.of(context).colorScheme.primary,
             foregroundColor: Theme.of(context).colorScheme.onPrimary,
@@ -243,7 +242,7 @@ class _HoverElevatedButtonState extends State<_HoverElevatedButton> {
 /// Widget for the featured image display
 class FeaturedImageWidget extends StatelessWidget {
   const FeaturedImageWidget({
-    super.key, 
+    super.key,
     required this.viewModel,
   });
 
@@ -272,11 +271,12 @@ class FeaturedImageWidget extends StatelessWidget {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Icon(
-                    Icons.pets, 
-                    size: 64, 
-                    color: Theme.of(context).colorScheme.primary.withValues(alpha: .5)
-                  ),
+                  Icon(Icons.pets,
+                      size: 64,
+                      color: Theme.of(context)
+                          .colorScheme
+                          .primary
+                          .withValues(alpha: .5)),
                   const SizedBox(height: 16),
                   Text(
                     'No doggos yet',
@@ -286,14 +286,17 @@ class FeaturedImageWidget extends StatelessWidget {
                   Text(
                     'Tap the "Fetch New Doggo" button',
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: Theme.of(context).colorScheme.onSurface.withValues(alpha: .6),
-                    ),
+                          color: Theme.of(context)
+                              .colorScheme
+                              .onSurface
+                              .withValues(alpha: .6),
+                        ),
                   ),
                 ],
               ),
             );
           }
-          
+
           return Container(
             constraints: const BoxConstraints(
               minHeight: 200,
@@ -312,8 +315,8 @@ class FeaturedImageWidget extends StatelessWidget {
                       return Center(
                         child: CircularProgressIndicator(
                           value: loadingProgress.expectedTotalBytes != null
-                              ? loadingProgress.cumulativeBytesLoaded / 
-                                (loadingProgress.expectedTotalBytes ?? 1)
+                              ? loadingProgress.cumulativeBytesLoaded /
+                                  (loadingProgress.expectedTotalBytes ?? 1)
                               : null,
                         ),
                       );
@@ -324,11 +327,9 @@ class FeaturedImageWidget extends StatelessWidget {
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            Icon(
-                              Icons.error_outline, 
-                              size: 48, 
-                              color: Theme.of(context).colorScheme.error
-                            ),
+                            Icon(Icons.error_outline,
+                                size: 48,
+                                color: Theme.of(context).colorScheme.error),
                             const SizedBox(height: 16),
                             const Text('Could not load image'),
                             const SizedBox(height: 8),
@@ -337,7 +338,10 @@ class FeaturedImageWidget extends StatelessWidget {
                               textAlign: TextAlign.center,
                               style: TextStyle(
                                 fontSize: 12,
-                                color: Theme.of(context).colorScheme.error.withValues(alpha: .8),
+                                color: Theme.of(context)
+                                    .colorScheme
+                                    .error
+                                    .withValues(alpha: .8),
                               ),
                             ),
                           ],
@@ -346,20 +350,24 @@ class FeaturedImageWidget extends StatelessWidget {
                     },
                   ),
                 ),
-                
+
                 // Error message
                 ValueListenableBuilder<String?>(
                   valueListenable: viewModel.errorMessage,
                   builder: (context, errorMessage, _) {
                     if (errorMessage == null) return const SizedBox.shrink();
-                    
+
                     return Positioned(
                       bottom: 0,
                       left: 0,
                       right: 0,
                       child: Container(
-                        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-                        color: Theme.of(context).colorScheme.error.withValues(alpha: .8),
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 12, horizontal: 16),
+                        color: Theme.of(context)
+                            .colorScheme
+                            .error
+                            .withValues(alpha: .8),
                         child: Text(
                           errorMessage,
                           style: const TextStyle(color: Colors.white),
@@ -381,7 +389,7 @@ class FeaturedImageWidget extends StatelessWidget {
 /// Widget for displaying the gallery of images
 class GalleryWidget extends StatelessWidget {
   const GalleryWidget({
-    super.key, 
+    super.key,
     required this.viewModel,
   });
 
@@ -400,7 +408,10 @@ class GalleryWidget extends StatelessWidget {
                 Icon(
                   Icons.photo_library_outlined,
                   size: 48,
-                  color: Theme.of(context).colorScheme.onSurface.withValues(alpha: .3),
+                  color: Theme.of(context)
+                      .colorScheme
+                      .onSurface
+                      .withValues(alpha: .3),
                 ),
                 const SizedBox(height: 16),
                 Text(
@@ -408,19 +419,23 @@ class GalleryWidget extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 16,
                     fontStyle: FontStyle.italic,
-                    color: Theme.of(context).colorScheme.onSurface.withValues(alpha: .5),
+                    color: Theme.of(context)
+                        .colorScheme
+                        .onSurface
+                        .withValues(alpha: .5),
                   ),
                 ),
               ],
             ),
           );
         }
-        
+
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 4.0),
+              padding:
+                  const EdgeInsets.symmetric(vertical: 8.0, horizontal: 4.0),
               child: Text(
                 'Your Collection',
                 style: Theme.of(context).textTheme.titleLarge,
@@ -429,7 +444,8 @@ class GalleryWidget extends StatelessWidget {
             Expanded(
               child: MediaQuery.of(context).size.width > 800
                   ? GridGalleryWidget(gallery: gallery, viewModel: viewModel)
-                  : HorizontalGalleryWidget(gallery: gallery, viewModel: viewModel),
+                  : HorizontalGalleryWidget(
+                      gallery: gallery, viewModel: viewModel),
             ),
           ],
         );
@@ -441,7 +457,7 @@ class GalleryWidget extends StatelessWidget {
 /// Widget for displaying a horizontal gallery
 class HorizontalGalleryWidget extends StatelessWidget {
   const HorizontalGalleryWidget({
-    super.key, 
+    super.key,
     required this.gallery,
     required this.viewModel,
   });
@@ -455,10 +471,11 @@ class HorizontalGalleryWidget extends StatelessWidget {
       scrollDirection: Axis.horizontal,
       itemCount: gallery.length,
       itemBuilder: (context, index) {
-        final imageUrl = gallery[gallery.length - 1 - index]; // Most recent first
-        
+        final imageUrl =
+            gallery[gallery.length - 1 - index]; // Most recent first
+
         return GalleryItemWidget(
-          imageUrl: imageUrl, 
+          imageUrl: imageUrl,
           viewModel: viewModel,
         );
       },
@@ -469,7 +486,7 @@ class HorizontalGalleryWidget extends StatelessWidget {
 /// Widget for displaying a grid gallery
 class GridGalleryWidget extends StatelessWidget {
   const GridGalleryWidget({
-    super.key, 
+    super.key,
     required this.gallery,
     required this.viewModel,
   });
@@ -488,10 +505,11 @@ class GridGalleryWidget extends StatelessWidget {
       ),
       itemCount: gallery.length,
       itemBuilder: (context, index) {
-        final imageUrl = gallery[gallery.length - 1 - index]; // Most recent first
-        
+        final imageUrl =
+            gallery[gallery.length - 1 - index]; // Most recent first
+
         return GalleryItemWidget(
-          imageUrl: imageUrl, 
+          imageUrl: imageUrl,
           viewModel: viewModel,
         );
       },
@@ -502,7 +520,7 @@ class GridGalleryWidget extends StatelessWidget {
 /// Widget for displaying an individual gallery item with hover effect
 class GalleryItemWidget extends StatefulWidget {
   const GalleryItemWidget({
-    super.key, 
+    super.key,
     required this.imageUrl,
     required this.viewModel,
   });
@@ -534,14 +552,17 @@ class _GalleryItemWidgetState extends State<GalleryItemWidget> {
             borderRadius: BorderRadius.circular(12),
             boxShadow: [
               BoxShadow(
-                color: _isHovered 
-                    ? Theme.of(context).colorScheme.primary.withValues(alpha: .3)
+                color: _isHovered
+                    ? Theme.of(context)
+                        .colorScheme
+                        .primary
+                        .withValues(alpha: .3)
                     : Colors.black.withValues(alpha: .1),
                 blurRadius: _isHovered ? 8 : 5,
                 spreadRadius: _isHovered ? 2 : 1,
               ),
             ],
-            border: _isHovered 
+            border: _isHovered
                 ? Border.all(
                     color: Theme.of(context).colorScheme.primary,
                     width: 2,
@@ -549,7 +570,7 @@ class _GalleryItemWidgetState extends State<GalleryItemWidget> {
                 : null,
           ),
           transformAlignment: Alignment.center,
-          transform: _isHovered 
+          transform: _isHovered
               ? (Matrix4.identity()..scale(1.05))
               : Matrix4.identity(),
           child: Hero(
@@ -568,7 +589,8 @@ class _GalleryItemWidgetState extends State<GalleryItemWidget> {
                         return Center(
                           child: CircularProgressIndicator(
                             value: loadingProgress.expectedTotalBytes != null
-                                ? loadingProgress.cumulativeBytesLoaded / (loadingProgress.expectedTotalBytes ?? 1)
+                                ? loadingProgress.cumulativeBytesLoaded /
+                                    (loadingProgress.expectedTotalBytes ?? 1)
                                 : null,
                           ),
                         );
@@ -578,14 +600,14 @@ class _GalleryItemWidgetState extends State<GalleryItemWidget> {
                         return Container(
                           color: Theme.of(context).colorScheme.errorContainer,
                           child: Icon(
-                            Icons.error, 
+                            Icons.error,
                             color: Theme.of(context).colorScheme.error,
                           ),
                         );
                       },
                     ),
                   ),
-                  
+
                   // Hover overlay
                   if (_isHovered)
                     Positioned.fill(

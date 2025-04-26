@@ -27,19 +27,23 @@ class LoggingService {
     switch (record.level) {
       case Level.WARNING:
         // ignore: avoid_print
-        print('🟡 ${record.level.name}: ${record.loggerName}: ${record.message}');
+        print(
+            '🟡 ${record.level.name}: ${record.loggerName}: ${record.message}');
         break;
       case Level.SEVERE:
         // ignore: avoid_print
-        print('🔴 ${record.level.name}: ${record.loggerName}: ${record.message}');
+        print(
+            '🔴 ${record.level.name}: ${record.loggerName}: ${record.message}');
         break;
       case Level.SHOUT:
         // ignore: avoid_print
-        print('🔴 ${record.level.name}: ${record.loggerName}: ${record.message}');
+        print(
+            '🔴 ${record.level.name}: ${record.loggerName}: ${record.message}');
         break;
       default:
         // ignore: avoid_print
-        print('🟢 ${record.level.name}: ${record.loggerName}: ${record.message}');
+        print(
+            '🟢 ${record.level.name}: ${record.loggerName}: ${record.message}');
         break;
     }
   }

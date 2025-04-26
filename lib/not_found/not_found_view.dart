@@ -65,4 +65,4 @@ class _NotFoundViewState extends State<NotFoundView> {
       ),
     );
   }
-} 
+}

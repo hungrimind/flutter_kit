@@ -10,4 +10,4 @@ class NotFoundViewModel {
   void navigateToHome() {
     _routerService.replaceAll('/');
   }
-} 
+}

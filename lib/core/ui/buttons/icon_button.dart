@@ -19,7 +19,7 @@ class AppIconButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    
+
     return IconButton(
       icon: Icon(
         icon,
@@ -30,4 +30,4 @@ class AppIconButton extends StatelessWidget {
       tooltip: tooltip,
     );
   }
-} 
+}

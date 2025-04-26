@@ -27,4 +27,4 @@ class ToastService {
   void dispose() {
     _toastNotifier.dispose();
   }
-} 
+}

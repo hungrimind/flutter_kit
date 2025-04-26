@@ -28,7 +28,7 @@ class StartupViewModel {
     appStateNotifier.value = const InitializingApp();
     try {
       setupLocator();
-      
+
       appStateNotifier.value = const AppInitialized();
     } catch (e, st) {
       appStateNotifier.value = AppInitializationError(e, st);
@@ -43,4 +43,4 @@ class StartupViewModel {
   void dispose() {
     appStateNotifier.dispose();
   }
-} 
+}

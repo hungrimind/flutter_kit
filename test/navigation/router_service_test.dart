@@ -84,14 +84,15 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.byType(HomePage), findsOneWidget);
-      
+
       routerService.push('/details');
       await tester.pumpAndSettle();
 
       expect(find.byType(DetailsPage), findsOneWidget);
       expect(find.byType(HomePage), findsNothing);
       expect(routerService.navigationStack.value.length, 2);
-      expect(routerService.navigationStack.value.last.pathWithParams, '/details');
+      expect(
+          routerService.navigationStack.value.last.pathWithParams, '/details');
     });
 
     testWidgets('Pop should remove last route from stack', (tester) async {
@@ -102,7 +103,7 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.byType(DetailsPage), findsOneWidget);
-      
+
       routerService.pop();
       await tester.pumpAndSettle();
 
@@ -112,7 +113,8 @@ void main() {
       expect(routerService.navigationStack.value.last.pathWithParams, '/');
     });
 
-    testWidgets('Replace all should clear stack and set new route', (tester) async {
+    testWidgets('Replace all should clear stack and set new route',
+        (tester) async {
       await tester.pumpWidget(createTestApp());
       await tester.pumpAndSettle();
 
@@ -120,17 +122,20 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.byType(DetailsPage), findsOneWidget);
-      
+
       routerService.replaceAll('/settings');
       await tester.pumpAndSettle();
 
       expect(find.byType(SettingsPage), findsOneWidget);
       expect(find.byType(DetailsPage), findsNothing);
       expect(routerService.navigationStack.value.length, 1);
-      expect(routerService.navigationStack.value.last.pathWithParams, '/settings');
+      expect(
+          routerService.navigationStack.value.last.pathWithParams, '/settings');
     });
 
-    testWidgets('Push invalid route should navigate to 404 and keep the previous route', (tester) async {
+    testWidgets(
+        'Push invalid route should navigate to 404 and keep the previous route',
+        (tester) async {
       await tester.pumpWidget(createTestApp());
       await tester.pumpAndSettle();
 
@@ -170,7 +175,8 @@ void main() {
         });
       });
 
-      testWidgets('Should handle multiple path parameters correctly', (tester) async {
+      testWidgets('Should handle multiple path parameters correctly',
+          (tester) async {
         await tester.pumpWidget(createTestApp());
         await tester.pumpAndSettle();
 
@@ -184,7 +190,8 @@ void main() {
         });
       });
 
-      testWidgets('Should handle mixed query and path parameters', (tester) async {
+      testWidgets('Should handle mixed query and path parameters',
+          (tester) async {
         await tester.pumpWidget(createTestApp());
         await tester.pumpAndSettle();
 
@@ -324,7 +331,7 @@ class SettingsPage extends StatelessWidget {
       body: Center(child: Text('Settings')),
     );
   }
-} 
+}
 
 class NotFoundPage extends StatelessWidget {
   const NotFoundPage({super.key});

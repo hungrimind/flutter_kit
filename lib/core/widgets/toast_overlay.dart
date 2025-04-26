@@ -76,13 +76,17 @@ class _ToastOverlayState extends State<ToastOverlay> {
                                 decoration: BoxDecoration(
                                   color: Theme.of(context).colorScheme.surface,
                                   border: Border.all(
-                                    color: Theme.of(context).colorScheme.outline.withValues(alpha: .2),
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .outline
+                                        .withValues(alpha: .2),
                                     width: 1,
                                   ),
                                   borderRadius: BorderRadius.circular(8),
                                   boxShadow: [
                                     BoxShadow(
-                                      color: Colors.black.withValues(alpha: .05),
+                                      color:
+                                          Colors.black.withValues(alpha: .05),
                                       blurRadius: 8,
                                       offset: const Offset(0, 2),
                                     ),
@@ -100,27 +104,35 @@ class _ToastOverlayState extends State<ToastOverlay> {
                                         Expanded(
                                           child: Text(
                                             toastMessage.message,
-                                            style: Theme.of(context).textTheme.bodyLarge,
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .bodyLarge,
                                           ),
                                         ),
                                         const SizedBox(width: 16),
                                         if (toastMessage.onUndo != null)
                                           TextButton(
                                             style: TextButton.styleFrom(
-                                              padding: const EdgeInsets.symmetric(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
                                                 horizontal: 16,
                                                 vertical: 8,
                                               ),
-                                              backgroundColor: Theme.of(context).colorScheme.surfaceContainerHighest,
+                                              backgroundColor: Theme.of(context)
+                                                  .colorScheme
+                                                  .surfaceContainerHighest,
                                             ),
                                             onPressed: () {
                                               toastMessage.onUndo?.call();
-                                              toastService.toastNotifier.value = null;
+                                              toastService.toastNotifier.value =
+                                                  null;
                                             },
                                             child: Text(
                                               'Undo',
                                               style: TextStyle(
-                                                color: Theme.of(context).colorScheme.onSurfaceVariant,
+                                                color: Theme.of(context)
+                                                    .colorScheme
+                                                    .onSurfaceVariant,
                                               ),
                                             ),
                                           ),
@@ -140,4 +152,4 @@ class _ToastOverlayState extends State<ToastOverlay> {
       ],
     );
   }
-} 
+}

@@ -8,7 +8,7 @@ GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 class AppRouterDelegate extends RouterDelegate<RouteData> {
   AppRouterDelegate({required RouterService routerService})
-    : _routerService = routerService;
+      : _routerService = routerService;
 
   final RouterService _routerService;
 

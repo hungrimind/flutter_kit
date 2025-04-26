@@ -7,16 +7,16 @@ import 'package:flutter_kit/navigation/router_service.dart';
 
 class BestRouterConfig extends RouterConfig<Object> {
   BestRouterConfig({required RouterService routerService})
-    : super(
-        routerDelegate: AppRouterDelegate(routerService: routerService),
-        routeInformationProvider: PlatformRouteInformationProvider(
-          initialRouteInformation: RouteInformation(
-            uri: Uri.parse(PlatformDispatcher.instance.defaultRouteName),
+      : super(
+          routerDelegate: AppRouterDelegate(routerService: routerService),
+          routeInformationProvider: PlatformRouteInformationProvider(
+            initialRouteInformation: RouteInformation(
+              uri: Uri.parse(PlatformDispatcher.instance.defaultRouteName),
+            ),
           ),
-        ),
-        backButtonDispatcher: RootBackButtonDispatcher(),
-        routeInformationParser: AppRouteInformationParser(
-          routes: routerService.supportedRoutes,
-        ),
-      );
+          backButtonDispatcher: RootBackButtonDispatcher(),
+          routeInformationParser: AppRouteInformationParser(
+            routes: routerService.supportedRoutes,
+          ),
+        );
 }
