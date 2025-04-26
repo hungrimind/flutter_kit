@@ -40,7 +40,7 @@ jobs:
         run: flutter test
 
       - name: Build Android APK
-        run: flutter build apk --debug
+        run: flutter build appbundle --debug
 
       - name: Build Web
         run: flutter build web
