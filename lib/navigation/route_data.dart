@@ -8,11 +8,16 @@ class RouteEntry {
   final Widget Function(ValueKey<String>? key, RouteData routeData) builder;
 }
 
-class RouteData extends RouteSettings {
-  const RouteData({required this.uri, required this.routePattern});
+class RouteData {
+  const RouteData({
+    required this.uri,
+    required this.routePattern,
+    this.extra,
+  });
 
   final Uri uri;
   final String routePattern;
+  final Object? extra;
 
   String get pathWithParams => uri.toString();
 
@@ -37,6 +42,6 @@ class RouteData extends RouteSettings {
 
   @override
   String toString() {
-    return 'RouteData(uri: $uri, routePattern: $routePattern, queryParameters: $queryParameters, pathParameters: $pathParameters)';
+    return 'RouteData(uri: $uri, routePattern: $routePattern, queryParameters: $queryParameters, pathParameters: $pathParameters, extra: $extra)';
   }
 }

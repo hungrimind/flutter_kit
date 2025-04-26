@@ -1,7 +1,10 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_kit/navigation/route_data.dart' show RouteData;
 import 'package:flutter_kit/navigation/router_service.dart';
 import 'package:flutter_kit/navigation/utils.dart';
+
+GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 class AppRouterDelegate extends RouterDelegate<RouteData> {
   AppRouterDelegate({required RouterService routerService})
@@ -22,11 +25,7 @@ class AppRouterDelegate extends RouterDelegate<RouteData> {
       );
 
       pages.add(
-        MaterialPage(
-          key: ValueKey('Page_${routeData.hashCode}'),
-          child: child,
-          canPop: _routerService.canPop(routeData),
-        ),
+        MaterialPage(key: ValueKey('Page_${routeData.hashCode}'), child: child),
       );
     }
     return pages;
@@ -35,6 +34,7 @@ class AppRouterDelegate extends RouterDelegate<RouteData> {
   @override
   Widget build(BuildContext context) {
     return Navigator(
+      key: navigatorKey,
       pages: createPages(),
       onDidRemovePage: (page) {
         _routerService.pop();
@@ -45,10 +45,10 @@ class AppRouterDelegate extends RouterDelegate<RouteData> {
   @override
   Future<bool> popRoute() async {
     if (_routerService.navigationStack.value.length > 1) {
-      _routerService.pop();
-      return true;
+      Navigator.of(navigatorKey.currentContext!).pop();
+      return SynchronousFuture(true);
     }
-    return false;
+    return SynchronousFuture(false);
   }
 
   @override
@@ -61,7 +61,7 @@ class AppRouterDelegate extends RouterDelegate<RouteData> {
 
   @override
   Future<void> setNewRoutePath(RouteData configuration) async {
-    _routerService.replaceAllWithRoute(configuration);
+    SynchronousFuture(_routerService.replaceAllWithRoute(configuration));
   }
 
   @override

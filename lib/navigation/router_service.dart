@@ -14,23 +14,24 @@ class RouterService with ObservableRouter {
 
   final List<RouteEntry> supportedRoutes;
 
-  RouteData _createRouteData(String path) {
+  RouteData _createRouteData(String path, [Object? extra]) {
     final uri = Uri.parse(path);
     return RouteData(
       uri: uri,
       routePattern: findMatchingRoutePattern(uri, supportedRoutes),
+      extra: extra,
     );
   }
 
-  void push(String path) {
+  void push(String path, {Object? extra}) {
     if (_pathNotSupported(path)) {
       _handlePathNotSupported(path);
       return;
     }
 
-    final defaultRoute = _createRouteData(path);
-    _navigationStack.value = [..._navigationStack.value, defaultRoute];
-    notifyPush(defaultRoute);
+    final newRoute = _createRouteData(path, extra);
+    _navigationStack.value = [..._navigationStack.value, newRoute];
+    notifyPush(newRoute);
   }
 
   void pop() {
@@ -39,6 +40,8 @@ class RouterService with ObservableRouter {
     }
 
     final poppedRoute = _navigationStack.value.last;
+
+    // Schedule this update for the next frame to avoid conflicts with build phase
     _navigationStack.value = _navigationStack.value.sublist(
       0,
       _navigationStack.value.length - 1,
@@ -46,13 +49,13 @@ class RouterService with ObservableRouter {
     notifyPop(poppedRoute);
   }
 
-  void replaceAll(String path) {
+  void replaceAll(String path, {Object? extra}) {
     if (_pathNotSupported(path)) {
       _handlePathNotSupported(path);
       return;
     }
 
-    final newRoute = _createRouteData(path);
+    final newRoute = _createRouteData(path, extra);
     _navigationStack.value = [newRoute];
     notifyReplace(newRoute);
   }
@@ -83,9 +86,9 @@ class RouterService with ObservableRouter {
       return;
     }
 
-
-    // For browser refreshes or direct URL access, we don't need to notify pops
-    // since we're creating a fresh navigation stack
+    // When restoring from URL, extra is typically not available.
+    // We use the resolvedRoute directly, which might or might not have extra depending on how it was created before serialization.
+    // If RouteData came from AppRouteInformationParser, it won't have extra.
     _navigationStack.value = [resolvedRoute];
     notifyReplace(resolvedRoute);
   }
@@ -103,11 +106,6 @@ class RouterService with ObservableRouter {
     notifyRemove(routeToRemove);
   }
 
-  bool canPop(RouteData route) {
-    return _navigationStack.value.length > 1 &&
-        _navigationStack.value.last.pathWithParams == route.pathWithParams;
-  }
-
   bool _existsInStack(String path) {
     final uri = Uri.parse(path);
     return _navigationStack.value.any((r) => r.uri == uri);
@@ -120,10 +118,7 @@ class RouterService with ObservableRouter {
 
   void _handlePathNotSupported(String path) {
     final notFoundRoute = _createRouteData('/404');
-    _navigationStack.value = [
-      ..._navigationStack.value,
-      notFoundRoute,
-    ];
+    _navigationStack.value = [..._navigationStack.value, notFoundRoute];
     notifyPush(notFoundRoute);
   }
 }

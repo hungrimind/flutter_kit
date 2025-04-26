@@ -1,11 +1,11 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_kit/navigation/route_data.dart';
 import 'package:flutter_kit/navigation/utils.dart';
 
-class AppRouteInformationParser
-    extends RouteInformationParser<RouteData> {
+class AppRouteInformationParser extends RouteInformationParser<RouteData> {
   AppRouteInformationParser({required this.routes});
-  
+
   final List<RouteEntry> routes;
 
   @override
@@ -13,19 +13,15 @@ class AppRouteInformationParser
     RouteInformation routeInformation,
   ) async {
     final uri = routeInformation.uri;
-    return RouteData(
-      uri: uri,
-      routePattern: findMatchingRoutePattern(uri, routes),
+    return SynchronousFuture(
+      RouteData(uri: uri, routePattern: findMatchingRoutePattern(uri, routes)),
     );
   }
 
   @override
   RouteInformation? restoreRouteInformation(RouteData configuration) {
     if (configuration.pathWithParams.isNotEmpty) {
-      return RouteInformation(
-        uri: configuration.uri,
-        state: configuration.arguments,
-      );
+      return RouteInformation(uri: configuration.uri);
     }
 
     return null;
