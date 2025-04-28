@@ -114,13 +114,13 @@ class _Toast extends StatelessWidget {
                 border: Border.all(
                   color: Theme.of(context)
                       .colorScheme
-                      .outline.withOpacity(0.2),
+                      .outline.withValues(alpha: 0.2),
                   width: 1,
                 ),
                 borderRadius: BorderRadius.circular(8),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.05),
+                    color: Colors.black.withValues(alpha: 0.05),
                     blurRadius: 8,
                     offset: const Offset(0, 2),
                   ),
