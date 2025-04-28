@@ -15,8 +15,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get errorGeneric => 'Oops! Something went wrong';
 
   @override
-  String get errorStartingApp =>
-      'We encountered an error while starting the app.';
+  String get errorStartingApp => 'We encountered an error while starting the app.';
 
   @override
   String get retry => 'Retry';
@@ -29,4 +28,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get notFoundGoHome => 'Go Home';
+
+  @override
+  String get counter => 'You have pushed the button this many times:';
 }

@@ -27,5 +27,9 @@
   "notFoundGoHome": "Go Home",
   "@notFoundGoHome": {
     "description": "Text for the button that takes users back to home page"
+  },
+  "counter": "You have pushed the button this many times:",
+  "@counter": {
+    "description": "Text for the counter"
   }
 }
