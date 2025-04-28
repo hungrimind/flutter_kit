@@ -31,11 +31,12 @@ void main() {
           reason: 'Lazy module should return the same singleton instance');
     });
 
-    test('Register and retrieve non-lazy module returns new instance each time', () {
+    test('Register and retrieve non-lazy module returns new instance each time',
+        () {
       // Arrange
       final module = Module<TestServiceA>(
         builder: () => TestServiceA(),
-        lazy: false, 
+        lazy: false,
       );
       locator.registerMany([module]);
 
@@ -50,10 +51,12 @@ void main() {
           reason: 'Non-lazy module should return a new instance each time');
     });
 
-     test('Register multiple modules with mixed lazy types', () {
+    test('Register multiple modules with mixed lazy types', () {
       // Arrange
-      final moduleA = Module<TestServiceA>(builder: () => TestServiceA(), lazy: true); // Lazy
-      final moduleB = Module<TestServiceB>(builder: () => TestServiceB(), lazy: false); // Non-lazy (factory)
+      final moduleA = Module<TestServiceA>(
+          builder: () => TestServiceA(), lazy: true); // Lazy
+      final moduleB = Module<TestServiceB>(
+          builder: () => TestServiceB(), lazy: false); // Non-lazy (factory)
 
       // Act
       locator.registerMany([moduleA, moduleB]);
@@ -62,20 +65,22 @@ void main() {
       final instanceA1 = locator<TestServiceA>();
       final instanceA2 = locator<TestServiceA>();
       expect(instanceA1, isA<TestServiceA>());
-      expect(instanceA1, same(instanceA2), reason: 'Lazy Module A should return same instance');
+      expect(instanceA1, same(instanceA2),
+          reason: 'Lazy Module A should return same instance');
 
       final instanceB1 = locator<TestServiceB>();
       final instanceB2 = locator<TestServiceB>();
       expect(instanceB1, isA<TestServiceB>());
-      expect(instanceB1, isNot(same(instanceB2)), reason: 'Non-lazy Module B should return new instances');
+      expect(instanceB1, isNot(same(instanceB2)),
+          reason: 'Non-lazy Module B should return new instances');
     });
-
 
     test('Retrieve unregistered module throws exception', () {
       // Arrange (no registration)
 
       // Act & Assert
-      expect(() => locator<TestServiceA>(), throwsA(isA<ModuleNotFoundException>()));
+      expect(() => locator<TestServiceA>(),
+          throwsA(isA<ModuleNotFoundException>()));
     });
 
     test('Reset clears registered modules', () {
@@ -90,7 +95,8 @@ void main() {
       locator.reset();
 
       // Assert
-      expect(() => locator<TestServiceA>(), throwsA(isA<ModuleNotFoundException>()),
+      expect(() => locator<TestServiceA>(),
+          throwsA(isA<ModuleNotFoundException>()),
           reason: 'Should throw after reset');
     });
   });

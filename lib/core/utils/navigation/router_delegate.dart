@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_kit/core/utils/navigation/route_data.dart' show RouteData;
+import 'package:flutter_kit/core/utils/navigation/route_data.dart'
+    show RouteData;
 import 'package:flutter_kit/core/utils/navigation/router_service.dart';
 import 'package:flutter_kit/core/utils/navigation/utils.dart';
 

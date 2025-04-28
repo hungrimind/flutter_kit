@@ -12,17 +12,14 @@ final modules = [
     builder: () => RouterService(supportedRoutes: routes),
     lazy: false,
   ),
-
   Module<LoggingService>(
     builder: () => LoggingService(),
     lazy: false,
   ),
-
   Module<ToastService>(
     builder: () => ToastService(),
     lazy: true,
   ),
-
   Module<HttpAbstraction>(
     builder: () {
       final httpAbstraction = HttpAbstraction();

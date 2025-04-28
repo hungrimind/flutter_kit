@@ -2,7 +2,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_kit/core/services/toast_service.dart';
 
 class ToastOverlayViewModel {
-  ToastOverlayViewModel({required ToastService toastService}) : _toastService = toastService;
+  ToastOverlayViewModel({required ToastService toastService})
+      : _toastService = toastService;
 
   final ToastService _toastService;
 

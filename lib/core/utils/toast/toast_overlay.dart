@@ -35,7 +35,8 @@ class _ToastOverlayState extends State<ToastOverlay> {
             builder: (context, toastMessage, _) {
               if (toastMessage != null) {
                 Future.delayed(toastMessage.duration, () {
-                  if (mounted && _viewModel.toastNotifier.value == toastMessage) {
+                  if (mounted &&
+                      _viewModel.toastNotifier.value == toastMessage) {
                     _viewModel.clearToast();
                   }
                 });
@@ -114,7 +115,8 @@ class _Toast extends StatelessWidget {
                 border: Border.all(
                   color: Theme.of(context)
                       .colorScheme
-                      .outline.withValues(alpha: 0.2),
+                      .outline
+                      .withValues(alpha: 0.2),
                   width: 1,
                 ),
                 borderRadius: BorderRadius.circular(8),
