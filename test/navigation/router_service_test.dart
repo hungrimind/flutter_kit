@@ -113,6 +113,24 @@ void main() {
       expect(routerService.navigationStack.value.last.pathWithParams, '/');
     });
 
+    testWidgets('Go to same route twice should noop', (tester) async {
+      await tester.pumpWidget(createTestApp());
+      await tester.pumpAndSettle();
+
+      routerService.goTo('/details');
+      await tester.pumpAndSettle();
+
+      expect(find.byType(DetailsPage), findsOneWidget);
+
+      routerService.goTo('/details');
+      await tester.pumpAndSettle();
+
+      expect(find.byType(DetailsPage), findsOneWidget);
+      expect(routerService.navigationStack.value.length, 2);
+      expect(
+          routerService.navigationStack.value.last.pathWithParams, '/details');
+    });
+
     testWidgets('Replace should replace last route in stack', (tester) async {
       await tester.pumpWidget(createTestApp());
       await tester.pumpAndSettle();
@@ -127,7 +145,7 @@ void main() {
 
       expect(find.byType(SettingsPage), findsOneWidget);
       expect(find.byType(DetailsPage), findsNothing);
-      expect(routerService.navigationStack.value.length, 1);
+      expect(routerService.navigationStack.value.length, 2);
       expect(
           routerService.navigationStack.value.last.pathWithParams, '/settings');
     });

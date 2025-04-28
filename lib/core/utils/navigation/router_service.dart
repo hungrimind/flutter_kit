@@ -29,6 +29,10 @@ class RouterService with ObservableRouter {
       return;
     }
 
+    if (_navigationStack.value.last.pathWithParams == path) {
+      return;
+    }
+
     final newRoute = _createRouteData(path, extra);
     _navigationStack.value = [..._navigationStack.value, newRoute];
     notifyPush(newRoute);
@@ -41,7 +45,7 @@ class RouterService with ObservableRouter {
     }
 
     final newRoute = _createRouteData(path, extra);
-    _navigationStack.value = [..._navigationStack.value.sublist(0, _navigationStack.value.length - 2), newRoute];
+    _navigationStack.value = [..._navigationStack.value.sublist(0, _navigationStack.value.length - 1), newRoute];
     notifyReplace(newRoute);
   }
 
