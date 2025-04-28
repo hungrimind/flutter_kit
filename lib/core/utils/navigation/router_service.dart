@@ -23,7 +23,7 @@ class RouterService with ObservableRouter {
     );
   }
 
-  void push(String path, {Object? extra}) {
+  void goTo(String path, {Object? extra}) {
     if (_pathNotSupported(path)) {
       _handlePathNotSupported(path);
       return;
@@ -34,7 +34,7 @@ class RouterService with ObservableRouter {
     notifyPush(newRoute);
   }
 
-  void pop() {
+  void back() {
     if (_navigationStack.value.length <= 1) {
       return;
     }
@@ -60,7 +60,7 @@ class RouterService with ObservableRouter {
     notifyReplace(newRoute);
   }
 
-  void popUntil(String path) {
+  void backUntil(String path) {
     if (!_existsInStack(path)) {
       return;
     }

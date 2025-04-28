@@ -79,13 +79,13 @@ void main() {
       expect(routerService.navigationStack.value.first.pathWithParams, '/');
     });
 
-    testWidgets('Push should add new route to stack', (tester) async {
+    testWidgets('Go to should add new route to stack', (tester) async {
       await tester.pumpWidget(createTestApp());
       await tester.pumpAndSettle();
 
       expect(find.byType(HomePage), findsOneWidget);
 
-      routerService.push('/details');
+      routerService.goTo('/details');
       await tester.pumpAndSettle();
 
       expect(find.byType(DetailsPage), findsOneWidget);
@@ -95,16 +95,16 @@ void main() {
           routerService.navigationStack.value.last.pathWithParams, '/details');
     });
 
-    testWidgets('Pop should remove last route from stack', (tester) async {
+    testWidgets('Back should remove last route from stack', (tester) async {
       await tester.pumpWidget(createTestApp());
       await tester.pumpAndSettle();
 
-      routerService.push('/details');
+      routerService.goTo('/details');
       await tester.pumpAndSettle();
 
       expect(find.byType(DetailsPage), findsOneWidget);
 
-      routerService.pop();
+      routerService.back();
       await tester.pumpAndSettle();
 
       expect(find.byType(HomePage), findsOneWidget);
@@ -118,7 +118,7 @@ void main() {
       await tester.pumpWidget(createTestApp());
       await tester.pumpAndSettle();
 
-      routerService.push('/details');
+      routerService.goTo('/details');
       await tester.pumpAndSettle();
 
       expect(find.byType(DetailsPage), findsOneWidget);
@@ -134,12 +134,12 @@ void main() {
     });
 
     testWidgets(
-        'Push invalid route should navigate to 404 and keep the previous route',
+        'Go to invalid route should navigate to 404 and keep the previous route',
         (tester) async {
       await tester.pumpWidget(createTestApp());
       await tester.pumpAndSettle();
 
-      routerService.push('/invalid-route');
+      routerService.goTo('/invalid-route');
       await tester.pumpAndSettle();
 
       expect(find.byType(NotFoundPage), findsOneWidget);
@@ -152,7 +152,7 @@ void main() {
         await tester.pumpWidget(createTestApp());
         await tester.pumpAndSettle();
 
-        routerService.push('/details?id=123&category=books');
+        routerService.goTo('/details?id=123&category=books');
         await tester.pumpAndSettle();
 
         expect(find.text('Details: 123 - books'), findsOneWidget);
@@ -166,7 +166,7 @@ void main() {
         await tester.pumpWidget(createTestApp());
         await tester.pumpAndSettle();
 
-        routerService.push('/products/456');
+        routerService.goTo('/products/456');
         await tester.pumpAndSettle();
 
         expect(find.text('Product: 456'), findsOneWidget);
@@ -180,7 +180,7 @@ void main() {
         await tester.pumpWidget(createTestApp());
         await tester.pumpAndSettle();
 
-        routerService.push('/users/123/posts/789');
+        routerService.goTo('/users/123/posts/789');
         await tester.pumpAndSettle();
 
         expect(find.text('User 123 - Post 789'), findsOneWidget);
@@ -195,7 +195,7 @@ void main() {
         await tester.pumpWidget(createTestApp());
         await tester.pumpAndSettle();
 
-        routerService.push('/products/456?color=red&size=large');
+        routerService.goTo('/products/456?color=red&size=large');
         await tester.pumpAndSettle();
 
         expect(find.text('Product: 456 (red, large)'), findsOneWidget);
@@ -207,12 +207,12 @@ void main() {
     });
 
     group('PopScope Tests', () {
-      testWidgets('Should allow pop when canPop is true', (tester) async {
+      testWidgets('Should allow back when canPop is true', (tester) async {
         await tester.pumpWidget(createTestApp());
         await tester.pumpAndSettle();
 
         // Navigate to PopScope page
-        routerService.push('/pop-scope');
+        routerService.goTo('/pop-scope');
         await tester.pumpAndSettle();
 
         expect(find.byType(PopScopePage), findsOneWidget);
@@ -226,12 +226,12 @@ void main() {
         expect(routerService.navigationStack.value.length, 1);
       });
 
-      testWidgets('Should prevent pop when canPop is false', (tester) async {
+      testWidgets('Should prevent back when canPop is false', (tester) async {
         await tester.pumpWidget(createTestApp());
         await tester.pumpAndSettle();
 
         // Navigate to PopScope page with canPop set to false
-        routerService.push('/pop-scope?canPop=false');
+        routerService.goTo('/pop-scope?canPop=false');
         await tester.pumpAndSettle();
 
         expect(find.byType(PopScopePage), findsOneWidget);

@@ -37,7 +37,7 @@ class AppRouterDelegate extends RouterDelegate<RouteData> {
       key: navigatorKey,
       pages: createPages(),
       onDidRemovePage: (page) {
-        _routerService.pop();
+        _routerService.back();
       },
     );
   }
