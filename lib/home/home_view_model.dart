@@ -8,6 +8,7 @@ class HomeViewModel {
   HomeViewModel({required ToastService toastService})
       : _toastService = toastService;
 
+
   final ValueNotifier<int> counter = ValueNotifier<int>(0);
 
   void increment() {

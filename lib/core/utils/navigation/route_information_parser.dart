@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_kit/navigation/route_data.dart';
-import 'package:flutter_kit/navigation/utils.dart';
+import 'package:flutter_kit/core/utils/navigation/route_data.dart';
+import 'package:flutter_kit/core/utils/navigation/utils.dart';
 
 class AppRouteInformationParser extends RouteInformationParser<RouteData> {
   AppRouteInformationParser({required this.routes});

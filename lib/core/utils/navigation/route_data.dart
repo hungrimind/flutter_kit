@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_kit/navigation/utils.dart';
+import 'package:flutter_kit/core/utils/navigation/utils.dart';
 
 class RouteEntry {
   RouteEntry({required this.path, required this.builder});
@@ -44,4 +44,12 @@ class RouteData {
   String toString() {
     return 'RouteData(uri: $uri, routePattern: $routePattern, queryParameters: $queryParameters, pathParameters: $pathParameters, extra: $extra)';
   }
+
+  @override
+  bool operator ==(Object other) {
+    return other is RouteData && uri == other.uri && routePattern == other.routePattern && extra == other.extra;
+  }
+
+  @override
+  int get hashCode => uri.hashCode ^ routePattern.hashCode ^ extra.hashCode;
 }

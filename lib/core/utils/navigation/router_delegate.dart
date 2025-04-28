@@ -1,8 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_kit/navigation/route_data.dart' show RouteData;
-import 'package:flutter_kit/navigation/router_service.dart';
-import 'package:flutter_kit/navigation/utils.dart';
+import 'package:flutter_kit/core/utils/navigation/route_data.dart' show RouteData;
+import 'package:flutter_kit/core/utils/navigation/router_service.dart';
+import 'package:flutter_kit/core/utils/navigation/utils.dart';
 
 GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
@@ -61,6 +61,9 @@ class AppRouterDelegate extends RouterDelegate<RouteData> {
 
   @override
   Future<void> setNewRoutePath(RouteData configuration) async {
+    if (currentConfiguration == configuration) {
+      return SynchronousFuture<void>(null);
+    }
     SynchronousFuture(_routerService.replaceAllWithRoute(configuration));
   }
 

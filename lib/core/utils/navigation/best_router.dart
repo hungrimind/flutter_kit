@@ -1,9 +1,9 @@
 import 'dart:ui';
 
 import 'package:flutter/widgets.dart';
-import 'package:flutter_kit/navigation/route_information_parser.dart';
-import 'package:flutter_kit/navigation/router_delegate.dart';
-import 'package:flutter_kit/navigation/router_service.dart';
+import 'package:flutter_kit/core/utils/navigation/route_information_parser.dart';
+import 'package:flutter_kit/core/utils/navigation/router_delegate.dart';
+import 'package:flutter_kit/core/utils/navigation/router_service.dart';
 
 class BestRouterConfig extends RouterConfig<Object> {
   BestRouterConfig({required RouterService routerService})

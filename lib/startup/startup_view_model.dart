@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:flutter_kit/config/locator_config.dart';
 import 'package:flutter_kit/core/utils/locator.dart';
 
 /// Represents different states of app initialization

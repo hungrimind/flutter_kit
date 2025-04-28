@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:flutter_kit/navigation/best_router.dart';
-import 'package:flutter_kit/navigation/route_data.dart';
-import 'package:flutter_kit/navigation/router_service.dart';
+import 'package:flutter_kit/core/utils/navigation/best_router.dart';
+import 'package:flutter_kit/core/utils/navigation/route_data.dart';
+import 'package:flutter_kit/core/utils/navigation/router_service.dart';
 
 void main() {
   group('Navigation Tests', () {

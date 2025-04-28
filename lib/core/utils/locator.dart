@@ -1,33 +1,7 @@
 import 'package:flutter/foundation.dart';
-import 'package:flutter_kit/core/http/http_abstraction.dart';
-import 'package:flutter_kit/core/http/http_interceptor.dart';
-import 'package:flutter_kit/core/router/router.dart';
-import 'package:flutter_kit/core/services/logging_service.dart';
-import 'package:flutter_kit/core/services/toast_service.dart';
-import 'package:flutter_kit/navigation/router_service.dart';
+
 
 final locator = ServiceLocator.instance;
-
-void setupLocator() {
-  locator
-      .registerSingleton<RouterService>(RouterService(supportedRoutes: routes));
-  locator.registerSingleton<LoggingService>(LoggingService());
-  locator.registerLazySingleton<ToastService>(() => ToastService());
-
-  // Create HttpAbstraction with logging interceptor
-  locator.registerLazySingleton<HttpAbstraction>(() {
-    final httpAbstraction = HttpAbstraction();
-
-    // Add logging interceptor
-    httpAbstraction.addInterceptor(
-      HttpLoggingInterceptor(
-        logBody: !kReleaseMode, // Only log bodies in debug mode
-      ),
-    );
-
-    return httpAbstraction;
-  });
-}
 
 class ServiceLocator {
   ServiceLocator._();

@@ -1,4 +1,4 @@
-import 'package:flutter_kit/core/http/http_interceptor.dart';
+import 'package:flutter_kit/core/utils/http/http_interceptor.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'http_native.dart' if (dart.library.js_interop) 'http_web.dart';

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_kit/navigation/url_strategy/url_strategy.dart';
+import 'package:flutter_kit/core/utils/navigation/url_strategy/url_strategy.dart';
 import 'package:flutter_kit/startup/startup.dart';
 
 void main() {

@@ -1,5 +1,5 @@
 import 'package:flutter_kit/home/home_view.dart';
-import 'package:flutter_kit/navigation/route_data.dart';
+import 'package:flutter_kit/core/utils/navigation/route_data.dart';
 import 'package:flutter_kit/not_found/not_found_view.dart';
 
 final routes = [

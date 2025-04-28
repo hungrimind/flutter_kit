@@ -1,4 +1,4 @@
-import 'package:flutter_kit/navigation/route_data.dart';
+import 'package:flutter_kit/core/utils/navigation/route_data.dart';
 
 bool matchRoute(String pattern, Uri path) {
   final pathSegments = path.pathSegments;
