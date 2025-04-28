@@ -24,7 +24,7 @@ class _StartupViewState extends State<StartupView> {
     super.initState();
     _viewModel.initializeApp();
     _routerConfig =
-        BestRouterConfig(routerService: locator.get<RouterService>());
+        BestRouterConfig(routerService: locator<RouterService>());
   }
 
   @override

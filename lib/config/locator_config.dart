@@ -7,23 +7,34 @@ import 'package:flutter_kit/core/services/toast_service.dart';
 import 'package:flutter_kit/core/utils/locator.dart';
 import 'package:flutter_kit/core/utils/navigation/router_service.dart';
 
-void setupLocator() {
-  locator
-      .registerSingleton<RouterService>(RouterService(supportedRoutes: routes));
-  locator.registerSingleton<LoggingService>(LoggingService());
-  locator.registerLazySingleton<ToastService>(() => ToastService());
+final modules = [
+  Module<RouterService>(
+    builder: () => RouterService(supportedRoutes: routes),
+    lazy: false,
+  ),
 
-  // Create HttpAbstraction with logging interceptor
-  locator.registerLazySingleton<HttpAbstraction>(() {
-    final httpAbstraction = HttpAbstraction();
+  Module<LoggingService>(
+    builder: () => LoggingService(),
+    lazy: false,
+  ),
 
-    // Add logging interceptor
-    httpAbstraction.addInterceptor(
-      HttpLoggingInterceptor(
-        logBody: !kReleaseMode, // Only log bodies in debug mode
-      ),
-    );
+  Module<ToastService>(
+    builder: () => ToastService(),
+    lazy: true,
+  ),
 
-    return httpAbstraction;
-  });
-}
+  Module<HttpAbstraction>(
+    builder: () {
+      final httpAbstraction = HttpAbstraction();
+
+      httpAbstraction.addInterceptor(
+        HttpLoggingInterceptor(
+          logBody: !kReleaseMode, // Only log bodies in debug mode
+        ),
+      );
+
+      return httpAbstraction;
+    },
+    lazy: true,
+  ),
+];

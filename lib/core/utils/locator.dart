@@ -1,52 +1,65 @@
-import 'package:flutter/foundation.dart';
+final locator = ModuleLocator.instance;
 
+class Module<T> {
+  final T Function() builder;
+  final bool lazy;
+  Type get type => T;
 
-final locator = ServiceLocator.instance;
+  T? _instance;
 
-class ServiceLocator {
-  ServiceLocator._();
-  static final ServiceLocator instance = ServiceLocator._();
+  Module({
+    required this.builder,
+    required this.lazy,
+  });
 
-  final Map<Type, Object> _singletons = {};
-  final Map<Type, Lazy<Object>> _lazySingletons = {};
+  T getInstance() {
+    if (lazy) {
+      _instance ??= builder();
+      return _instance!;
+    } else {
+      return builder();
+    }
+  }
+}
 
-  void registerSingleton<T extends Object>(T instance) {
-    _singletons[T] = instance;
+class ModuleLocator {
+  ModuleLocator._();
+  static final ModuleLocator instance = ModuleLocator._();
+  final Map<Type, Module> _modules = {};
+
+  void registerMany<T>(List<Module> modules) {
+    for (var module in modules) {
+      final type = module.type;
+      if (_modules.containsKey(type)) {
+        throw ModuleAlreadyRegisteredException(type);
+      }
+      _modules[type] = module;
+
+      if (!module.lazy) {
+        module.getInstance();
+      }
+    }
   }
 
-  void registerLazySingleton<T extends Object>(T Function() create) {
-    _lazySingletons[T] = Lazy<Object>(create);
-  }
-
-  T get<T extends Object>() {
-    final singleton = _singletons[T];
-    if (singleton != null) {
-      return singleton as T;
+  T call<T>() {
+    final module = _modules[T];
+    if (module == null) {
+      throw ModuleNotFoundException(T);
     }
-
-    final lazy = _lazySingletons[T];
-    if (lazy != null) {
-      return lazy.value as T;
-    }
-
-    throw Exception('No singleton registered for type $T');
+    return (module as Module<T>).getInstance();
   }
 
   void reset() {
-    _singletons.clear();
-    _lazySingletons.clear();
+    _modules.clear();
   }
-
-  @visibleForTesting
-  bool isRegistered<T extends Object>() =>
-      _singletons.containsKey(T) || _lazySingletons.containsKey(T);
 }
 
-class Lazy<T> {
-  Lazy(this._create);
+class ModuleNotFoundException implements Exception {
+  final Type type;
+  ModuleNotFoundException(this.type);
+}
 
-  final T Function() _create;
-  T? _value;
-
-  T get value => _value ??= _create();
+class ModuleAlreadyRegisteredException implements Exception {
+  final Type type;
+  ModuleAlreadyRegisteredException(this.type);
 }

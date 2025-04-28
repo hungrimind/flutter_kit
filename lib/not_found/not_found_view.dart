@@ -18,7 +18,7 @@ class _NotFoundViewState extends State<NotFoundView> {
   void initState() {
     super.initState();
     _viewModel = NotFoundViewModel(
-      routerService: locator.get<RouterService>(),
+      routerService: locator<RouterService>(),
     );
   }
 

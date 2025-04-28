@@ -13,7 +13,7 @@ class HomeView extends StatefulWidget {
 
 class _HomeViewState extends State<HomeView> {
   late final HomeViewModel _viewModel = HomeViewModel(
-    toastService: locator.get<ToastService>(),
+    toastService: locator<ToastService>(),
   );
 
   @override

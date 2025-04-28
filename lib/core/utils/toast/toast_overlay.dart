@@ -17,7 +17,7 @@ class ToastOverlay extends StatefulWidget {
 
 class _ToastOverlayState extends State<ToastOverlay> {
   late final ToastOverlayViewModel _viewModel = ToastOverlayViewModel(
-    toastService: locator.get<ToastService>(),
+    toastService: locator<ToastService>(),
   );
   double _dragOffset = 0;
 

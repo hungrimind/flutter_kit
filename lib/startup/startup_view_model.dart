@@ -28,7 +28,7 @@ class StartupViewModel {
   Future<void> initializeApp() async {
     appStateNotifier.value = const InitializingApp();
     try {
-      setupLocator();
+      locator.registerMany(modules);
 
       appStateNotifier.value = const AppInitialized();
     } catch (e, st) {
