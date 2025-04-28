@@ -48,11 +48,9 @@ class RouteData {
   @override
   bool operator ==(Object other) {
     return other is RouteData &&
-        uri == other.uri &&
-        routePattern == other.routePattern &&
-        extra == other.extra;
+        uri == other.uri && routePattern == other.routePattern && extra == other.extra;
   }
 
   @override
-  int get hashCode => uri.hashCode ^ routePattern.hashCode ^ extra.hashCode;
+  int get hashCode => uri.hashCode;
 }

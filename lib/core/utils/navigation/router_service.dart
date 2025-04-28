@@ -34,6 +34,17 @@ class RouterService with ObservableRouter {
     notifyPush(newRoute);
   }
 
+  void replace(String path, {Object? extra}) {
+    if (_pathNotSupported(path)) {
+      _handlePathNotSupported(path);
+      return;
+    }
+
+    final newRoute = _createRouteData(path, extra);
+    _navigationStack.value = [..._navigationStack.value.sublist(0, _navigationStack.value.length - 2), newRoute];
+    notifyReplace(newRoute);
+  }
+
   void back() {
     if (_navigationStack.value.length <= 1) {
       return;
