@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_kit/core/ui/constants/spacing.dart';
 import 'package:flutter_kit/core/ui/theme/app_theme.dart';
 import 'package:flutter_kit/core/utils/locator.dart';
 import 'package:flutter_kit/core/utils/toast/toast_overlay.dart';
@@ -78,19 +79,19 @@ class _StartupErrorView extends StatelessWidget {
                 color: Colors.red,
                 size: 48,
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: AppSpacing.md),
               Text(
                 context.translate.errorGeneric,
                 style: Theme.of(context).textTheme.titleLarge,
                 textAlign: TextAlign.center,
               ),
-              const SizedBox(height: 8),
+              const SizedBox(height: AppSpacing.sm),
               Text(
                 context.translate.errorStartingApp,
                 style: Theme.of(context).textTheme.bodyMedium,
                 textAlign: TextAlign.center,
               ),
-              const SizedBox(height: 24),
+              const SizedBox(height: AppSpacing.lg),
               FilledButton.icon(
                 onPressed: onRetry,
                 icon: const Icon(Icons.refresh),

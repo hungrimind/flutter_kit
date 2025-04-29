@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_kit/core/ui/constants/spacing.dart';
 import 'package:flutter_kit/core/utils/locator.dart';
 import 'package:flutter_kit/l10n/translate_extension.dart';
 import 'package:flutter_kit/core/utils/navigation/router_service.dart';
@@ -39,7 +40,7 @@ class _NotFoundViewState extends State<NotFoundView> {
               size: 100,
               color: Colors.red,
             ),
-            const SizedBox(height: 24),
+            const SizedBox(height: AppSpacing.lg),
             Text(
               context.translate.notFoundTitle,
               style: const TextStyle(
@@ -47,7 +48,7 @@ class _NotFoundViewState extends State<NotFoundView> {
                 fontWeight: FontWeight.bold,
               ),
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: AppSpacing.md),
             Text(
               context.translate.notFoundMessage,
               style: const TextStyle(
@@ -55,7 +56,7 @@ class _NotFoundViewState extends State<NotFoundView> {
                 color: Colors.grey,
               ),
             ),
-            const SizedBox(height: 32),
+            const SizedBox(height: AppSpacing.xl),
             ElevatedButton(
               onPressed: _viewModel.navigateToHome,
               child: Text(context.translate.notFoundGoHome),
