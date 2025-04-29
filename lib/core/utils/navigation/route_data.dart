@@ -5,18 +5,19 @@ class RouteEntry {
   RouteEntry({required this.path, required this.builder});
 
   final String path;
-  final Widget Function(ValueKey<String>? key, RouteData routeData) builder;
+  final Widget Function(ValueKey<String>? key, RouteMatchData routeData)
+  builder;
 }
 
-class RouteConfig {
-  RouteConfig({required this.path, this.extra});
+class RouteData {
+  RouteData({required this.path, this.extra});
 
   final String path;
   final Object? extra;
 }
 
-class RouteData {
-  const RouteData({
+class RouteMatchData {
+  const RouteMatchData({
     required this.uri,
     required this.routePattern,
     this.extra,
@@ -45,7 +46,7 @@ class RouteData {
     }
 
     return params;
-  } 
+  }
 
   @override
   String toString() {
@@ -54,7 +55,7 @@ class RouteData {
 
   @override
   bool operator ==(Object other) {
-    return other is RouteData &&
+    return other is RouteMatchData &&
         uri == other.uri &&
         routePattern == other.routePattern &&
         extra == other.extra;

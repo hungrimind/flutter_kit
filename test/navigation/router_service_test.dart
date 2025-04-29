@@ -12,31 +12,31 @@ void main() {
     setUp(() {
       // Define test routes
       testRoutes = [
-        RouteEntry(
-          path: '/',
-          builder: (key, routeData) => const HomePage(),
-        ),
+        RouteEntry(path: '/', builder: (key, routeData) => const HomePage()),
         RouteEntry(
           path: '/details',
-          builder: (key, routeData) => DetailsPage(
-            id: routeData.queryParameters['id'],
-            category: routeData.queryParameters['category'],
-          ),
+          builder:
+              (key, routeData) => DetailsPage(
+                id: routeData.queryParameters['id'],
+                category: routeData.queryParameters['category'],
+              ),
         ),
         RouteEntry(
           path: '/products/:id',
-          builder: (key, routeData) => ProductPage(
-            id: routeData.pathParameters['id'] ?? '',
-            color: routeData.queryParameters['color'],
-            size: routeData.queryParameters['size'],
-          ),
+          builder:
+              (key, routeData) => ProductPage(
+                id: routeData.pathParameters['id'] ?? '',
+                color: routeData.queryParameters['color'],
+                size: routeData.queryParameters['size'],
+              ),
         ),
         RouteEntry(
           path: '/users/:userId/posts/:postId',
-          builder: (key, routeData) => UserPostPage(
-            userId: routeData.pathParameters['userId'] ?? '',
-            postId: routeData.pathParameters['postId'] ?? '',
-          ),
+          builder:
+              (key, routeData) => UserPostPage(
+                userId: routeData.pathParameters['userId'] ?? '',
+                postId: routeData.pathParameters['postId'] ?? '',
+              ),
         ),
         RouteEntry(
           path: '/settings',
@@ -50,10 +50,7 @@ void main() {
           path: '/pop-scope',
           builder: (key, routeData) {
             final canPop = routeData.queryParameters['canPop'] != 'false';
-            return PopScopePage(
-              key: key,
-              canPop: canPop,
-            );
+            return PopScopePage(key: key, canPop: canPop);
           },
         ),
       ];
@@ -64,9 +61,7 @@ void main() {
 
     Widget createTestApp() {
       return MaterialApp.router(
-        routerConfig: BestRouterConfig(
-          routerService: routerService,
-        ),
+        routerConfig: BestRouterConfig(routerService: routerService),
       );
     }
 
@@ -85,21 +80,23 @@ void main() {
 
       expect(find.byType(HomePage), findsOneWidget);
 
-      routerService.goTo(RouteConfig(path: '/details'));
+      routerService.goTo(RouteData(path: '/details'));
       await tester.pumpAndSettle();
 
       expect(find.byType(DetailsPage), findsOneWidget);
       expect(find.byType(HomePage), findsNothing);
       expect(routerService.navigationStack.value.length, 2);
       expect(
-          routerService.navigationStack.value.last.pathWithParams, '/details');
+        routerService.navigationStack.value.last.pathWithParams,
+        '/details',
+      );
     });
 
     testWidgets('Back should remove last route from stack', (tester) async {
       await tester.pumpWidget(createTestApp());
       await tester.pumpAndSettle();
 
-      routerService.goTo(RouteConfig(path: '/details'));
+      routerService.goTo(RouteData(path: '/details'));
       await tester.pumpAndSettle();
 
       expect(find.byType(DetailsPage), findsOneWidget);
@@ -117,56 +114,62 @@ void main() {
       await tester.pumpWidget(createTestApp());
       await tester.pumpAndSettle();
 
-      routerService.goTo(RouteConfig(path: '/details'));
+      routerService.goTo(RouteData(path: '/details'));
       await tester.pumpAndSettle();
 
       expect(find.byType(DetailsPage), findsOneWidget);
 
-      routerService.replace(RouteConfig(path: '/settings'));
+      routerService.replace(RouteData(path: '/settings'));
       await tester.pumpAndSettle();
 
       expect(find.byType(SettingsPage), findsOneWidget);
       expect(find.byType(DetailsPage), findsNothing);
       expect(routerService.navigationStack.value.length, 2);
       expect(
-          routerService.navigationStack.value.last.pathWithParams, '/settings');
+        routerService.navigationStack.value.last.pathWithParams,
+        '/settings',
+      );
     });
 
-    testWidgets('Replace all should clear stack and set new route',
-        (tester) async {
+    testWidgets('Replace all should clear stack and set new route', (
+      tester,
+    ) async {
       await tester.pumpWidget(createTestApp());
       await tester.pumpAndSettle();
 
-      routerService.goTo(RouteConfig(path: '/details'));
+      routerService.goTo(RouteData(path: '/details'));
       await tester.pumpAndSettle();
 
       expect(find.byType(DetailsPage), findsOneWidget);
 
-      routerService.replaceAll([RouteConfig(path: '/settings')]);
+      routerService.replaceAll([RouteData(path: '/settings')]);
       await tester.pumpAndSettle();
 
       expect(find.byType(SettingsPage), findsOneWidget);
       expect(find.byType(DetailsPage), findsNothing);
       expect(routerService.navigationStack.value.length, 1);
       expect(
-          routerService.navigationStack.value.last.pathWithParams, '/settings');
+        routerService.navigationStack.value.last.pathWithParams,
+        '/settings',
+      );
     });
 
-    testWidgets('Replace all should clear stack and set new routes',
-        (tester) async {
+    testWidgets('Replace all should clear stack and set new routes', (
+      tester,
+    ) async {
       await tester.pumpWidget(createTestApp());
       await tester.pumpAndSettle();
 
-      routerService.goTo(RouteConfig(path: '/details'));
+      routerService.goTo(RouteData(path: '/details'));
       await tester.pumpAndSettle();
 
       expect(find.byType(DetailsPage), findsOneWidget);
 
       routerService.replaceAll([
-        RouteConfig(path: '/'),
-        RouteConfig(path: '/settings'),
-        RouteConfig(path: '/details'),
-        RouteConfig(path: '/products/456'),
+        RouteData(path: '/'),
+        RouteData(path: '/settings'),
+        RouteData(path: '/details'),
+        RouteData(path: '/products/456'),
       ]);
       await tester.pumpAndSettle();
 
@@ -175,55 +178,61 @@ void main() {
       expect(find.byType(HomePage), findsNothing);
       expect(find.byType(ProductPage), findsOneWidget);
       expect(routerService.navigationStack.value.length, 4);
-      expect(routerService.navigationStack.value.last.pathWithParams,
-          '/products/456');
-    });
-
-    testWidgets('Replace all with less routes than before should clear stack and set new routes',
-        (tester) async {
-      await tester.pumpWidget(createTestApp());
-      await tester.pumpAndSettle();
-
-      routerService.goTo(RouteConfig(path: '/details'));
-      routerService.goTo(RouteConfig(path: '/products/456'));
-      routerService.goTo(RouteConfig(path: '/users/123/posts/789'));
-      await tester.pumpAndSettle();
-
-      expect(find.byType(UserPostPage), findsOneWidget);
-
-      routerService.replaceAll([
-        RouteConfig(path: '/'),
-        RouteConfig(path: '/settings'),
-      ]);
-      await tester.pumpAndSettle();
-
-
-      expect(find.byType(SettingsPage), findsOneWidget);
-      expect(routerService.navigationStack.value.length, 2);
-      expect(routerService.navigationStack.value.last.pathWithParams,
-          '/settings');
+      expect(
+        routerService.navigationStack.value.last.pathWithParams,
+        '/products/456',
+      );
     });
 
     testWidgets(
-        'Go to invalid route should navigate to 404 and keep the previous route',
-        (tester) async {
-      await tester.pumpWidget(createTestApp());
-      await tester.pumpAndSettle();
+      'Replace all with less routes than before should clear stack and set new routes',
+      (tester) async {
+        await tester.pumpWidget(createTestApp());
+        await tester.pumpAndSettle();
 
-      routerService.goTo(RouteConfig(path: '/invalid-route'));
-      await tester.pumpAndSettle();
+        routerService.goTo(RouteData(path: '/details'));
+        routerService.goTo(RouteData(path: '/products/456'));
+        routerService.goTo(RouteData(path: '/users/123/posts/789'));
+        await tester.pumpAndSettle();
 
-      expect(find.byType(NotFoundPage), findsOneWidget);
-      expect(routerService.navigationStack.value.length, 2);
-      expect(routerService.navigationStack.value.last.pathWithParams, '/404');
-    });
+        expect(find.byType(UserPostPage), findsOneWidget);
+
+        routerService.replaceAll([
+          RouteData(path: '/'),
+          RouteData(path: '/settings'),
+        ]);
+        await tester.pumpAndSettle();
+
+        expect(find.byType(SettingsPage), findsOneWidget);
+        expect(routerService.navigationStack.value.length, 2);
+        expect(
+          routerService.navigationStack.value.last.pathWithParams,
+          '/settings',
+        );
+      },
+    );
+
+    testWidgets(
+      'Go to invalid route should navigate to 404 and keep the previous route',
+      (tester) async {
+        await tester.pumpWidget(createTestApp());
+        await tester.pumpAndSettle();
+
+        routerService.goTo(RouteData(path: '/invalid-route'));
+        await tester.pumpAndSettle();
+
+        expect(find.byType(NotFoundPage), findsOneWidget);
+        expect(routerService.navigationStack.value.length, 2);
+        expect(routerService.navigationStack.value.last.pathWithParams, '/404');
+      },
+    );
 
     group('Route Parameters Tests', () {
       testWidgets('Should handle query parameters correctly', (tester) async {
         await tester.pumpWidget(createTestApp());
         await tester.pumpAndSettle();
 
-        routerService.goTo(RouteConfig(path: '/details?id=123&category=books'));
+        routerService.goTo(RouteData(path: '/details?id=123&category=books'));
         await tester.pumpAndSettle();
 
         expect(find.text('Details: 123 - books'), findsOneWidget);
@@ -237,7 +246,7 @@ void main() {
         await tester.pumpWidget(createTestApp());
         await tester.pumpAndSettle();
 
-        routerService.goTo(RouteConfig(path: '/products/456'));
+        routerService.goTo(RouteData(path: '/products/456'));
         await tester.pumpAndSettle();
 
         expect(find.text('Product: 456'), findsOneWidget);
@@ -246,12 +255,13 @@ void main() {
         });
       });
 
-      testWidgets('Should handle multiple path parameters correctly',
-          (tester) async {
+      testWidgets('Should handle multiple path parameters correctly', (
+        tester,
+      ) async {
         await tester.pumpWidget(createTestApp());
         await tester.pumpAndSettle();
 
-        routerService.goTo(RouteConfig(path: '/users/123/posts/789'));
+        routerService.goTo(RouteData(path: '/users/123/posts/789'));
         await tester.pumpAndSettle();
 
         expect(find.text('User 123 - Post 789'), findsOneWidget);
@@ -261,13 +271,15 @@ void main() {
         });
       });
 
-      testWidgets('Should handle mixed query and path parameters',
-          (tester) async {
+      testWidgets('Should handle mixed query and path parameters', (
+        tester,
+      ) async {
         await tester.pumpWidget(createTestApp());
         await tester.pumpAndSettle();
 
-        routerService
-            .goTo(RouteConfig(path: '/products/456?color=red&size=large'));
+        routerService.goTo(
+          RouteData(path: '/products/456?color=red&size=large'),
+        );
         await tester.pumpAndSettle();
 
         expect(find.text('Product: 456 (red, large)'), findsOneWidget);
@@ -284,7 +296,7 @@ void main() {
         await tester.pumpAndSettle();
 
         // Navigate to PopScope page
-        routerService.goTo(RouteConfig(path: '/pop-scope'));
+        routerService.goTo(RouteData(path: '/pop-scope'));
         await tester.pumpAndSettle();
 
         expect(find.byType(PopScopePage), findsOneWidget);
@@ -303,7 +315,7 @@ void main() {
         await tester.pumpAndSettle();
 
         // Navigate to PopScope page with canPop set to false
-        routerService.goTo(RouteConfig(path: '/pop-scope?canPop=false'));
+        routerService.goTo(RouteData(path: '/pop-scope?canPop=false'));
         await tester.pumpAndSettle();
 
         expect(find.byType(PopScopePage), findsOneWidget);
@@ -327,37 +339,24 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Center(child: Text('Home')),
-    );
+    return const Scaffold(body: Center(child: Text('Home')));
   }
 }
 
 class DetailsPage extends StatelessWidget {
-  const DetailsPage({
-    super.key,
-    this.id,
-    this.category,
-  });
+  const DetailsPage({super.key, this.id, this.category});
 
   final String? id;
   final String? category;
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(child: Text('Details: $id - $category')),
-    );
+    return Scaffold(body: Center(child: Text('Details: $id - $category')));
   }
 }
 
 class ProductPage extends StatelessWidget {
-  const ProductPage({
-    super.key,
-    required this.id,
-    this.color,
-    this.size,
-  });
+  const ProductPage({super.key, required this.id, this.color, this.size});
 
   final String id;
   final String? color;
@@ -370,27 +369,19 @@ class ProductPage extends StatelessWidget {
         body: Center(child: Text('Product: $id ($color, $size)')),
       );
     }
-    return Scaffold(
-      body: Center(child: Text('Product: $id')),
-    );
+    return Scaffold(body: Center(child: Text('Product: $id')));
   }
 }
 
 class UserPostPage extends StatelessWidget {
-  const UserPostPage({
-    super.key,
-    required this.userId,
-    required this.postId,
-  });
+  const UserPostPage({super.key, required this.userId, required this.postId});
 
   final String userId;
   final String postId;
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(child: Text('User $userId - Post $postId')),
-    );
+    return Scaffold(body: Center(child: Text('User $userId - Post $postId')));
   }
 }
 
@@ -399,9 +390,7 @@ class SettingsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Center(child: Text('Settings')),
-    );
+    return const Scaffold(body: Center(child: Text('Settings')));
   }
 }
 
@@ -410,19 +399,13 @@ class NotFoundPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Center(child: Text('404')),
-    );
+    return const Scaffold(body: Center(child: Text('404')));
   }
 }
 
 // Add PopScopePage for testing PopScope behavior
 class PopScopePage extends StatelessWidget {
-  const PopScopePage({
-    super.key,
-    this.canPop = true,
-    this.onPopInvoked,
-  });
+  const PopScopePage({super.key, this.canPop = true, this.onPopInvoked});
 
   final bool canPop;
   final PopInvokedWithResultCallback<dynamic>? onPopInvoked;

@@ -6,15 +6,15 @@ import 'package:flutter_kit/core/utils/navigation/utils.dart';
 /// Service responsible for managing navigation state using MVVM pattern
 class RouterService with ObservableRouter {
   RouterService({required this.supportedRoutes}) {
-    _navigationStack.value = [_createRouteData(RouteConfig(path: '/'))];
+    _navigationStack.value = [_createRouteData(RouteData(path: '/'))];
   }
 
-  final _navigationStack = ValueNotifier<List<RouteData>>([]);
-  ValueNotifier<List<RouteData>> get navigationStack => _navigationStack;
+  final _navigationStack = ValueNotifier<List<RouteMatchData>>([]);
+  ValueNotifier<List<RouteMatchData>> get navigationStack => _navigationStack;
 
   final List<RouteEntry> supportedRoutes;
 
-  void goTo(RouteConfig routeConfig) {
+  void goTo(RouteData routeConfig) {
     if (_pathNotSupported(routeConfig.path)) {
       _handlePathNotSupported();
       return;
@@ -25,7 +25,7 @@ class RouterService with ObservableRouter {
     notifyPush(newRoute);
   }
 
-  void replace(RouteConfig routeConfig) {
+  void replace(RouteData routeConfig) {
     if (_pathNotSupported(routeConfig.path)) {
       _handlePathNotSupported();
       return;
@@ -34,7 +34,7 @@ class RouterService with ObservableRouter {
     final newRoute = _createRouteData(routeConfig);
     _navigationStack.value = [
       ..._navigationStack.value.sublist(0, _navigationStack.value.length - 1),
-      newRoute
+      newRoute,
     ];
     notifyReplace([newRoute]);
   }
@@ -53,8 +53,8 @@ class RouterService with ObservableRouter {
     notifyPop(poppedRoute);
   }
 
-  void replaceAll(List<RouteConfig> routeConfigs) {
-    final newRoutes = <RouteData>[];
+  void replaceAll(List<RouteData> routeConfigs) {
+    final newRoutes = <RouteMatchData>[];
     for (final routeConfig in routeConfigs) {
       if (_pathNotSupported(routeConfig.path)) {
         _handlePathNotSupported();
@@ -68,7 +68,7 @@ class RouterService with ObservableRouter {
     notifyReplace(newRoutes);
   }
 
-  void backUntil(RouteConfig routeConfig) {
+  void backUntil(RouteData routeConfig) {
     if (!_existsInStack(routeConfig.path)) {
       return;
     }
@@ -87,7 +87,7 @@ class RouterService with ObservableRouter {
 
   /// Rebuilds the navigation stack to end at the specified route.
   /// This is typically used by setNewRoutePath to handle browser history changes.
-  void replaceAllWithRoute(RouteData resolvedRoute) {
+  void replaceAllWithRoute(RouteMatchData resolvedRoute) {
     if (_pathNotSupported(resolvedRoute.pathWithParams)) {
       _handlePathNotSupported();
       return;
@@ -100,7 +100,7 @@ class RouterService with ObservableRouter {
     notifyReplace([resolvedRoute]);
   }
 
-  void remove(RouteConfig routeConfig) {
+  void remove(RouteData routeConfig) {
     if (!_existsInStack(routeConfig.path)) {
       return;
     }
@@ -108,9 +108,10 @@ class RouterService with ObservableRouter {
     final routeToRemove = _navigationStack.value.firstWhere(
       (r) => r.pathWithParams == routeConfig.path,
     );
-    _navigationStack.value = _navigationStack.value
-        .where((r) => r.pathWithParams != routeConfig.path)
-        .toList();
+    _navigationStack.value =
+        _navigationStack.value
+            .where((r) => r.pathWithParams != routeConfig.path)
+            .toList();
     notifyRemove(routeToRemove);
   }
 
@@ -125,14 +126,14 @@ class RouterService with ObservableRouter {
   }
 
   void _handlePathNotSupported() {
-    final notFoundRoute = _createRouteData(RouteConfig(path: '/404'));
+    final notFoundRoute = _createRouteData(RouteData(path: '/404'));
     _navigationStack.value = [..._navigationStack.value, notFoundRoute];
     notifyPush(notFoundRoute);
   }
 
-  RouteData _createRouteData(RouteConfig routeConfig) {
+  RouteMatchData _createRouteData(RouteData routeConfig) {
     final uri = Uri.parse(routeConfig.path);
-    return RouteData(
+    return RouteMatchData(
       uri: uri,
       routePattern: findMatchingRoutePattern(uri, supportedRoutes),
       extra: routeConfig.extra,

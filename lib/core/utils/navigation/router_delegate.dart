@@ -1,21 +1,21 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_kit/core/utils/navigation/route_data.dart'
-    show RouteData;
+    show RouteMatchData;
 import 'package:flutter_kit/core/utils/navigation/router_service.dart';
 import 'package:flutter_kit/core/utils/navigation/utils.dart';
 
 GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
-class AppRouterDelegate extends RouterDelegate<RouteData> {
+class AppRouterDelegate extends RouterDelegate<RouteMatchData> {
   AppRouterDelegate({required RouterService routerService})
-      : _routerService = routerService;
+    : _routerService = routerService;
 
   final RouterService _routerService;
 
   List<Page<dynamic>> createPages() {
     List<Page<dynamic>> pages = [];
-    for (RouteData routeData in _routerService.navigationStack.value) {
+    for (RouteMatchData routeData in _routerService.navigationStack.value) {
       final matchedRoute = _routerService.supportedRoutes.firstWhere(
         (route) => matchRoute(route.path, routeData.uri),
       );
@@ -58,7 +58,7 @@ class AppRouterDelegate extends RouterDelegate<RouteData> {
   }
 
   @override
-  RouteData? get currentConfiguration {
+  RouteMatchData? get currentConfiguration {
     if (_routerService.navigationStack.value.isEmpty) {
       return null;
     }
@@ -66,7 +66,7 @@ class AppRouterDelegate extends RouterDelegate<RouteData> {
   }
 
   @override
-  Future<void> setNewRoutePath(RouteData configuration) async {
+  Future<void> setNewRoutePath(RouteMatchData configuration) async {
     if (currentConfiguration == configuration) {
       return SynchronousFuture<void>(null);
     }
