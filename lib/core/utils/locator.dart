@@ -1,3 +1,5 @@
+import 'package:flutter/foundation.dart';
+
 final locator = ModuleLocator.instance;
 
 class Module<T> {
@@ -12,13 +14,13 @@ class Module<T> {
     required this.lazy,
   });
 
+  void _createInstance() {
+    _instance ??= builder();
+  }
+
   T getInstance() {
-    if (lazy) {
-      _instance ??= builder();
-      return _instance!;
-    } else {
-      return builder();
-    }
+    _createInstance();
+    return _instance!;
   }
 }
 
@@ -35,8 +37,9 @@ class ModuleLocator {
       }
       _modules[type] = module;
 
+      // Create the instance immediately if it's not lazy
       if (!module.lazy) {
-        module.getInstance();
+        module._createInstance();
       }
     }
   }
@@ -46,10 +49,16 @@ class ModuleLocator {
     if (module == null) {
       throw ModuleNotFoundException(T);
     }
+    // getInstance will now correctly return the cached instance for non-lazy
+    // or create/return the cached instance for lazy.
     return (module as Module<T>).getInstance();
   }
 
   void reset() {
+    // Clear instances when resetting
+    for (var module in _modules.values) {
+      module._instance = null;
+    }
     _modules.clear();
   }
 }
