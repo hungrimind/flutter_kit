@@ -30,9 +30,11 @@ mixin ObservableRouter {
     }
   }
 
-  void notifyReplace(RouteData route) {
+  void notifyReplace(List<RouteData> routes) {
     for (final observer in _observers) {
-      observer.onReplace(route);
+      for (final route in routes) {
+        observer.onReplace(route);
+      }
     }
   }
 
