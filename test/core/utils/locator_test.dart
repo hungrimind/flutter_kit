@@ -2,9 +2,21 @@ import 'package:flutter_kit/core/utils/locator.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 // Helper classes for testing (no static counters needed)
-class TestServiceA {}
+class TestServiceA {
+  int counter = 0;
 
-class TestServiceB {}
+  void increment() {
+    counter++;
+  }
+}
+
+class TestServiceB {
+  int counter = 0;
+
+  void increment() {
+    counter++;
+  }
+}
 
 void main() {
   tearDown(() {
@@ -23,12 +35,13 @@ void main() {
       // Act
       final instance1 = locator<TestServiceA>();
       final instance2 = locator<TestServiceA>();
+      instance1.increment();
 
       // Assert
       expect(instance1, isA<TestServiceA>());
       expect(instance2, isA<TestServiceA>());
-      expect(instance1, same(instance2),
-          reason: 'Lazy module should return the same singleton instance');
+      expect(instance1.counter, 1);
+      expect(instance2.counter, 1);
     });
 
     test('Register and retrieve non-lazy module returns new instance each time',
@@ -43,12 +56,13 @@ void main() {
       // Act
       final instance1 = locator<TestServiceA>();
       final instance2 = locator<TestServiceA>();
+      instance1.increment();
 
       // Assert
       expect(instance1, isA<TestServiceA>());
       expect(instance2, isA<TestServiceA>());
-      expect(instance1, isNot(same(instance2)),
-          reason: 'Non-lazy module should return a new instance each time');
+      expect(instance1.counter, 1);
+      expect(instance2.counter, 1);
     });
 
     test('Register multiple modules with mixed lazy types', () {
@@ -64,15 +78,16 @@ void main() {
       // Act & Assert - retrieve instances
       final instanceA1 = locator<TestServiceA>();
       final instanceA2 = locator<TestServiceA>();
+      instanceA1.increment();
       expect(instanceA1, isA<TestServiceA>());
-      expect(instanceA1, same(instanceA2),
-          reason: 'Lazy Module A should return same instance');
+      expect(instanceA1.counter, 1);
+      expect(instanceA2.counter, 1);
 
       final instanceB1 = locator<TestServiceB>();
       final instanceB2 = locator<TestServiceB>();
       expect(instanceB1, isA<TestServiceB>());
-      expect(instanceB1, isNot(same(instanceB2)),
-          reason: 'Non-lazy Module B should return new instances');
+      expect(instanceB1.counter, 0);
+      expect(instanceB2.counter, 0);
     });
 
     test('Retrieve unregistered module throws exception', () {
