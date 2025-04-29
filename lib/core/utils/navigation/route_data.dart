@@ -48,7 +48,9 @@ class RouteData {
   @override
   bool operator ==(Object other) {
     return other is RouteData &&
-        uri == other.uri && routePattern == other.routePattern && extra == other.extra;
+        uri == other.uri &&
+        routePattern == other.routePattern &&
+        extra == other.extra;
   }
 
   @override

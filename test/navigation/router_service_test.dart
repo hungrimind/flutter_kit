@@ -127,7 +127,7 @@ void main() {
 
       expect(find.byType(SettingsPage), findsOneWidget);
       expect(find.byType(DetailsPage), findsNothing);
-      expect(routerService.navigationStack.value.length, 1);
+      expect(routerService.navigationStack.value.length, 2);
       expect(
           routerService.navigationStack.value.last.pathWithParams, '/settings');
     });

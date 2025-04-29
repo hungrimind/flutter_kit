@@ -1,5 +1,3 @@
-import 'package:flutter/foundation.dart';
-
 final locator = ModuleLocator.instance;
 
 class Module<T> {
