@@ -6,7 +6,7 @@ import 'package:flutter_kit/core/utils/navigation/utils.dart';
 /// Service responsible for managing navigation state using MVVM pattern
 class RouterService with ObservableRouter {
   RouterService({required this.supportedRoutes}) {
-    _navigationStack.value = [_createRouteData('/')];
+    _navigationStack.value = [_createRouteData(RouteConfig(path: '/'))];
   }
 
   final _navigationStack = ValueNotifier<List<RouteData>>([]);
@@ -14,38 +14,29 @@ class RouterService with ObservableRouter {
 
   final List<RouteEntry> supportedRoutes;
 
-  RouteData _createRouteData(String path, [Object? extra]) {
-    final uri = Uri.parse(path);
-    return RouteData(
-      uri: uri,
-      routePattern: findMatchingRoutePattern(uri, supportedRoutes),
-      extra: extra,
-    );
-  }
-
-  void goTo(String path, {Object? extra}) {
-    if (_pathNotSupported(path)) {
-      _handlePathNotSupported(path);
+  void goTo(RouteConfig routeConfig) {
+    if (_pathNotSupported(routeConfig.path)) {
+      _handlePathNotSupported();
       return;
     }
 
-    final newRoute = _createRouteData(path, extra);
+    final newRoute = _createRouteData(routeConfig);
     _navigationStack.value = [..._navigationStack.value, newRoute];
     notifyPush(newRoute);
   }
 
-  void replace(String path, {Object? extra}) {
-    if (_pathNotSupported(path)) {
-      _handlePathNotSupported(path);
+  void replace(RouteConfig routeConfig) {
+    if (_pathNotSupported(routeConfig.path)) {
+      _handlePathNotSupported();
       return;
     }
 
-    final newRoute = _createRouteData(path, extra);
+    final newRoute = _createRouteData(routeConfig);
     _navigationStack.value = [
       ..._navigationStack.value.sublist(0, _navigationStack.value.length - 1),
       newRoute
     ];
-    notifyReplace(newRoute);
+    notifyReplace([newRoute]);
   }
 
   void back() {
@@ -54,7 +45,6 @@ class RouterService with ObservableRouter {
     }
 
     final poppedRoute = _navigationStack.value.last;
-
     // Schedule this update for the next frame to avoid conflicts with build phase
     _navigationStack.value = _navigationStack.value.sublist(
       0,
@@ -63,27 +53,30 @@ class RouterService with ObservableRouter {
     notifyPop(poppedRoute);
   }
 
-  void replaceAll(String path, {Object? extra}) {
-    if (_pathNotSupported(path)) {
-      _handlePathNotSupported(path);
-      return;
-    }
+  void replaceAll(List<RouteConfig> routeConfigs) {
+    final newRoutes = <RouteData>[];
+    for (final routeConfig in routeConfigs) {
+      if (_pathNotSupported(routeConfig.path)) {
+        _handlePathNotSupported();
+        return;
+      }
 
-    final newRoute = _createRouteData(path, extra);
-    _navigationStack.value = [newRoute];
-    notifyReplace(newRoute);
+      final newRoute = _createRouteData(routeConfig);
+      newRoutes.add(newRoute);
+    }
+    _navigationStack.value = newRoutes;
+    notifyReplace(newRoutes);
   }
 
-  void backUntil(String path) {
-    if (!_existsInStack(path)) {
+  void backUntil(RouteConfig routeConfig) {
+    if (!_existsInStack(routeConfig.path)) {
       return;
     }
 
     final indexToKeep = _navigationStack.value.indexWhere(
-      (r) => r.pathWithParams == path,
+      (r) => r.pathWithParams == routeConfig.path,
     );
     final removedRoutes = _navigationStack.value.sublist(indexToKeep + 1);
-
     _navigationStack.value = _navigationStack.value.sublist(0, indexToKeep + 1);
 
     // Notify about each removed route
@@ -96,7 +89,7 @@ class RouterService with ObservableRouter {
   /// This is typically used by setNewRoutePath to handle browser history changes.
   void replaceAllWithRoute(RouteData resolvedRoute) {
     if (_pathNotSupported(resolvedRoute.pathWithParams)) {
-      _handlePathNotSupported(resolvedRoute.pathWithParams);
+      _handlePathNotSupported();
       return;
     }
 
@@ -104,19 +97,20 @@ class RouterService with ObservableRouter {
     // We use the resolvedRoute directly, which might or might not have extra depending on how it was created before serialization.
     // If RouteData came from AppRouteInformationParser, it won't have extra.
     _navigationStack.value = [resolvedRoute];
-    notifyReplace(resolvedRoute);
+    notifyReplace([resolvedRoute]);
   }
 
-  void remove(String path) {
-    if (!_existsInStack(path)) {
+  void remove(RouteConfig routeConfig) {
+    if (!_existsInStack(routeConfig.path)) {
       return;
     }
 
     final routeToRemove = _navigationStack.value.firstWhere(
-      (r) => r.pathWithParams == path,
+      (r) => r.pathWithParams == routeConfig.path,
     );
-    _navigationStack.value =
-        _navigationStack.value.where((r) => r.pathWithParams != path).toList();
+    _navigationStack.value = _navigationStack.value
+        .where((r) => r.pathWithParams != routeConfig.path)
+        .toList();
     notifyRemove(routeToRemove);
   }
 
@@ -130,9 +124,18 @@ class RouterService with ObservableRouter {
     return !supportedRoutes.any((route) => matchRoute(route.path, uri));
   }
 
-  void _handlePathNotSupported(String path) {
-    final notFoundRoute = _createRouteData('/404');
+  void _handlePathNotSupported() {
+    final notFoundRoute = _createRouteData(RouteConfig(path: '/404'));
     _navigationStack.value = [..._navigationStack.value, notFoundRoute];
     notifyPush(notFoundRoute);
+  }
+
+  RouteData _createRouteData(RouteConfig routeConfig) {
+    final uri = Uri.parse(routeConfig.path);
+    return RouteData(
+      uri: uri,
+      routePattern: findMatchingRoutePattern(uri, supportedRoutes),
+      extra: routeConfig.extra,
+    );
   }
 }

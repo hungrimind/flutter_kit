@@ -22,6 +22,12 @@ class AppTheme {
         onSurface: neutralColors.neutral950,
         surfaceTint: neutralColors.neutral100,
       ),
+      pageTransitionsTheme: const PageTransitionsTheme(
+        builders: <TargetPlatform, PageTransitionsBuilder>{
+          // Set the predictive back transitions for Android.
+          TargetPlatform.android: PredictiveBackPageTransitionsBuilder(),
+        },
+      ),
       scaffoldBackgroundColor: neutralColors.neutral50,
       appBarTheme: AppBarTheme(
         elevation: 0,

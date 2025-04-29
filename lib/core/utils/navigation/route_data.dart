@@ -8,6 +8,13 @@ class RouteEntry {
   final Widget Function(ValueKey<String>? key, RouteData routeData) builder;
 }
 
+class RouteConfig {
+  RouteConfig({required this.path, this.extra});
+
+  final String path;
+  final Object? extra;
+}
+
 class RouteData {
   const RouteData({
     required this.uri,
@@ -38,7 +45,7 @@ class RouteData {
     }
 
     return params;
-  }
+  } 
 
   @override
   String toString() {

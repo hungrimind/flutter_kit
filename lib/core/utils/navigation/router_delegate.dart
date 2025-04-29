@@ -37,8 +37,13 @@ class AppRouterDelegate extends RouterDelegate<RouteData> {
     return Navigator(
       key: navigatorKey,
       pages: createPages(),
-      onDidRemovePage: (page) {
-        _routerService.back();
+      // ignore: deprecated_member_use
+      onPopPage: (route, result) {
+        if (route.didPop(result)) {
+          _routerService.back();
+          return true;
+        }
+        return false;
       },
     );
   }
@@ -46,7 +51,7 @@ class AppRouterDelegate extends RouterDelegate<RouteData> {
   @override
   Future<bool> popRoute() async {
     if (_routerService.navigationStack.value.length > 1) {
-      Navigator.of(navigatorKey.currentContext!).pop();
+      _routerService.back();
       return SynchronousFuture(true);
     }
     return SynchronousFuture(false);
