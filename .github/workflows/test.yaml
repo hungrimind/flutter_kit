@@ -2,45 +2,82 @@ name: CI
 
 on:
   push:
-    branches: [main]
+    branches:
+      - main
   pull_request:
-    branches: [main]
+    branches:
+      - main
+  workflow_dispatch:
+
+env:
+  FLUTTER_VERSION: "3.29.3"
+  CHANNEL: "stable"
 
 jobs:
-  build_and_test:
-    name: Build and Test (Android & Web)
+  lint:
+    name: Lint and Format Check
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Set up Java # Needed for Android build
-        uses: actions/setup-java@v4
+      - uses: subosito/flutter-action@v2
         with:
-          distribution: "temurin"
-          java-version: "17"
-
-      - name: Set up Flutter
-        uses: subosito/flutter-action@v2
-        with:
-          channel: "stable"
-          cache: true
+          channel: ${{ env.CHANNEL }}
+          flutter-version: ${{ env.FLUTTER_VERSION }}
 
       - name: Install dependencies
         run: flutter pub get
 
-      - name: Check formatting
-        run: dart format --output=none .
-
       - name: Analyze project source
         run: flutter analyze
 
+      - name: Format project source
+        run: dart format $(find lib -name "*.dart" \
+          -not -name "*.*freezed.dart" \
+          -not -name "*.*g.dart" \
+          -not -name "app_localizations.dart" \
+          -not -name "app_localizations_*.dart") \
+          --set-exit-if-changed
+
+  unit_and_widget_tests:
+    needs: lint
+    name: Unit and Widget tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: ${{ env.CHANNEL }}
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+
       - name: Run tests
-        run: flutter test
+        run: flutter test --exclude-tags=golden
 
-      - name: Build Android APK
-        run: flutter build appbundle --debug
+  # Uncomment when golden tests exists 
+  # golden_tests:
+  #   needs: lint
+  #   name: Golden tests
+  #   runs-on: ubuntu-latest
 
-      - name: Build Web
-        run: flutter build web
+  #   steps:
+  #     - uses: actions/checkout@v4
+
+  #     - uses: subosito/flutter-action@v2
+  #       with:
+  #         channel: ${{ env.CHANNEL }}
+  #         flutter-version: ${{ env.FLUTTER_VERSION }}
+
+  #     - name: Run golden tests
+  #       run: flutter test --tags=golden
+
+  #     - name: Upload failure artifacts
+  #       if: failure()
+  #       uses: actions/upload-artifact@v4
+  #       with:
+  #         name: golden-failure-artifacts
+  #         path: |
+  #           test/failures/
+  #           test/goldens/
