@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_kit/core/ui/constants/spacing.dart';
 import 'package:flutter_kit/core/utils/locator.dart';
-import 'package:flutter_kit/l10n/translate_extension.dart';
+import 'package:flutter_kit/core/utils/l10n/translate_extension.dart';
 import 'package:flutter_kit/core/utils/navigation/router_service.dart';
 import 'package:flutter_kit/not_found/not_found_view_model.dart';
 

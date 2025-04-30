@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_kit/core/services/toast_service.dart';
 import 'package:flutter_kit/core/utils/locator.dart';
 import 'package:flutter_kit/home/home_view_model.dart';
-import 'package:flutter_kit/l10n/translate_extension.dart';
+import 'package:flutter_kit/core/utils/l10n/translate_extension.dart';
 
 class HomeView extends StatefulWidget {
   const HomeView({super.key});
