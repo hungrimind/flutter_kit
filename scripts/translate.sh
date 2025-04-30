@@ -21,7 +21,7 @@ if [ -z "$1" ]; then
 fi
 
 TRANSLATION_KEY=$1
-L10N_DIR="lib/l10n"
+L10N_DIR="lib/core/utils/l10n"
 
 print_header
 
