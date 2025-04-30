@@ -6,32 +6,32 @@ import 'package:flutter_kit/core/utils/navigation/utils.dart';
 /// Service responsible for managing navigation state using MVVM pattern
 class RouterService with ObservableRouter {
   RouterService({required this.supportedRoutes}) {
-    _navigationStack.value = [_createRouteData(RouteData(path: '/'))];
+    _navigationStack.value = [_createRouteData(Path(name: '/'))];
   }
 
-  final _navigationStack = ValueNotifier<List<RouteMatchData>>([]);
-  ValueNotifier<List<RouteMatchData>> get navigationStack => _navigationStack;
+  final _navigationStack = ValueNotifier<List<RouteData>>([]);
+  ValueNotifier<List<RouteData>> get navigationStack => _navigationStack;
 
   final List<RouteEntry> supportedRoutes;
 
-  void goTo(RouteData routeData) {
-    if (_pathNotSupported(routeData.path)) {
+  void goTo(Path path) {
+    if (_pathNotSupported(path.name)) {
       _handlePathNotSupported();
       return;
     }
 
-    final newRoute = _createRouteData(routeData);
+    final newRoute = _createRouteData(path);
     _navigationStack.value = [..._navigationStack.value, newRoute];
     notifyPush(newRoute);
   }
 
-  void replace(RouteData routeData) {
-    if (_pathNotSupported(routeData.path)) {
+  void replace(Path path) {
+    if (_pathNotSupported(path.name)) {
       _handlePathNotSupported();
       return;
     }
 
-    final newRoute = _createRouteData(routeData);
+    final newRoute = _createRouteData(path);
     _navigationStack.value = [
       ..._navigationStack.value.sublist(0, _navigationStack.value.length - 1),
       newRoute,
@@ -53,10 +53,10 @@ class RouterService with ObservableRouter {
     notifyPop(poppedRoute);
   }
 
-  void replaceAll(List<RouteData> routeDatas) {
-    final newRoutes = <RouteMatchData>[];
+  void replaceAll(List<Path> routeDatas) {
+    final newRoutes = <RouteData>[];
     for (final routeData in routeDatas) {
-      if (_pathNotSupported(routeData.path)) {
+      if (_pathNotSupported(routeData.name)) {
         _handlePathNotSupported();
         return;
       }
@@ -68,13 +68,13 @@ class RouterService with ObservableRouter {
     notifyReplace(newRoutes);
   }
 
-  void backUntil(RouteData routeData) {
-    if (!_existsInStack(routeData.path)) {
+  void backUntil(Path path) {
+    if (!_existsInStack(path.name)) {
       return;
     }
 
     final indexToKeep = _navigationStack.value.indexWhere(
-      (r) => r.pathWithParams == routeData.path,
+      (r) => r.pathWithParams == path.name,
     );
     final removedRoutes = _navigationStack.value.sublist(indexToKeep + 1);
     _navigationStack.value = _navigationStack.value.sublist(0, indexToKeep + 1);
@@ -87,7 +87,7 @@ class RouterService with ObservableRouter {
 
   /// Rebuilds the navigation stack to end at the specified route.
   /// This is typically used by setNewRoutePath to handle browser history changes.
-  void replaceAllWithRoute(RouteMatchData resolvedRoute) {
+  void replaceAllWithRoute(RouteData resolvedRoute) {
     if (_pathNotSupported(resolvedRoute.pathWithParams)) {
       _handlePathNotSupported();
       return;
@@ -100,17 +100,17 @@ class RouterService with ObservableRouter {
     notifyReplace([resolvedRoute]);
   }
 
-  void remove(RouteData routeData) {
-    if (!_existsInStack(routeData.path)) {
+  void remove(Path path) {
+    if (!_existsInStack(path.name)) {
       return;
     }
 
     final routeToRemove = _navigationStack.value.firstWhere(
-      (r) => r.pathWithParams == routeData.path,
+      (r) => r.pathWithParams == path.name,
     );
     _navigationStack.value =
         _navigationStack.value
-            .where((r) => r.pathWithParams != routeData.path)
+            .where((r) => r.pathWithParams != path.name)
             .toList();
     notifyRemove(routeToRemove);
   }
@@ -126,17 +126,17 @@ class RouterService with ObservableRouter {
   }
 
   void _handlePathNotSupported() {
-    final notFoundRoute = _createRouteData(RouteData(path: '/404'));
+    final notFoundRoute = _createRouteData(Path(name: '/404'));
     _navigationStack.value = [..._navigationStack.value, notFoundRoute];
     notifyPush(notFoundRoute);
   }
 
-  RouteMatchData _createRouteData(RouteData routeData) {
-    final uri = Uri.parse(routeData.path);
-    return RouteMatchData(
+  RouteData _createRouteData(Path path) {
+    final uri = Uri.parse(path.name);
+    return RouteData(
       uri: uri,
       routePattern: findMatchingRoutePattern(uri, supportedRoutes),
-      extra: routeData.extra,
+      extra: path.extra,
     );
   }
 }

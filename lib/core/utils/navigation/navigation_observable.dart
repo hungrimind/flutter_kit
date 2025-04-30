@@ -1,10 +1,10 @@
 import 'package:flutter_kit/core/utils/navigation/route_data.dart';
 
 abstract class NavigationObserver {
-  void onPush(RouteMatchData route);
-  void onPop(RouteMatchData route);
-  void onReplace(RouteMatchData route);
-  void onRemove(RouteMatchData route);
+  void onPush(RouteData route);
+  void onPop(RouteData route);
+  void onReplace(RouteData route);
+  void onRemove(RouteData route);
 }
 
 mixin ObservableRouter {
@@ -18,19 +18,19 @@ mixin ObservableRouter {
     _observers.remove(observer);
   }
 
-  void notifyPush(RouteMatchData route) {
+  void notifyPush(RouteData route) {
     for (final observer in _observers) {
       observer.onPush(route);
     }
   }
 
-  void notifyPop(RouteMatchData route) {
+  void notifyPop(RouteData route) {
     for (final observer in _observers) {
       observer.onPop(route);
     }
   }
 
-  void notifyReplace(List<RouteMatchData> routes) {
+  void notifyReplace(List<RouteData> routes) {
     for (final observer in _observers) {
       for (final route in routes) {
         observer.onReplace(route);
@@ -38,7 +38,7 @@ mixin ObservableRouter {
     }
   }
 
-  void notifyRemove(RouteMatchData route) {
+  void notifyRemove(RouteData route) {
     for (final observer in _observers) {
       observer.onRemove(route);
     }

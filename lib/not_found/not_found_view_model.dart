@@ -8,6 +8,6 @@ class NotFoundViewModel {
     : _routerService = routerService;
 
   void navigateToHome() {
-    _routerService.replaceAll([RouteData(path: '/')]);
+    _routerService.replaceAll([Path(name: '/')]);
   }
 }

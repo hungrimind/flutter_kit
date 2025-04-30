@@ -3,26 +3,23 @@ import 'package:flutter/material.dart';
 import 'package:flutter_kit/core/utils/navigation/route_data.dart';
 import 'package:flutter_kit/core/utils/navigation/utils.dart';
 
-class AppRouteInformationParser extends RouteInformationParser<RouteMatchData> {
+class AppRouteInformationParser extends RouteInformationParser<RouteData> {
   AppRouteInformationParser({required this.routes});
 
   final List<RouteEntry> routes;
 
   @override
-  Future<RouteMatchData> parseRouteInformation(
+  Future<RouteData> parseRouteInformation(
     RouteInformation routeInformation,
   ) async {
     final uri = routeInformation.uri;
     return SynchronousFuture(
-      RouteMatchData(
-        uri: uri,
-        routePattern: findMatchingRoutePattern(uri, routes),
-      ),
+      RouteData(uri: uri, routePattern: findMatchingRoutePattern(uri, routes)),
     );
   }
 
   @override
-  RouteInformation? restoreRouteInformation(RouteMatchData configuration) {
+  RouteInformation? restoreRouteInformation(RouteData configuration) {
     if (configuration.pathWithParams.isNotEmpty) {
       return RouteInformation(uri: configuration.uri);
     }
