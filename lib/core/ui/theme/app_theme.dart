@@ -138,9 +138,9 @@ class AppTheme {
             ),
             borderRadius: borderRadius.md,
           ),
-          contentPadding: const EdgeInsets.symmetric(
-            horizontal: 12,
-            vertical: 8,
+          contentPadding: EdgeInsets.symmetric(
+            horizontal: CustomSpacing.instance.md,
+            vertical: CustomSpacing.instance.sm,
           ),
         ),
       ),
