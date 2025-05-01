@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_kit/config/locator_config.dart';
 import 'package:flutter_kit/core/utils/locator.dart';
 import 'package:flutter_kit/core/abstractions/logging_abstraction.dart';
+import 'package:logging/logging.dart';
 
 /// Represents different states of app initialization
 sealed class AppState {
@@ -32,7 +33,7 @@ class StartupViewModel {
   final appStateNotifier = ValueNotifier<AppState>(const InitializingApp());
 
   final LoggingAbstraction _loggingAbstraction;
-  late StreamSubscription loggingSubscription;
+  late StreamSubscription<LogRecord> loggingSubscription;
 
   Future<void> initializeApp() async {
     appStateNotifier.value = const InitializingApp();
