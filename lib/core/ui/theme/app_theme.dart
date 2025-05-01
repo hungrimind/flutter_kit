@@ -1,26 +1,55 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_kit/core/ui/theme/border_radius.dart';
+import 'package:flutter_kit/core/ui/theme/breakpoints.dart';
+import 'package:flutter_kit/core/ui/theme/durations.dart';
+import 'package:flutter_kit/core/ui/theme/shadows.dart';
+import 'package:flutter_kit/core/ui/theme/spacing.dart';
+import 'package:flutter_kit/core/ui/theme/text_styles.dart';
 
 import 'neutral_colors.dart';
 
+/// AppTheme is a class that builds a theme for the app.
+/// By default this will support light and dark mode.
+///
+/// you can access different theme extensions from the context
+///
+/// ```dart
+/// context.textStyles.textBase
+/// context.neutralColors.neutral50
+/// context.borderRadius.radiusMd
+/// ```
+///
+/// Some are also just instances of the class, so you can access them directly without context:
+///
+/// ```dart
+/// CustomSpacing.instance.md
+/// CustomDurations.instance.duration200
+/// ```
 class AppTheme {
   static ThemeData buildTheme(Brightness brightness) {
     final isDark = brightness == Brightness.dark;
-    final neutralColors = isDark ? NeutralColors.dark : NeutralColors.light;
+    final neutralColors = NeutralColors();
+    final textStyles = CustomTextStyles();
+    final borderRadius = CustomBorderRadius();
+    final breakpoints = CustomBreakpoints();
+    final shadows = CustomShadows();
 
     return ThemeData(
       brightness: brightness,
       colorScheme: ColorScheme(
         brightness: brightness,
-        surface: neutralColors.neutral100,
-        primary: neutralColors.neutral950,
-        onPrimary: neutralColors.neutral50,
-        secondary: neutralColors.neutral600,
-        onSecondary: neutralColors.neutral50,
+        surface: isDark ? neutralColors.neutral900 : neutralColors.neutral100,
+        primary: isDark ? neutralColors.neutral50 : neutralColors.neutral950,
+        onPrimary: isDark ? neutralColors.neutral950 : neutralColors.neutral50,
+        secondary: isDark ? neutralColors.neutral50 : neutralColors.neutral950,
+        onSecondary:
+            isDark ? neutralColors.neutral950 : neutralColors.neutral50,
         error: Colors.red.shade400,
         onError: neutralColors.neutral50,
-        onSurface: neutralColors.neutral950,
-        surfaceTint: neutralColors.neutral100,
+        onSurface: isDark ? neutralColors.neutral50 : neutralColors.neutral950,
+        surfaceTint:
+            isDark ? neutralColors.neutral900 : neutralColors.neutral100,
       ),
       pageTransitionsTheme: const PageTransitionsTheme(
         builders: <TargetPlatform, PageTransitionsBuilder>{
@@ -28,11 +57,13 @@ class AppTheme {
           TargetPlatform.android: PredictiveBackPageTransitionsBuilder(),
         },
       ),
-      scaffoldBackgroundColor: neutralColors.neutral50,
+      scaffoldBackgroundColor:
+          isDark ? neutralColors.neutral900 : neutralColors.neutral100,
       appBarTheme: AppBarTheme(
         elevation: 0,
         backgroundColor: Colors.transparent,
-        foregroundColor: neutralColors.neutral950,
+        foregroundColor:
+            isDark ? neutralColors.neutral50 : neutralColors.neutral950,
         systemOverlayStyle: SystemUiOverlayStyle(
           statusBarColor: Colors.transparent,
           // For iOS: dark icons in light mode, light icons in dark mode
@@ -42,55 +73,122 @@ class AppTheme {
         ),
       ),
       dividerTheme: DividerThemeData(
-        color: neutralColors.neutral200,
+        color: isDark ? neutralColors.neutral800 : neutralColors.neutral200,
       ),
       textTheme: TextTheme(
-        bodyLarge: TextStyle(color: neutralColors.neutral950),
-        bodyMedium: TextStyle(color: neutralColors.neutral950),
-        titleMedium: TextStyle(color: neutralColors.neutral600),
-        headlineLarge: TextStyle(
+        bodyLarge: textStyles.lg.copyWith(
+          color: isDark ? neutralColors.neutral50 : neutralColors.neutral950,
+        ),
+        bodyMedium: textStyles.standard.copyWith(
+          color: isDark ? neutralColors.neutral50 : neutralColors.neutral950,
+        ),
+        titleMedium: textStyles.standard.copyWith(
+          color: isDark ? neutralColors.neutral50 : neutralColors.neutral950,
+        ),
+        headlineLarge: textStyles.xxl.copyWith(
           color: neutralColors.neutral950,
           fontWeight: FontWeight.bold,
         ),
       ),
       iconTheme: IconThemeData(
-        color: neutralColors.neutral600,
+        color: isDark ? neutralColors.neutral50 : neutralColors.neutral950,
       ),
       extensions: [
         neutralColors,
+        textStyles,
+        borderRadius,
+        breakpoints,
+        shadows,
       ],
       useMaterial3: true,
       splashFactory: NoSplash.splashFactory,
       highlightColor: Colors.white.withValues(alpha: .1),
       dropdownMenuTheme: DropdownMenuThemeData(
-        textStyle: TextStyle(color: neutralColors.neutral950),
+        textStyle: TextStyle(
+          color: isDark ? neutralColors.neutral50 : neutralColors.neutral950,
+        ),
         menuStyle: MenuStyle(
-          backgroundColor: WidgetStatePropertyAll(neutralColors.neutral100),
+          backgroundColor: WidgetStatePropertyAll(
+            isDark ? neutralColors.neutral900 : neutralColors.neutral100,
+          ),
           surfaceTintColor: WidgetStatePropertyAll(Colors.transparent),
         ),
         inputDecorationTheme: InputDecorationTheme(
           filled: true,
-          fillColor: neutralColors.neutral100,
+          fillColor:
+              isDark ? neutralColors.neutral900 : neutralColors.neutral100,
           border: OutlineInputBorder(
-            borderSide: BorderSide(color: neutralColors.neutral200),
-            borderRadius: BorderRadius.circular(4),
+            borderSide: BorderSide(
+              color:
+                  isDark ? neutralColors.neutral800 : neutralColors.neutral200,
+            ),
+            borderRadius: borderRadius.md,
           ),
           enabledBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: neutralColors.neutral200),
-            borderRadius: BorderRadius.circular(4),
+            borderSide: BorderSide(
+              color:
+                  isDark ? neutralColors.neutral800 : neutralColors.neutral200,
+            ),
+            borderRadius: borderRadius.md,
           ),
           focusedBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: neutralColors.neutral300),
-            borderRadius: BorderRadius.circular(4),
+            borderSide: BorderSide(
+              color:
+                  isDark ? neutralColors.neutral800 : neutralColors.neutral200,
+            ),
+            borderRadius: borderRadius.md,
           ),
-          contentPadding:
-              const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+          contentPadding: const EdgeInsets.symmetric(
+            horizontal: 12,
+            vertical: 8,
+          ),
         ),
       ),
       popupMenuTheme: PopupMenuThemeData(
-        color: neutralColors.neutral100,
-        textStyle: TextStyle(color: neutralColors.neutral950),
+        color: isDark ? neutralColors.neutral900 : neutralColors.neutral100,
+        textStyle: TextStyle(
+          color: isDark ? neutralColors.neutral50 : neutralColors.neutral950,
+        ),
+      ),
+      elevatedButtonTheme: ElevatedButtonThemeData(
+        style: ElevatedButton.styleFrom(
+          shape: RoundedRectangleBorder(borderRadius: borderRadius.md),
+        ),
+      ),
+      outlinedButtonTheme: OutlinedButtonThemeData(
+        style: OutlinedButton.styleFrom(
+          shape: RoundedRectangleBorder(borderRadius: borderRadius.md),
+          side: BorderSide(
+            color: isDark ? neutralColors.neutral800 : neutralColors.neutral200,
+          ),
+        ),
+      ),
+      textButtonTheme: TextButtonThemeData(
+        style: TextButton.styleFrom(
+          shape: RoundedRectangleBorder(borderRadius: borderRadius.md),
+        ),
       ),
     );
   }
+}
+
+extension ThemeDataX on BuildContext {
+  ThemeData get theme => Theme.of(this);
+
+  CustomTextStyles get textStyles =>
+      Theme.of(this).extension<CustomTextStyles>()!;
+
+  NeutralColors get neutralColors => Theme.of(this).extension<NeutralColors>()!;
+
+  CustomBorderRadius get borderRadius =>
+      Theme.of(this).extension<CustomBorderRadius>()!;
+
+  CustomBreakpoints get breakpoints =>
+      Theme.of(this).extension<CustomBreakpoints>()!;
+
+  CustomDurations get durations => CustomDurations.instance;
+
+  CustomSpacing get spacing => CustomSpacing.instance;
+
+  CustomShadows get shadows => Theme.of(this).extension<CustomShadows>()!;
 }

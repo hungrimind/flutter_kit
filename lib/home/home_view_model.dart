@@ -6,7 +6,7 @@ class HomeViewModel {
   final ToastService _toastService;
 
   HomeViewModel({required ToastService toastService})
-      : _toastService = toastService;
+    : _toastService = toastService;
 
   final ValueNotifier<int> counter = ValueNotifier<int>(0);
 

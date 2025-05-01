@@ -15,48 +15,18 @@ class NeutralColors extends ThemeExtension<NeutralColors> {
   final Color neutral950;
 
   const NeutralColors({
-    required this.neutral50,
-    required this.neutral100,
-    required this.neutral200,
-    required this.neutral300,
-    required this.neutral400,
-    required this.neutral500,
-    required this.neutral600,
-    required this.neutral700,
-    required this.neutral800,
-    required this.neutral900,
-    required this.neutral950,
+    this.neutral50 = NeutralColorValues.neutral50,
+    this.neutral100 = NeutralColorValues.neutral100,
+    this.neutral200 = NeutralColorValues.neutral200,
+    this.neutral300 = NeutralColorValues.neutral300,
+    this.neutral400 = NeutralColorValues.neutral400,
+    this.neutral500 = NeutralColorValues.neutral500,
+    this.neutral600 = NeutralColorValues.neutral600,
+    this.neutral700 = NeutralColorValues.neutral700,
+    this.neutral800 = NeutralColorValues.neutral800,
+    this.neutral900 = NeutralColorValues.neutral900,
+    this.neutral950 = NeutralColorValues.neutral950,
   });
-
-  // Light theme values from Tailwind
-  static const light = NeutralColors(
-    neutral50: NeutralColorValues.neutral50,
-    neutral100: NeutralColorValues.neutral100,
-    neutral200: NeutralColorValues.neutral200,
-    neutral300: NeutralColorValues.neutral300,
-    neutral400: NeutralColorValues.neutral400,
-    neutral500: NeutralColorValues.neutral500,
-    neutral600: NeutralColorValues.neutral600,
-    neutral700: NeutralColorValues.neutral700,
-    neutral800: NeutralColorValues.neutral800,
-    neutral900: NeutralColorValues.neutral900,
-    neutral950: NeutralColorValues.neutral950,
-  );
-
-  // Dark theme values from Tailwind (inverted)
-  static const dark = NeutralColors(
-    neutral50: NeutralColorValues.neutral950,
-    neutral100: NeutralColorValues.neutral900,
-    neutral200: NeutralColorValues.neutral800,
-    neutral300: NeutralColorValues.neutral700,
-    neutral400: NeutralColorValues.neutral600,
-    neutral500: NeutralColorValues.neutral500,
-    neutral600: NeutralColorValues.neutral400,
-    neutral700: NeutralColorValues.neutral300,
-    neutral800: NeutralColorValues.neutral200,
-    neutral900: NeutralColorValues.neutral100,
-    neutral950: NeutralColorValues.neutral50,
-  );
 
   @override
   ThemeExtension<NeutralColors> copyWith({

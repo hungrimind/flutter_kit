@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_kit/core/services/toast_service.dart';
+import 'package:flutter_kit/core/ui/theme/app_theme.dart';
 import 'package:flutter_kit/core/utils/locator.dart';
 import 'package:flutter_kit/home/home_view_model.dart';
 import 'package:flutter_kit/core/utils/l10n/translate_extension.dart';
@@ -25,10 +26,7 @@ class _HomeViewState extends State<HomeView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('MVVM Counter'),
-        elevation: 0,
-      ),
+      appBar: AppBar(title: Text('MVVM Counter')),
       body: Center(
         child: ValueListenableBuilder<int>(
           valueListenable: _viewModel.counter,
@@ -39,12 +37,12 @@ class _HomeViewState extends State<HomeView> {
                 Text(
                   context.translate.counter,
                   textAlign: TextAlign.center,
-                  style: Theme.of(context).textTheme.bodyLarge,
+                  style: context.textStyles.standard,
                 ),
                 Text(
                   '$count',
                   textAlign: TextAlign.center,
-                  style: Theme.of(context).textTheme.headlineMedium,
+                  style: context.textStyles.xxxl,
                 ),
               ],
             );
