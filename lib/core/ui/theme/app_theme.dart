@@ -18,6 +18,9 @@ import 'neutral_colors.dart';
 /// context.textStyles.standard
 /// context.neutralColors.neutral50
 /// context.borderRadius.md
+/// context.spacing.md
+/// context.durations.duration200
+/// context.shadows.sm
 /// ```
 ///
 /// Some are also just instances of the class, so you can access them directly without context:
