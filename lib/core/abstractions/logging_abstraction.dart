@@ -12,8 +12,6 @@ class LoggingAbstraction {
         _printLog(record);
         return;
       }
-
-      // TODO: do any logging to sentry or other logging service in production
     });
   }
 
