@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_kit/core/utils/toast/toast_service.dart';
-import 'package:flutter_kit/core/ui/theme/app_theme.dart';
+import 'package:flutter_kit/core/ui/app_theme.dart';
 import 'package:flutter_kit/core/utils/locator.dart';
 import 'package:flutter_kit/home/home_view_model.dart';
 import 'package:flutter_kit/core/utils/l10n/translate_extension.dart';
