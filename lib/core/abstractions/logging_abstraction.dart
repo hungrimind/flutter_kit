@@ -18,26 +18,22 @@ class LoggingAbstraction {
   void _printLog(LogRecord record) {
     switch (record.level) {
       case Level.WARNING:
-        // ignore: avoid_print
-        print(
+        debugPrint(
           '🟡 ${record.level.name}: ${record.loggerName}: ${record.message}',
         );
         break;
       case Level.SEVERE:
-        // ignore: avoid_print
-        print(
+        debugPrint(
           '🔴 ${record.level.name}: ${record.loggerName}: ${record.message}',
         );
         break;
       case Level.SHOUT:
-        // ignore: avoid_print
-        print(
+        debugPrint(
           '🔴 ${record.level.name}: ${record.loggerName}: ${record.message}',
         );
         break;
       default:
-        // ignore: avoid_print
-        print(
+        debugPrint(
           '🟢 ${record.level.name}: ${record.loggerName}: ${record.message}',
         );
         break;
