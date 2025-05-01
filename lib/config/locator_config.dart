@@ -12,26 +12,17 @@ final modules = [
     builder: () => RouterService(supportedRoutes: routes),
     lazy: false,
   ),
-  Module<LoggingService>(
-    builder: () => LoggingService(),
-    lazy: false,
-  ),
-  Module<ToastService>(
-    builder: () => ToastService(),
-    lazy: true,
-  ),
+  Module<LoggingService>(builder: () => LoggingService(), lazy: false),
+  Module<ToastService>(builder: () => ToastService(), lazy: true),
   Module<HttpAbstraction>(
-    builder: () {
-      final httpAbstraction = HttpAbstraction();
-
-      httpAbstraction.addInterceptor(
-        HttpLoggingInterceptor(
-          logBody: !kReleaseMode, // Only log bodies in debug mode
+    builder:
+        () => HttpAbstraction(
+          interceptors: [
+            LoggingInterceptor(
+              logBody: !kReleaseMode, // Only log bodies in debug mode
+            ),
+          ],
         ),
-      );
-
-      return httpAbstraction;
-    },
     lazy: true,
   ),
 ];

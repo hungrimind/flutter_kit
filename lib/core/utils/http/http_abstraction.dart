@@ -10,8 +10,8 @@ class HttpAbstraction {
   final List<HttpInterceptor> _interceptors;
 
   HttpAbstraction({List<HttpInterceptor>? interceptors})
-      : _client = httpClient(),
-        _interceptors = interceptors ?? [];
+    : _client = httpClient(),
+      _interceptors = interceptors ?? [];
 
   /// Adds an interceptor to the chain
   void addInterceptor(HttpInterceptor interceptor) {
@@ -31,8 +31,9 @@ class HttpAbstraction {
   Future<http.BaseResponse> _processResponse(http.BaseResponse response) async {
     var processedResponse = response;
     for (final interceptor in _interceptors.reversed) {
-      processedResponse =
-          await interceptor.interceptResponse(processedResponse);
+      processedResponse = await interceptor.interceptResponse(
+        processedResponse,
+      );
     }
     return processedResponse;
   }
@@ -48,7 +49,8 @@ class HttpAbstraction {
     }
 
     throw Exception(
-        'Unexpected response type: ${processedResponse.runtimeType}');
+      'Unexpected response type: ${processedResponse.runtimeType}',
+    );
   }
 
   /// Performs an HTTP request with the given method, applying all interceptors
@@ -79,10 +81,7 @@ class HttpAbstraction {
   }
 
   /// Performs a GET request with interceptors
-  Future<http.Response> get(
-    Uri url, {
-    Map<String, String>? headers,
-  }) async {
+  Future<http.Response> get(Uri url, {Map<String, String>? headers}) async {
     return _performRequest('GET', url, headers: headers);
   }
 
@@ -93,8 +92,13 @@ class HttpAbstraction {
     Object? body,
     Encoding? encoding,
   }) async {
-    return _performRequest('POST', url,
-        headers: headers, body: body, encoding: encoding);
+    return _performRequest(
+      'POST',
+      url,
+      headers: headers,
+      body: body,
+      encoding: encoding,
+    );
   }
 
   /// Performs a PUT request with interceptors
@@ -104,8 +108,13 @@ class HttpAbstraction {
     Object? body,
     Encoding? encoding,
   }) async {
-    return _performRequest('PUT', url,
-        headers: headers, body: body, encoding: encoding);
+    return _performRequest(
+      'PUT',
+      url,
+      headers: headers,
+      body: body,
+      encoding: encoding,
+    );
   }
 
   /// Performs a DELETE request with interceptors
@@ -115,8 +124,13 @@ class HttpAbstraction {
     Object? body,
     Encoding? encoding,
   }) async {
-    return _performRequest('DELETE', url,
-        headers: headers, body: body, encoding: encoding);
+    return _performRequest(
+      'DELETE',
+      url,
+      headers: headers,
+      body: body,
+      encoding: encoding,
+    );
   }
 
   /// Performs a PATCH request with interceptors
@@ -126,8 +140,13 @@ class HttpAbstraction {
     Object? body,
     Encoding? encoding,
   }) async {
-    return _performRequest('PATCH', url,
-        headers: headers, body: body, encoding: encoding);
+    return _performRequest(
+      'PATCH',
+      url,
+      headers: headers,
+      body: body,
+      encoding: encoding,
+    );
   }
 
   /// Closes the client when done

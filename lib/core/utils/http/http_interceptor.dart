@@ -11,11 +11,11 @@ abstract class HttpInterceptor {
 }
 
 /// A simplified HTTP interceptor that logs essential request and response info
-class HttpLoggingInterceptor implements HttpInterceptor {
+class LoggingInterceptor implements HttpInterceptor {
   final Logger _logger = Logger('HttpClient');
   final bool logBody;
 
-  HttpLoggingInterceptor({this.logBody = false});
+  LoggingInterceptor({this.logBody = false});
 
   @override
   Future<http.BaseRequest> interceptRequest(http.BaseRequest request) async {
@@ -31,7 +31,8 @@ class HttpLoggingInterceptor implements HttpInterceptor {
 
   @override
   Future<http.BaseResponse> interceptResponse(
-      http.BaseResponse response) async {
+    http.BaseResponse response,
+  ) async {
     _logger.info('<-- ${response.statusCode} ${response.request?.url}');
 
     if (logBody && response is http.Response) {
