@@ -11,14 +11,16 @@ const _maxCacheSize = 2 * 1024 * 1024;
 http.Client httpClient() {
   if (io.Platform.isAndroid) {
     final engine = CronetEngine.build(
-        cacheMode: CacheMode.memory,
-        cacheMaxSize: _maxCacheSize,
-        userAgent: 'Flutter Kit');
+      cacheMode: CacheMode.memory,
+      cacheMaxSize: _maxCacheSize,
+      userAgent: 'Flutter Kit',
+    );
     return CronetClient.fromCronetEngine(engine);
   } else if (io.Platform.isIOS || io.Platform.isMacOS) {
-    final config = URLSessionConfiguration.ephemeralSessionConfiguration()
-      ..cache = URLCache.withCapacity(memoryCapacity: _maxCacheSize)
-      ..httpAdditionalHeaders = {'User-Agent': 'Flutter Kit'};
+    final config =
+        URLSessionConfiguration.ephemeralSessionConfiguration()
+          ..cache = URLCache.withCapacity(memoryCapacity: _maxCacheSize)
+          ..httpAdditionalHeaders = {'User-Agent': 'Flutter Kit'};
     return CupertinoClient.fromSessionConfiguration(config);
   } else {
     final httpClient = io.HttpClient();

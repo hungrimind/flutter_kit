@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_kit/core/ui/constants/spacing.dart';
 import 'package:flutter_kit/core/ui/theme/app_theme.dart';
 import 'package:flutter_kit/core/utils/locator.dart';
 import 'package:flutter_kit/core/utils/toast/toast_overlay.dart';
@@ -46,12 +45,14 @@ class _StartupViewState extends State<StartupView> {
           debugShowCheckedModeBanner: false,
           theme: AppTheme.buildTheme(Brightness.light),
           darkTheme: AppTheme.buildTheme(Brightness.dark),
-          builder: (context, child) => switch (state) {
-            InitializingApp() => _SplashView(),
-            AppInitialized() => ToastOverlay(child: child!),
-            AppInitializationError() =>
-              _StartupErrorView(onRetry: _viewModel.retryInitialization),
-          },
+          builder:
+              (context, child) => switch (state) {
+                InitializingApp() => _SplashView(),
+                AppInitialized() => ToastOverlay(child: child!),
+                AppInitializationError() => _StartupErrorView(
+                  onRetry: _viewModel.retryInitialization,
+                ),
+              },
         );
       },
     );
@@ -59,9 +60,7 @@ class _StartupViewState extends State<StartupView> {
 }
 
 class _StartupErrorView extends StatelessWidget {
-  const _StartupErrorView({
-    required this.onRetry,
-  });
+  const _StartupErrorView({required this.onRetry});
 
   final VoidCallback onRetry;
 
@@ -70,28 +69,28 @@ class _StartupErrorView extends StatelessWidget {
     return Scaffold(
       body: Center(
         child: Padding(
-          padding: const EdgeInsets.all(24.0),
+          padding: EdgeInsets.all(context.spacing.md),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Icon(
+              Icon(
                 Icons.error_outline,
-                color: Colors.red,
+                color: context.theme.colorScheme.error,
                 size: 48,
               ),
-              const SizedBox(height: AppSpacing.md),
+              SizedBox(height: context.spacing.md),
               Text(
                 context.translate.errorGeneric,
-                style: Theme.of(context).textTheme.titleLarge,
+                style: context.textStyles.xxl,
                 textAlign: TextAlign.center,
               ),
-              const SizedBox(height: AppSpacing.sm),
+              SizedBox(height: context.spacing.sm),
               Text(
                 context.translate.errorStartingApp,
-                style: Theme.of(context).textTheme.bodyMedium,
+                style: context.textStyles.standard,
                 textAlign: TextAlign.center,
               ),
-              const SizedBox(height: AppSpacing.lg),
+              SizedBox(height: context.spacing.lg),
               FilledButton.icon(
                 onPressed: onRetry,
                 icon: const Icon(Icons.refresh),
@@ -108,10 +107,6 @@ class _StartupErrorView extends StatelessWidget {
 class _SplashView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Center(
-        child: CircularProgressIndicator(),
-      ),
-    );
+    return const Scaffold(body: Center(child: CircularProgressIndicator()));
   }
 }

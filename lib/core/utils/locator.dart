@@ -7,10 +7,7 @@ class Module<T> {
 
   T? _instance;
 
-  Module({
-    required this.builder,
-    required this.lazy,
-  });
+  Module({required this.builder, required this.lazy});
 
   void _createInstance() {
     _instance ??= builder();

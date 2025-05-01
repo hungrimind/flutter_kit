@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_kit/core/ui/constants/spacing.dart';
+import 'package:flutter_kit/core/ui/theme/app_theme.dart';
 import 'package:flutter_kit/core/utils/locator.dart';
 import 'package:flutter_kit/core/utils/l10n/translate_extension.dart';
 import 'package:flutter_kit/core/utils/navigation/router_service.dart';
@@ -18,50 +18,37 @@ class _NotFoundViewState extends State<NotFoundView> {
   @override
   void initState() {
     super.initState();
-    _viewModel = NotFoundViewModel(
-      routerService: locator<RouterService>(),
-    );
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
+    _viewModel = NotFoundViewModel(routerService: locator<RouterService>());
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Icon(
-              Icons.error_outline,
-              size: 100,
-              color: Colors.red,
-            ),
-            const SizedBox(height: AppSpacing.lg),
-            Text(
-              context.translate.notFoundTitle,
-              style: const TextStyle(
-                fontSize: 48,
-                fontWeight: FontWeight.bold,
+      body: Padding(
+        padding: EdgeInsets.all(context.spacing.xl),
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text(
+                context.translate.notFoundTitle,
+                style: context.textStyles.xxxl,
+                textAlign: TextAlign.center,
               ),
-            ),
-            const SizedBox(height: AppSpacing.md),
-            Text(
-              context.translate.notFoundMessage,
-              style: const TextStyle(
-                fontSize: 24,
-                color: Colors.grey,
+              SizedBox(height: context.spacing.md),
+              Text(
+                context.translate.notFoundMessage,
+                style: context.textStyles.standard,
+                textAlign: TextAlign.center,
               ),
-            ),
-            const SizedBox(height: AppSpacing.xl),
-            ElevatedButton(
-              onPressed: _viewModel.navigateToHome,
-              child: Text(context.translate.notFoundGoHome),
-            ),
-          ],
+              SizedBox(height: context.spacing.xl),
+              OutlinedButton(
+                onPressed: _viewModel.navigateToHome,
+                child: Text(context.translate.notFoundGoHome),
+              ),
+            ],
+          ),
         ),
       ),
     );

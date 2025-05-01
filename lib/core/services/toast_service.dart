@@ -4,10 +4,7 @@ class ToastMessage {
   final String message;
   final Duration duration;
 
-  ToastMessage(
-    this.message, {
-    this.duration = const Duration(seconds: 4),
-  });
+  ToastMessage(this.message, {this.duration = const Duration(seconds: 4)});
 }
 
 class ToastService {
