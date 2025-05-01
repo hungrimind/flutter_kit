@@ -4,13 +4,18 @@ import 'package:flutter/foundation.dart';
 import 'package:logging/logging.dart';
 
 class LoggingAbstraction {
-  StreamSubscription initializeLogging() {
+  StreamSubscription initializeLogging({List<Function(LogRecord)>? onLogs}) {
     Logger.root.level = Level.ALL; // Adjust this based on your needs
 
     return Logger.root.onRecord.listen((record) {
       if (!kReleaseMode) {
         _printLog(record);
         return;
+      }
+      if (onLogs != null) {
+        for (Function(LogRecord) onLog in onLogs) {
+          onLog(record);
+        }
       }
     });
   }
