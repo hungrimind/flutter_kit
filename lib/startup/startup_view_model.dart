@@ -1,6 +1,10 @@
+import 'dart:async';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter_kit/config/locator_config.dart';
 import 'package:flutter_kit/core/utils/locator.dart';
+import 'package:flutter_kit/core/abstractions/logging_abstraction.dart';
+import 'package:logging/logging.dart';
 
 /// Represents different states of app initialization
 sealed class AppState {
@@ -23,13 +27,19 @@ class AppInitializationError extends AppState {
 
 /// ViewModel responsible for handling app startup and initialization
 class StartupViewModel {
+  StartupViewModel({LoggingAbstraction? loggingAbstraction})
+    : _loggingAbstraction = loggingAbstraction ?? LoggingAbstraction();
+
   final appStateNotifier = ValueNotifier<AppState>(const InitializingApp());
+
+  final LoggingAbstraction _loggingAbstraction;
+  late StreamSubscription<LogRecord> loggingSubscription;
 
   Future<void> initializeApp() async {
     appStateNotifier.value = const InitializingApp();
     try {
       locator.registerMany(modules);
-
+      loggingSubscription = _loggingAbstraction.initializeLogging();
       appStateNotifier.value = const AppInitialized();
     } catch (e, st) {
       appStateNotifier.value = AppInitializationError(e, st);
@@ -43,5 +53,6 @@ class StartupViewModel {
 
   void dispose() {
     appStateNotifier.dispose();
+    loggingSubscription.cancel();
   }
 }
