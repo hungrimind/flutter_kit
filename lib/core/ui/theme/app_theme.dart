@@ -15,9 +15,9 @@ import 'neutral_colors.dart';
 /// you can access different theme extensions from the context
 ///
 /// ```dart
-/// context.textStyles.textBase
+/// context.textStyles.standard
 /// context.neutralColors.neutral50
-/// context.borderRadius.radiusMd
+/// context.borderRadius.md
 /// ```
 ///
 /// Some are also just instances of the class, so you can access them directly without context:
