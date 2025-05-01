@@ -1,5 +1,5 @@
 import 'package:flutter/foundation.dart';
-import 'package:flutter_kit/core/services/toast_service.dart';
+import 'package:flutter_kit/core/utils/toast/toast_service.dart';
 
 /// Manages the dog image gallery for the home screen
 class HomeViewModel {
