@@ -26,14 +26,19 @@ class AppInitializationError extends AppState {
 
 /// ViewModel responsible for handling app startup and initialization
 class StartupViewModel {
+  StartupViewModel({LoggingAbstraction? loggingAbstraction})
+    : _loggingAbstraction = loggingAbstraction ?? LoggingAbstraction();
+
   final appStateNotifier = ValueNotifier<AppState>(const InitializingApp());
+
+  final LoggingAbstraction _loggingAbstraction;
   late StreamSubscription loggingSubscription;
 
   Future<void> initializeApp() async {
     appStateNotifier.value = const InitializingApp();
     try {
       locator.registerMany(modules);
-      loggingSubscription = LoggingAbstraction().initializeLogging();
+      loggingSubscription = _loggingAbstraction.initializeLogging();
       appStateNotifier.value = const AppInitialized();
     } catch (e, st) {
       appStateNotifier.value = AppInitializationError(e, st);
