@@ -3,17 +3,11 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:logging/logging.dart';
 
-class LoggingService {
-  LoggingService() {
-    _initializeLogging();
-  }
-
-  late StreamSubscription _loggerSubscription;
-
-  void _initializeLogging() {
+class LoggingAbstraction {
+  StreamSubscription initializeLogging() {
     Logger.root.level = Level.ALL; // Adjust this based on your needs
 
-    _loggerSubscription = Logger.root.onRecord.listen((record) {
+    return Logger.root.onRecord.listen((record) {
       if (!kReleaseMode) {
         _printLog(record);
         return;
@@ -50,9 +44,5 @@ class LoggingService {
         );
         break;
     }
-  }
-
-  void dispose() {
-    _loggerSubscription.cancel();
   }
 }
