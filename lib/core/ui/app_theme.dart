@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_kit/core/ui/styles/border_radius.dart';
-import 'package:flutter_kit/core/ui/styles/breakpoints.dart';
-import 'package:flutter_kit/core/ui/styles/durations.dart';
-import 'package:flutter_kit/core/ui/styles/shadows.dart';
-import 'package:flutter_kit/core/ui/styles/spacing.dart';
-import 'package:flutter_kit/core/ui/styles/text_styles.dart';
-
-import 'styles/neutral_colors.dart';
+import 'package:flutter_kit/core/ui/constants/border_radius.dart';
+import 'package:flutter_kit/core/ui/constants/breakpoints.dart';
+import 'package:flutter_kit/core/ui/constants/durations.dart';
+import 'package:flutter_kit/core/ui/constants/neutral_colors.dart';
+import 'package:flutter_kit/core/ui/constants/shadows.dart';
+import 'package:flutter_kit/core/ui/constants/spacing.dart';
+import 'package:flutter_kit/core/ui/constants/text_styles.dart';
 
 /// AppTheme is a class that builds a theme for the app.
 /// By default this will support light and dark mode.
