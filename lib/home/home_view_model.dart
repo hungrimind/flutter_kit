@@ -1,23 +1,18 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter_kit/core/utils/disposable.dart';
-import 'package:flutter_kit/core/utils/toast/toast_messenger.dart';
+import 'package:flutter_kit/core/utils/side_effects/side_effects.dart';
+import 'package:flutter_kit/core/utils/side_effects/toast/toast_events.dart';
 
-sealed class HomeToastEvent {}
-
-class HomeToastEventCounterIsNow extends HomeToastEvent {
-  final int value;
-
-  HomeToastEventCounterIsNow({required this.value});
-}
-
-class HomeViewModel extends Disposable with ToastMessenger<HomeToastEvent> {
+class HomeViewModel extends Disposable with SideEffects {
   final ValueNotifier<int> counter = ValueNotifier<int>(0);
 
   void increment() {
     counter.value++;
 
     if (counter.value % 10 == 0) {
-      notifyToast(HomeToastEventCounterIsNow(value: counter.value));
+      notifySideEffect<ToastEvent>(
+        ToastEventCounterIsNow(value: counter.value),
+      );
     }
   }
 

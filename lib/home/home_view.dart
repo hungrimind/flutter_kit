@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_kit/core/ui/app_theme.dart';
-import 'package:flutter_kit/core/utils/toast/event_value_listener.dart';
-import 'package:flutter_kit/core/utils/toast/toast_overlay.dart';
+import 'package:flutter_kit/core/utils/side_effects/side_effect_listener.dart';
+import 'package:flutter_kit/core/utils/side_effects/toast/toast_events.dart';
+import 'package:flutter_kit/core/utils/side_effects/toast/toast_overlay.dart';
 import 'package:flutter_kit/home/home_view_model.dart';
 import 'package:flutter_kit/core/utils/l10n/translate_extension.dart';
 
@@ -23,11 +24,11 @@ class _HomeViewState extends State<HomeView> {
 
   @override
   Widget build(BuildContext context) {
-    return EventValueListener<HomeToastEvent>(
-      valueListenable: _viewModel.toastEvent,
+    return SideEffectListener<ToastEvent>(
+      valueListenable: _viewModel.sideEffectNotifier<ToastEvent>(),
       onEvent: (context, event) {
         switch (event) {
-          case HomeToastEventCounterIsNow _:
+          case ToastEventCounterIsNow _:
             ToastOverlay.of(
               context,
             )?.showToast('Counter is now ${event.value}');

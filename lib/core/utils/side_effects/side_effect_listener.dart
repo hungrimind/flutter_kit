@@ -1,8 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-class EventValueListener<T> extends StatefulWidget {
-  const EventValueListener({
+class SideEffectListener<T> extends StatefulWidget {
+  const SideEffectListener({
     super.key,
     required this.valueListenable,
     required this.onEvent,
@@ -14,10 +14,10 @@ class EventValueListener<T> extends StatefulWidget {
   final Widget child;
 
   @override
-  State<EventValueListener<T>> createState() => _EventValueListenerState<T>();
+  State<SideEffectListener<T>> createState() => _SideEffectListenerState<T>();
 }
 
-class _EventValueListenerState<T> extends State<EventValueListener<T>> {
+class _SideEffectListenerState<T> extends State<SideEffectListener<T>> {
   @override
   void initState() {
     super.initState();
@@ -33,7 +33,7 @@ class _EventValueListenerState<T> extends State<EventValueListener<T>> {
   }
 
   @override
-  void didUpdateWidget(covariant EventValueListener<T> oldWidget) {
+  void didUpdateWidget(covariant SideEffectListener<T> oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (widget.valueListenable != oldWidget.valueListenable) {
       oldWidget.valueListenable.removeListener(_listener);

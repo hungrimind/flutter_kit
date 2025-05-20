@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_kit/core/ui/app_theme.dart';
-import 'package:flutter_kit/core/utils/toast/toast_overlay_view_model.dart';
+import 'package:flutter_kit/core/utils/side_effects/toast/toast_overlay_view_model.dart';
 
 class ToastOverlay extends StatefulWidget {
   final Widget child;

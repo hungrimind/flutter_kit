@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_kit/core/ui/app_theme.dart';
 import 'package:flutter_kit/core/utils/locator.dart';
-import 'package:flutter_kit/core/utils/toast/toast_overlay.dart';
+import 'package:flutter_kit/core/utils/side_effects/toast/toast_overlay.dart';
 import 'package:flutter_kit/core/utils/l10n/app_localizations.dart';
 import 'package:flutter_kit/core/utils/l10n/translate_extension.dart';
 import 'package:flutter_kit/core/utils/navigation/best_router.dart';
