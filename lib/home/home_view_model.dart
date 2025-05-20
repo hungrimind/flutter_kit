@@ -1,4 +1,6 @@
 import 'package:flutter/foundation.dart';
+import 'package:flutter_kit/core/utils/disposable.dart';
+import 'package:flutter_kit/core/utils/toast/toast_messenger.dart';
 
 sealed class HomeToastEvent {}
 
@@ -8,21 +10,20 @@ class HomeToastEventCounterIsNow extends HomeToastEvent {
   HomeToastEventCounterIsNow({required this.value});
 }
 
-class HomeViewModel {
+class HomeViewModel extends Disposable with ToastMessenger<HomeToastEvent> {
   final ValueNotifier<int> counter = ValueNotifier<int>(0);
-
-  final ValueNotifier<HomeToastEvent?> toastEvent =
-      ValueNotifier<HomeToastEvent?>(null);
 
   void increment() {
     counter.value++;
 
     if (counter.value % 10 == 0) {
-      toastEvent.value = HomeToastEventCounterIsNow(value: counter.value);
+      notifyToast(HomeToastEventCounterIsNow(value: counter.value));
     }
   }
 
+  @override
   void dispose() {
     counter.dispose();
+    super.dispose();
   }
 }
