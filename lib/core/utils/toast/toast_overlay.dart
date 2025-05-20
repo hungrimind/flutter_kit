@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_kit/core/utils/toast/toast_service.dart';
 import 'package:flutter_kit/core/ui/app_theme.dart';
-import 'package:flutter_kit/core/utils/locator.dart';
 import 'package:flutter_kit/core/utils/toast/toast_overlay_view_model.dart';
 
 class ToastOverlay extends StatefulWidget {
@@ -9,15 +7,31 @@ class ToastOverlay extends StatefulWidget {
 
   const ToastOverlay({super.key, required this.child});
 
+  static ToastOverlayState? of(BuildContext context) {
+    return context.findAncestorStateOfType<ToastOverlayState>();
+  }
+
   @override
-  State<ToastOverlay> createState() => _ToastOverlayState();
+  State<ToastOverlay> createState() => ToastOverlayState();
 }
 
-class _ToastOverlayState extends State<ToastOverlay> {
-  late final ToastOverlayViewModel _viewModel = ToastOverlayViewModel(
-    toastService: locator<ToastService>(),
-  );
+class ToastOverlayState extends State<ToastOverlay> {
+  late final ToastOverlayViewModel _viewModel = ToastOverlayViewModel();
   double _dragOffset = 0;
+
+  void showToast(String message, {Duration? duration}) {
+    _viewModel.showToast(message, duration: duration);
+  }
+
+  void clearToast() {
+    _viewModel.clearToast();
+  }
+
+  @override
+  void dispose() {
+    _viewModel.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +49,7 @@ class _ToastOverlayState extends State<ToastOverlay> {
                 Future.delayed(toastMessage.duration, () {
                   if (mounted &&
                       _viewModel.toastNotifier.value == toastMessage) {
-                    _viewModel.clearToast();
+                    clearToast();
                   }
                 });
               }
@@ -67,13 +81,13 @@ class _ToastOverlayState extends State<ToastOverlay> {
                           key: ValueKey(toastMessage.message),
                           toastMessage: toastMessage,
                           onDismiss: () {
-                            _viewModel.clearToast();
+                            clearToast();
                           },
                           onVerticalDragStart: (_) => _dragOffset = 0,
                           onVerticalDragUpdate: (details) {
                             _dragOffset += details.primaryDelta!;
                             if (_dragOffset < -20) {
-                              _viewModel.clearToast();
+                              clearToast();
                             }
                           },
                         ),

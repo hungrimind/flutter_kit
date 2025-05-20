@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_kit/core/utils/toast/toast_service.dart';
 import 'package:flutter_kit/core/ui/app_theme.dart';
-import 'package:flutter_kit/core/utils/locator.dart';
+import 'package:flutter_kit/core/utils/toast/toast_overlay.dart';
 import 'package:flutter_kit/home/home_view_model.dart';
 import 'package:flutter_kit/core/utils/l10n/translate_extension.dart';
 
@@ -13,12 +12,29 @@ class HomeView extends StatefulWidget {
 }
 
 class _HomeViewState extends State<HomeView> {
-  late final HomeViewModel _viewModel = HomeViewModel(
-    toastService: locator<ToastService>(),
-  );
+  late final HomeViewModel _viewModel = HomeViewModel();
+
+  @override
+  void initState() {
+    super.initState();
+    _viewModel.toastEvent.addListener(toastListener);
+  }
+
+  void toastListener() {
+    final event = _viewModel.toastEvent.value;
+
+    switch (event) {
+      case HomeToastEventCounterIsNow _:
+        ToastOverlay.of(context)?.showToast('Counter is now ${event.value}');
+        break;
+      default:
+        break;
+    }
+  }
 
   @override
   void dispose() {
+    _viewModel.toastEvent.removeListener(toastListener);
     _viewModel.dispose();
     super.dispose();
   }

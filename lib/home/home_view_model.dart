@@ -1,19 +1,24 @@
 import 'package:flutter/foundation.dart';
-import 'package:flutter_kit/core/utils/toast/toast_service.dart';
+
+sealed class HomeToastEvent {}
+
+class HomeToastEventCounterIsNow extends HomeToastEvent {
+  final int value;
+
+  HomeToastEventCounterIsNow({required this.value});
+}
 
 class HomeViewModel {
-  final ToastService _toastService;
-
-  HomeViewModel({required ToastService toastService})
-    : _toastService = toastService;
-
   final ValueNotifier<int> counter = ValueNotifier<int>(0);
+
+  final ValueNotifier<HomeToastEvent?> toastEvent =
+      ValueNotifier<HomeToastEvent?>(null);
 
   void increment() {
     counter.value++;
 
     if (counter.value % 10 == 0) {
-      _toastService.show('Counter is now ${counter.value}');
+      toastEvent.value = HomeToastEventCounterIsNow(value: counter.value);
     }
   }
 

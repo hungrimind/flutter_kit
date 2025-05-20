@@ -1,19 +1,40 @@
 import 'package:flutter/foundation.dart';
-import 'package:flutter_kit/core/utils/toast/toast_service.dart';
+import 'package:flutter/material.dart';
+
+class ToastMessage {
+  final String message;
+  final Duration duration;
+
+  ToastMessage(this.message, {this.duration = const Duration(seconds: 4)});
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is ToastMessage &&
+          runtimeType == other.runtimeType &&
+          message == other.message &&
+          duration == other.duration;
+
+  @override
+  int get hashCode => message.hashCode ^ duration.hashCode;
+}
 
 class ToastOverlayViewModel {
-  ToastOverlayViewModel({required ToastService toastService})
-    : _toastService = toastService;
+  final ValueNotifier<ToastMessage?> _toastNotifier = ValueNotifier(null);
+  ValueNotifier<ToastMessage?> get toastNotifier => _toastNotifier;
 
-  final ToastService _toastService;
-
-  ValueNotifier<ToastMessage?> get toastNotifier => _toastService.toastNotifier;
-
-  void showToast(String message) {
-    _toastService.show(message);
+  void showToast(String message, {Duration? duration}) {
+    _toastNotifier.value = ToastMessage(
+      message,
+      duration: duration ?? const Duration(seconds: 4),
+    );
   }
 
   void clearToast() {
-    _toastService.toastNotifier.value = null;
+    _toastNotifier.value = null;
+  }
+
+  void dispose() {
+    _toastNotifier.dispose();
   }
 }
