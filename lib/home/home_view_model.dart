@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:flutter_kit/core/utils/internal_notification/haptic_feedback/haptic_feedback_listener.dart';
 import 'package:flutter_kit/core/utils/internal_notification/notify_service.dart';
 import 'package:flutter_kit/core/utils/internal_notification/in_app_message/in_app_message_event.dart';
 import 'package:flutter_kit/core/utils/l10n/s.dart';
@@ -11,9 +12,6 @@ class HomeViewModel {
 
   final ValueNotifier<int> counter = ValueNotifier<int>(0);
 
-  ValueNotifier<InAppMessageEvent?> get toastEvent =>
-      _notifyService.inAppMessageEvent;
-
   void increment() {
     counter.value++;
 
@@ -21,6 +19,7 @@ class HomeViewModel {
       _notifyService.setInAppMessageEvent(
         InAppSuccessEvent(message: S.current.appName),
       );
+      _notifyService.setHapticFeedbackEvent(HapticFeedbackEvent.success);
     }
   }
 

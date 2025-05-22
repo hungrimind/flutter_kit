@@ -9,17 +9,17 @@ sealed class InAppMessageEvent {
 }
 
 class InAppSuccessEvent extends InAppMessageEvent {
-  InAppSuccessEvent({required super.message}) : super();
+  InAppSuccessEvent({required super.message});
 }
 
 class InAppErrorEvent extends InAppMessageEvent {
-  InAppErrorEvent({required super.message}) : super();
+  InAppErrorEvent({required super.message});
 }
 
 class InAppWarningEvent extends InAppMessageEvent {
-  InAppWarningEvent({required super.message}) : super();
+  InAppWarningEvent({required super.message});
 }
 
 class InAppInfoEvent extends InAppMessageEvent {
-  InAppInfoEvent({required super.message}) : super();
+  InAppInfoEvent({required super.message});
 }
