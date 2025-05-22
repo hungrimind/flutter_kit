@@ -3,10 +3,13 @@ import 'package:flutter/services.dart';
 import 'package:flutter_kit/core/ui/constants/border_radius.dart';
 import 'package:flutter_kit/core/ui/constants/breakpoints.dart';
 import 'package:flutter_kit/core/ui/constants/durations.dart';
+import 'package:flutter_kit/core/ui/constants/green_colors.dart';
 import 'package:flutter_kit/core/ui/constants/neutral_colors.dart';
+import 'package:flutter_kit/core/ui/constants/red_colors.dart';
 import 'package:flutter_kit/core/ui/constants/shadows.dart';
 import 'package:flutter_kit/core/ui/constants/spacing.dart';
 import 'package:flutter_kit/core/ui/constants/text_styles.dart';
+import 'package:flutter_kit/core/ui/constants/yellow_colors.dart';
 
 /// AppTheme is a class that builds a theme for the app.
 /// By default this will support light and dark mode.
@@ -36,6 +39,9 @@ class AppTheme {
     final borderRadius = CustomBorderRadius();
     final breakpoints = CustomBreakpoints();
     final shadows = CustomShadows();
+    final yellowColors = YellowColors();
+    final redColors = RedColors();
+    final greenColors = GreenColors();
 
     return ThemeData(
       brightness: brightness,
@@ -101,6 +107,9 @@ class AppTheme {
         borderRadius,
         breakpoints,
         shadows,
+        yellowColors,
+        redColors,
+        greenColors,
       ],
       useMaterial3: true,
       splashFactory: NoSplash.splashFactory,
@@ -193,4 +202,10 @@ extension ThemeDataX on BuildContext {
   CustomSpacing get spacing => CustomSpacing.instance;
 
   CustomShadows get shadows => Theme.of(this).extension<CustomShadows>()!;
+
+  YellowColors get yellowColors => Theme.of(this).extension<YellowColors>()!;
+
+  RedColors get redColors => Theme.of(this).extension<RedColors>()!;
+
+  GreenColors get greenColors => Theme.of(this).extension<GreenColors>()!;
 }

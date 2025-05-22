@@ -1,24 +1,30 @@
 import 'package:flutter/foundation.dart';
-import 'package:flutter_kit/core/utils/disposable.dart';
-import 'package:flutter_kit/core/utils/side_effects/side_effects.dart';
-import 'package:flutter_kit/core/utils/side_effects/toast/toast_events.dart';
+import 'package:flutter_kit/core/utils/internal_notification/notify_service.dart';
+import 'package:flutter_kit/core/utils/internal_notification/in_app_message/in_app_message_event.dart';
+import 'package:flutter_kit/core/utils/l10n/s.dart';
 
-class HomeViewModel extends Disposable with SideEffects {
+class HomeViewModel {
+  HomeViewModel({required NotifyService notifyService})
+    : _notifyService = notifyService;
+
+  final NotifyService _notifyService;
+
   final ValueNotifier<int> counter = ValueNotifier<int>(0);
+
+  ValueNotifier<InAppMessageEvent?> get toastEvent =>
+      _notifyService.inAppMessageEvent;
 
   void increment() {
     counter.value++;
 
     if (counter.value % 10 == 0) {
-      notifySideEffect<ToastEvent>(
-        ToastEventCounterIsNow(value: counter.value),
+      _notifyService.setInAppMessageEvent(
+        InAppSuccessEvent(message: S.current.appName),
       );
     }
   }
 
-  @override
   void dispose() {
     counter.dispose();
-    super.dispose();
   }
 }
