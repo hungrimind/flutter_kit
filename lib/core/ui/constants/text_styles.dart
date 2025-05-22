@@ -8,16 +8,16 @@ class CustomTextStyles extends ThemeExtension<CustomTextStyles> {
   /// 14
   final TextStyle sm;
 
-  /// 16, regular weight (implicit)
+  /// 16
   final TextStyle standard;
 
-  /// 18, perhaps semi-bold?
+  /// 18, semi-bold
   final TextStyle lg;
 
   /// 20
   final TextStyle xl;
 
-  /// 24, maybe bold?
+  /// 24, bold
   final TextStyle xxl;
 
   /// 32, bold

@@ -134,20 +134,20 @@ class _Toast extends StatelessWidget {
                   color: switch (toastEvent) {
                     InAppSuccessEvent() =>
                       isDark
-                          ? context.greenColors.green900
-                          : context.greenColors.green200,
+                          ? context.kitColors.green900
+                          : context.kitColors.green200,
                     InAppErrorEvent() =>
                       isDark
-                          ? context.redColors.red900
-                          : context.redColors.red200,
+                          ? context.kitColors.red900
+                          : context.kitColors.red200,
                     InAppWarningEvent() =>
                       isDark
-                          ? context.yellowColors.yellow900
-                          : context.yellowColors.yellow200,
+                          ? context.kitColors.yellow900
+                          : context.kitColors.yellow200,
                     InAppInfoEvent() =>
                       isDark
-                          ? context.neutralColors.neutral900
-                          : context.neutralColors.neutral200,
+                          ? context.kitColors.neutral900
+                          : context.kitColors.neutral200,
                   },
                   width: 1,
                 ),
@@ -158,20 +158,20 @@ class _Toast extends StatelessWidget {
                 color: switch (toastEvent) {
                   InAppSuccessEvent() =>
                     isDark
-                        ? context.greenColors.green800
-                        : context.greenColors.green100,
+                        ? context.kitColors.green800
+                        : context.kitColors.green100,
                   InAppErrorEvent() =>
                     isDark
-                        ? context.redColors.red800
-                        : context.redColors.red100,
+                        ? context.kitColors.red800
+                        : context.kitColors.red100,
                   InAppWarningEvent() =>
                     isDark
-                        ? context.yellowColors.yellow800
-                        : context.yellowColors.yellow100,
+                        ? context.kitColors.yellow800
+                        : context.kitColors.yellow100,
                   InAppInfoEvent() =>
                     isDark
-                        ? context.neutralColors.neutral800
-                        : context.neutralColors.neutral100,
+                        ? context.kitColors.neutral800
+                        : context.kitColors.neutral100,
                 },
                 borderRadius: context.borderRadius.md,
                 child: Padding(
