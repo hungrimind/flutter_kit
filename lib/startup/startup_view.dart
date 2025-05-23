@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_kit/core/ui/app_theme.dart';
 import 'package:flutter_kit/core/utils/internal_notification/haptic_feedback/haptic_feedback_listener.dart';
-import 'package:flutter_kit/core/utils/internal_notification/in_app_message/in_app_message_view.dart';
+import 'package:flutter_kit/core/utils/internal_notification/toast/toast_view.dart';
 import 'package:flutter_kit/core/utils/locator.dart';
 import 'package:flutter_kit/core/utils/l10n/app_localizations.dart';
 import 'package:flutter_kit/core/utils/l10n/translate_extension.dart';
@@ -52,7 +52,7 @@ class _StartupViewState extends State<StartupView> {
             return switch (state) {
               InitializingApp() => _SplashView(),
               AppInitialized() => HapticFeedbackListener(
-                child: InAppMessageView(child: child!),
+                child: ToastView(child: child!),
               ),
               AppInitializationError() => _StartupErrorView(
                 onRetry: _viewModel.retryInitialization,
