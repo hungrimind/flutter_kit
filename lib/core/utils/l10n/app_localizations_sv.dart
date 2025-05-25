@@ -31,4 +31,7 @@ class AppLocalizationsSv extends AppLocalizations {
 
   @override
   String get counter => 'Du har tryckt på knappen så här många gånger:';
+
+  @override
+  String get success => 'Lyckades';
 }

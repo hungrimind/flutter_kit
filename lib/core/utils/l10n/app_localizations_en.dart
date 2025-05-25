@@ -32,4 +32,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get counter => 'You have pushed the button this many times:';
+
+  @override
+  String get success => 'Success';
 }

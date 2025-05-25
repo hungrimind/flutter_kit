@@ -17,7 +17,7 @@ class HomeViewModel {
 
     if (counter.value % 10 == 0) {
       _notifyService.setToastEvent(
-        ToastEventSuccess(message: Translate.current.appName),
+        ToastEventSuccess(message: Translate.current.success),
       );
       _notifyService.setHapticFeedbackEvent(HapticFeedbackEvent.success);
     }
