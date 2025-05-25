@@ -13,14 +13,13 @@ final modules = [
   ),
   Module<NotifyService>(builder: () => NotifyService(), lazy: false),
   Module<HttpAbstraction>(
-    builder:
-        () => HttpAbstraction(
-          interceptors: [
-            LoggingInterceptor(
-              logBody: !kReleaseMode, // Only log bodies in debug mode
-            ),
-          ],
+    builder: () => HttpAbstraction(
+      interceptors: [
+        LoggingInterceptor(
+          logBody: !kReleaseMode, // Only log bodies in debug mode
         ),
+      ],
+    ),
     lazy: true,
   ),
 ];

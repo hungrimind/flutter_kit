@@ -24,7 +24,7 @@ class HomeView extends StatefulWidget {
 
 class _HomeViewState extends State<HomeView> {
   late final HomeViewModel _viewModel = HomeViewModel(
-    toastService: locator<ToastService>(),
+    notifyService: locator<NotifyService>(),
   );
 
   @override
@@ -39,6 +39,7 @@ class _HomeViewState extends State<HomeView> {
 
 ## Directory Structure
 - `lib/`
+  - `config/`: configure routes and services
   - `core/`
     - `ui/`: plain widgets, should never take in viewmodels and other project specific inputs 
     - `services/`: Shared services and business logic

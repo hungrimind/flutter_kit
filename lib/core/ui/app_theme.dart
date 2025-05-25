@@ -57,8 +57,9 @@ class AppTheme {
           TargetPlatform.android: PredictiveBackPageTransitionsBuilder(),
         },
       ),
-      scaffoldBackgroundColor:
-          isDark ? kitColors.neutral900 : kitColors.neutral100,
+      scaffoldBackgroundColor: isDark
+          ? kitColors.neutral900
+          : kitColors.neutral100,
       appBarTheme: AppBarTheme(
         elevation: 0,
         backgroundColor: Colors.transparent,

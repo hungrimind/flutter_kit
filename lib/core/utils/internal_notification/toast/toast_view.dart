@@ -58,37 +58,37 @@ class _ToastViewState extends State<ToastView> {
                 return FadeTransition(
                   opacity: animation,
                   child: SlideTransition(
-                    position: Tween<Offset>(
-                      begin: const Offset(0, -0.3),
-                      end: Offset.zero,
-                    ).animate(
-                      CurvedAnimation(
-                        parent: animation,
-                        curve: Curves.easeOut,
-                        reverseCurve: Curves.easeIn,
-                      ),
-                    ),
+                    position:
+                        Tween<Offset>(
+                          begin: const Offset(0, -0.3),
+                          end: Offset.zero,
+                        ).animate(
+                          CurvedAnimation(
+                            parent: animation,
+                            curve: Curves.easeOut,
+                            reverseCurve: Curves.easeIn,
+                          ),
+                        ),
                     child: child,
                   ),
                 );
               },
-              child:
-                  toastEvent == null
-                      ? const SizedBox.shrink()
-                      : _Toast(
-                        key: ValueKey(toastEvent),
-                        toastEvent: toastEvent,
-                        onDismiss: () {
+              child: toastEvent == null
+                  ? const SizedBox.shrink()
+                  : _Toast(
+                      key: ValueKey(toastEvent),
+                      toastEvent: toastEvent,
+                      onDismiss: () {
+                        _viewModel.clearToastEvent();
+                      },
+                      onVerticalDragStart: (_) => _dragOffset = 0,
+                      onVerticalDragUpdate: (details) {
+                        _dragOffset += details.primaryDelta!;
+                        if (_dragOffset < -20) {
                           _viewModel.clearToastEvent();
-                        },
-                        onVerticalDragStart: (_) => _dragOffset = 0,
-                        onVerticalDragUpdate: (details) {
-                          _dragOffset += details.primaryDelta!;
-                          if (_dragOffset < -20) {
-                            _viewModel.clearToastEvent();
-                          }
-                        },
-                      ),
+                        }
+                      },
+                    ),
             );
           },
         ),
@@ -134,15 +134,13 @@ class _Toast extends StatelessWidget {
             child: Container(
               margin: EdgeInsets.all(context.spacing.md),
               decoration: BoxDecoration(
-                color:
-                    isDark
-                        ? context.kitColors.neutral800
-                        : context.kitColors.neutral100,
+                color: isDark
+                    ? context.kitColors.neutral800
+                    : context.kitColors.neutral100,
                 border: Border.all(
-                  color:
-                      isDark
-                          ? context.kitColors.neutral700
-                          : context.kitColors.neutral300,
+                  color: isDark
+                      ? context.kitColors.neutral700
+                      : context.kitColors.neutral300,
                   width: 1,
                 ),
                 borderRadius: radius,
@@ -163,10 +161,9 @@ class _Toast extends StatelessWidget {
                           children: [
                             Icon(
                               iconData,
-                              color:
-                                  isDark
-                                      ? context.kitColors.neutral100
-                                      : context.kitColors.neutral900,
+                              color: isDark
+                                  ? context.kitColors.neutral100
+                                  : context.kitColors.neutral900,
                             ),
                             SizedBox(width: context.spacing.sm),
                           ],

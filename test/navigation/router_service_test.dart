@@ -15,28 +15,25 @@ void main() {
         RouteEntry(path: '/', builder: (key, routeData) => const HomePage()),
         RouteEntry(
           path: '/details',
-          builder:
-              (key, routeData) => DetailsPage(
-                id: routeData.queryParameters['id'],
-                category: routeData.queryParameters['category'],
-              ),
+          builder: (key, routeData) => DetailsPage(
+            id: routeData.queryParameters['id'],
+            category: routeData.queryParameters['category'],
+          ),
         ),
         RouteEntry(
           path: '/products/:id',
-          builder:
-              (key, routeData) => ProductPage(
-                id: routeData.pathParameters['id'] ?? '',
-                color: routeData.queryParameters['color'],
-                size: routeData.queryParameters['size'],
-              ),
+          builder: (key, routeData) => ProductPage(
+            id: routeData.pathParameters['id'] ?? '',
+            color: routeData.queryParameters['color'],
+            size: routeData.queryParameters['size'],
+          ),
         ),
         RouteEntry(
           path: '/users/:userId/posts/:postId',
-          builder:
-              (key, routeData) => UserPostPage(
-                userId: routeData.pathParameters['userId'] ?? '',
-                postId: routeData.pathParameters['postId'] ?? '',
-              ),
+          builder: (key, routeData) => UserPostPage(
+            userId: routeData.pathParameters['userId'] ?? '',
+            postId: routeData.pathParameters['postId'] ?? '',
+          ),
         ),
         RouteEntry(
           path: '/settings',
