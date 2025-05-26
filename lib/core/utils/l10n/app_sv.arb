@@ -7,5 +7,6 @@
   "notFoundTitle": "404",
   "notFoundMessage": "Sidan hittades inte",
   "notFoundGoHome": "Gå till startsidan",
-  "counter": "Du har tryckt på knappen så här många gånger:"
+  "counter": "Du har tryckt på knappen så här många gånger:",
+  "success": "Lyckades"
 }

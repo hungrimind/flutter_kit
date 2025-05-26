@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_kit/core/ui/app_theme.dart';
+import 'package:flutter_kit/core/utils/internal_notification/internal_notification_listener.dart';
 import 'package:flutter_kit/core/utils/locator.dart';
-import 'package:flutter_kit/core/utils/toast/toast_overlay.dart';
 import 'package:flutter_kit/core/utils/l10n/app_localizations.dart';
 import 'package:flutter_kit/core/utils/l10n/translate_extension.dart';
 import 'package:flutter_kit/core/utils/navigation/best_router.dart';
 import 'package:flutter_kit/core/utils/navigation/router_service.dart';
+import 'package:flutter_kit/core/utils/l10n/translate.dart';
 import 'package:flutter_kit/startup/startup_view_model.dart';
 
 class StartupView extends StatefulWidget {
@@ -45,14 +46,16 @@ class _StartupViewState extends State<StartupView> {
           debugShowCheckedModeBanner: false,
           theme: AppTheme.buildTheme(Brightness.light),
           darkTheme: AppTheme.buildTheme(Brightness.dark),
-          builder:
-              (context, child) => switch (state) {
-                InitializingApp() => _SplashView(),
-                AppInitialized() => ToastOverlay(child: child!),
-                AppInitializationError() => _StartupErrorView(
-                  onRetry: _viewModel.retryInitialization,
-                ),
-              },
+          builder: (context, child) {
+            Translate.init(context);
+            return switch (state) {
+              InitializingApp() => _SplashView(),
+              AppInitialized() => InternalNotificationListener(child: child!),
+              AppInitializationError() => _StartupErrorView(
+                onRetry: _viewModel.retryInitialization,
+              ),
+            };
+          },
         );
       },
     );

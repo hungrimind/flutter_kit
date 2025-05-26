@@ -108,10 +108,9 @@ class RouterService with ObservableRouter {
     final routeToRemove = _navigationStack.value.firstWhere(
       (r) => r.pathWithParams == path.name,
     );
-    _navigationStack.value =
-        _navigationStack.value
-            .where((r) => r.pathWithParams != path.name)
-            .toList();
+    _navigationStack.value = _navigationStack.value
+        .where((r) => r.pathWithParams != path.name)
+        .toList();
     notifyRemove(routeToRemove);
   }
 

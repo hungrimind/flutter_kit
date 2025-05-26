@@ -31,5 +31,9 @@
   "counter": "You have pushed the button this many times:",
   "@counter": {
     "description": "Text for the counter"
+  },
+  "success": "Success",
+  "@success": {
+    "description": "Text for the success message"
   }
 }

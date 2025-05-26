@@ -1,11 +1,14 @@
 import 'package:flutter/foundation.dart';
-import 'package:flutter_kit/core/utils/toast/toast_service.dart';
+import 'package:flutter_kit/core/utils/internal_notification/haptic_feedback/haptic_feedback_listener.dart';
+import 'package:flutter_kit/core/utils/internal_notification/notify_service.dart';
+import 'package:flutter_kit/core/utils/internal_notification/toast/toast_event.dart';
+import 'package:flutter_kit/core/utils/l10n/translate.dart';
 
 class HomeViewModel {
-  final ToastService _toastService;
+  HomeViewModel({required NotifyService notifyService})
+    : _notifyService = notifyService;
 
-  HomeViewModel({required ToastService toastService})
-    : _toastService = toastService;
+  final NotifyService _notifyService;
 
   final ValueNotifier<int> counter = ValueNotifier<int>(0);
 
@@ -13,7 +16,10 @@ class HomeViewModel {
     counter.value++;
 
     if (counter.value % 10 == 0) {
-      _toastService.show('Counter is now ${counter.value}');
+      _notifyService.setToastEvent(
+        ToastEventSuccess(message: Translate.current.success),
+      );
+      _notifyService.setHapticFeedbackEvent(HapticFeedbackEvent.success);
     }
   }
 

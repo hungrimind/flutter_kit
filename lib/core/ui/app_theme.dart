@@ -3,7 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_kit/core/ui/constants/border_radius.dart';
 import 'package:flutter_kit/core/ui/constants/breakpoints.dart';
 import 'package:flutter_kit/core/ui/constants/durations.dart';
-import 'package:flutter_kit/core/ui/constants/neutral_colors.dart';
+import 'package:flutter_kit/core/ui/constants/kit_colors.dart';
 import 'package:flutter_kit/core/ui/constants/shadows.dart';
 import 'package:flutter_kit/core/ui/constants/spacing.dart';
 import 'package:flutter_kit/core/ui/constants/text_styles.dart';
@@ -31,27 +31,25 @@ import 'package:flutter_kit/core/ui/constants/text_styles.dart';
 class AppTheme {
   static ThemeData buildTheme(Brightness brightness) {
     final isDark = brightness == Brightness.dark;
-    final neutralColors = NeutralColors();
     final textStyles = CustomTextStyles();
     final borderRadius = CustomBorderRadius();
     final breakpoints = CustomBreakpoints();
     final shadows = CustomShadows();
+    final kitColors = KitColorsExtension();
 
     return ThemeData(
       brightness: brightness,
       colorScheme: ColorScheme(
         brightness: brightness,
-        surface: isDark ? neutralColors.neutral900 : neutralColors.neutral100,
-        primary: isDark ? neutralColors.neutral50 : neutralColors.neutral950,
-        onPrimary: isDark ? neutralColors.neutral950 : neutralColors.neutral50,
-        secondary: isDark ? neutralColors.neutral50 : neutralColors.neutral950,
-        onSecondary:
-            isDark ? neutralColors.neutral950 : neutralColors.neutral50,
+        surface: isDark ? kitColors.neutral900 : kitColors.neutral100,
+        primary: isDark ? kitColors.neutral50 : kitColors.neutral950,
+        onPrimary: isDark ? kitColors.neutral950 : kitColors.neutral50,
+        secondary: isDark ? kitColors.neutral50 : kitColors.neutral950,
+        onSecondary: isDark ? kitColors.neutral950 : kitColors.neutral50,
         error: Colors.red.shade400,
-        onError: neutralColors.neutral50,
-        onSurface: isDark ? neutralColors.neutral50 : neutralColors.neutral950,
-        surfaceTint:
-            isDark ? neutralColors.neutral900 : neutralColors.neutral100,
+        onError: kitColors.neutral50,
+        onSurface: isDark ? kitColors.neutral50 : kitColors.neutral950,
+        surfaceTint: isDark ? kitColors.neutral900 : kitColors.neutral100,
       ),
       pageTransitionsTheme: const PageTransitionsTheme(
         builders: <TargetPlatform, PageTransitionsBuilder>{
@@ -59,13 +57,13 @@ class AppTheme {
           TargetPlatform.android: PredictiveBackPageTransitionsBuilder(),
         },
       ),
-      scaffoldBackgroundColor:
-          isDark ? neutralColors.neutral900 : neutralColors.neutral100,
+      scaffoldBackgroundColor: isDark
+          ? kitColors.neutral900
+          : kitColors.neutral100,
       appBarTheme: AppBarTheme(
         elevation: 0,
         backgroundColor: Colors.transparent,
-        foregroundColor:
-            isDark ? neutralColors.neutral50 : neutralColors.neutral950,
+        foregroundColor: isDark ? kitColors.neutral50 : kitColors.neutral950,
         systemOverlayStyle: SystemUiOverlayStyle(
           statusBarColor: Colors.transparent,
           // For iOS: dark icons in light mode, light icons in dark mode
@@ -75,68 +73,58 @@ class AppTheme {
         ),
       ),
       dividerTheme: DividerThemeData(
-        color: isDark ? neutralColors.neutral800 : neutralColors.neutral200,
+        color: isDark ? kitColors.neutral800 : kitColors.neutral200,
       ),
       textTheme: TextTheme(
         bodyLarge: textStyles.lg.copyWith(
-          color: isDark ? neutralColors.neutral50 : neutralColors.neutral950,
+          color: isDark ? kitColors.neutral50 : kitColors.neutral950,
         ),
         bodyMedium: textStyles.standard.copyWith(
-          color: isDark ? neutralColors.neutral50 : neutralColors.neutral950,
+          color: isDark ? kitColors.neutral50 : kitColors.neutral950,
         ),
         titleMedium: textStyles.standard.copyWith(
-          color: isDark ? neutralColors.neutral50 : neutralColors.neutral950,
+          color: isDark ? kitColors.neutral50 : kitColors.neutral950,
         ),
         headlineLarge: textStyles.xxl.copyWith(
-          color: neutralColors.neutral950,
+          color: kitColors.neutral950,
           fontWeight: FontWeight.bold,
         ),
       ),
       iconTheme: IconThemeData(
-        color: isDark ? neutralColors.neutral50 : neutralColors.neutral950,
+        color: isDark ? kitColors.neutral50 : kitColors.neutral950,
       ),
-      extensions: [
-        neutralColors,
-        textStyles,
-        borderRadius,
-        breakpoints,
-        shadows,
-      ],
+      extensions: [textStyles, borderRadius, breakpoints, shadows, kitColors],
       useMaterial3: true,
       splashFactory: NoSplash.splashFactory,
       highlightColor: Colors.white.withValues(alpha: .1),
       dropdownMenuTheme: DropdownMenuThemeData(
         textStyle: TextStyle(
-          color: isDark ? neutralColors.neutral50 : neutralColors.neutral950,
+          color: isDark ? kitColors.neutral50 : kitColors.neutral950,
         ),
         menuStyle: MenuStyle(
           backgroundColor: WidgetStatePropertyAll(
-            isDark ? neutralColors.neutral900 : neutralColors.neutral100,
+            isDark ? kitColors.neutral900 : kitColors.neutral100,
           ),
           surfaceTintColor: WidgetStatePropertyAll(Colors.transparent),
         ),
         inputDecorationTheme: InputDecorationTheme(
           filled: true,
-          fillColor:
-              isDark ? neutralColors.neutral900 : neutralColors.neutral100,
+          fillColor: isDark ? kitColors.neutral900 : kitColors.neutral100,
           border: OutlineInputBorder(
             borderSide: BorderSide(
-              color:
-                  isDark ? neutralColors.neutral800 : neutralColors.neutral200,
+              color: isDark ? kitColors.neutral800 : kitColors.neutral200,
             ),
             borderRadius: borderRadius.md,
           ),
           enabledBorder: OutlineInputBorder(
             borderSide: BorderSide(
-              color:
-                  isDark ? neutralColors.neutral800 : neutralColors.neutral200,
+              color: isDark ? kitColors.neutral800 : kitColors.neutral200,
             ),
             borderRadius: borderRadius.md,
           ),
           focusedBorder: OutlineInputBorder(
             borderSide: BorderSide(
-              color:
-                  isDark ? neutralColors.neutral800 : neutralColors.neutral200,
+              color: isDark ? kitColors.neutral800 : kitColors.neutral200,
             ),
             borderRadius: borderRadius.md,
           ),
@@ -147,9 +135,9 @@ class AppTheme {
         ),
       ),
       popupMenuTheme: PopupMenuThemeData(
-        color: isDark ? neutralColors.neutral900 : neutralColors.neutral100,
+        color: isDark ? kitColors.neutral900 : kitColors.neutral100,
         textStyle: TextStyle(
-          color: isDark ? neutralColors.neutral50 : neutralColors.neutral950,
+          color: isDark ? kitColors.neutral50 : kitColors.neutral950,
         ),
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(
@@ -161,7 +149,7 @@ class AppTheme {
         style: OutlinedButton.styleFrom(
           shape: RoundedRectangleBorder(borderRadius: borderRadius.md),
           side: BorderSide(
-            color: isDark ? neutralColors.neutral800 : neutralColors.neutral200,
+            color: isDark ? kitColors.neutral800 : kitColors.neutral200,
           ),
         ),
       ),
@@ -180,7 +168,8 @@ extension ThemeDataX on BuildContext {
   CustomTextStyles get textStyles =>
       Theme.of(this).extension<CustomTextStyles>()!;
 
-  NeutralColors get neutralColors => Theme.of(this).extension<NeutralColors>()!;
+  KitColorsExtension get kitColors =>
+      Theme.of(this).extension<KitColorsExtension>()!;
 
   CustomBorderRadius get borderRadius =>
       Theme.of(this).extension<CustomBorderRadius>()!;
