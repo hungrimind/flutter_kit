@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:flutter/widgets.dart';
 import 'package:flutter_kit/core/utils/navigation/route_information_parser.dart';
 import 'package:flutter_kit/core/utils/navigation/router_delegate.dart';
@@ -11,7 +9,9 @@ class BestRouterConfig extends RouterConfig<Object> {
         routerDelegate: AppRouterDelegate(routerService: routerService),
         routeInformationProvider: PlatformRouteInformationProvider(
           initialRouteInformation: RouteInformation(
-            uri: Uri.parse(PlatformDispatcher.instance.defaultRouteName),
+            uri: Uri.parse(
+              routerService.navigationStack.value.last.uri.toString(),
+            ),
           ),
         ),
         backButtonDispatcher: RootBackButtonDispatcher(),
