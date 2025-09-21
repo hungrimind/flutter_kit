@@ -99,12 +99,12 @@ class _HomeViewState extends State<HomeView> {
 - `lib/`
   - `config/`: Configure routes and services (locator_config.dart, route_config.dart)
   - `core/`: Core application infrastructure
-    - `abstractions/`: Abstract interfaces and contracts
+    - `abstractions/`: Wrapping external dependencies
     - `ui/`: Plain widgets and design system components
       - `constants/`: Design tokens (colors, spacing, text styles, etc.)
     - `utils/`: Shared utilities and core services
       - `http/`: HTTP client abstractions and implementations
-      - `internal_notification/`: App-wide notification system (toasts, haptics)
+      - `internal_notification/`: App-wide notification system
       - `l10n/`: Internationalization and localization
       - `navigation/`: Routing and navigation utilities
       - `locator.dart`: Service locator setup
