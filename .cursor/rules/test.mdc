@@ -1,14 +1,16 @@
 ---
-description: 
-globs: 
+description:
+globs:
 alwaysApply: true
 ---
+
 # Testing Guidelines
 
 Unit Tests: input <-> output
 Widget Tests: action <-> result
 
 ## Unit tests
+
 ```dart
 // lib/utils/validators.dart
 bool isEmailValid(String email) {
@@ -34,6 +36,7 @@ void main() {
 ```
 
 ## Widget tests
+
 ```dart
 // counter_view_model.dart
 class CounterViewModel {
@@ -117,10 +120,11 @@ void main() {
 ```
 
 ## Testing Requirements
+
 - Unit tests should focus on methods with clear input/output transformations
 - Widget tests required for views.
 - Follow Arrange-Act-Assert pattern in tests.
 - Mock dependencies in tests using Fake classes.
 - Widget tests should test the View with its real ViewModel (no mocking).
 - Simple ViewModels with functionality covered by widget tests may not need separate unit tests
-- Tests should verify behavior, not implementation details  
+- Tests should verify behavior, not implementation details
