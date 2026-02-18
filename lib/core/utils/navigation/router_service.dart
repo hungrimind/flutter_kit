@@ -1,17 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_kit/core/utils/navigation/route_data.dart';
-import 'package:flutter_kit/core/utils/navigation/navigation_observable.dart';
 import 'package:flutter_kit/core/utils/navigation/utils.dart';
 import 'package:go_router/go_router.dart';
 
 /// Service responsible for managing navigation state using MVVM pattern
-class RouterService with ObservableRouter {
+class RouterService {
   RouterService({required this.supportedRoutes}) {
-    _navigationStack.value = [_createRouteData(Path(name: '/'))];
     goRouter = _createGoRouter();
+    _syncNavigationState();
+    goRouter.addListener(_syncNavigationState);
   }
 
   final _navigationStack = ValueNotifier<List<RouteData>>([]);
+  /// A lightweight view of navigation state sourced from go_router.
+  /// This reflects the current resolved location.
   ValueNotifier<List<RouteData>> get navigationStack => _navigationStack;
 
   final List<RouteEntry> supportedRoutes;
@@ -39,10 +41,6 @@ class RouterService with ObservableRouter {
       _handlePathNotSupported();
       return;
     }
-
-    final newRoute = _createRouteData(path);
-    _navigationStack.value = [..._navigationStack.value, newRoute];
-    notifyPush(newRoute);
     goRouter.push(path.name, extra: path.extra);
   }
 
@@ -52,30 +50,14 @@ class RouterService with ObservableRouter {
       return;
     }
 
-    final newRoute = _createRouteData(path);
-    _navigationStack.value = [
-      ..._navigationStack.value.sublist(0, _navigationStack.value.length - 1),
-      newRoute,
-    ];
-    notifyReplace([newRoute]);
     goRouter.replace(path.name, extra: path.extra);
   }
 
   void back() {
-    if (_navigationStack.value.length <= 1) {
+    if (!goRouter.canPop()) {
       return;
     }
-
-    final poppedRoute = _navigationStack.value.last;
-    // Schedule this update for the next frame to avoid conflicts with build phase
-    _navigationStack.value = _navigationStack.value.sublist(
-      0,
-      _navigationStack.value.length - 1,
-    );
-    notifyPop(poppedRoute);
-    if (goRouter.canPop()) {
-      goRouter.pop();
-    }
+    goRouter.pop();
   }
 
   void replaceAll(List<Path> routeDatas) {
@@ -83,18 +65,12 @@ class RouterService with ObservableRouter {
       return;
     }
 
-    final newRoutes = <RouteData>[];
     for (final routeData in routeDatas) {
       if (_pathNotSupported(routeData.name)) {
         _handlePathNotSupported();
         return;
       }
-
-      final newRoute = _createRouteData(routeData);
-      newRoutes.add(newRoute);
     }
-    _navigationStack.value = newRoutes;
-    notifyReplace(newRoutes);
     goRouter.go(routeDatas.first.name, extra: routeDatas.first.extra);
     for (final route in routeDatas.skip(1)) {
       goRouter.push(route.name, extra: route.extra);
@@ -102,19 +78,8 @@ class RouterService with ObservableRouter {
   }
 
   void backUntil(Path path) {
-    if (!_existsInStack(path.name)) {
+    if (_pathNotSupported(path.name)) {
       return;
-    }
-
-    final indexToKeep = _navigationStack.value.indexWhere(
-      (r) => r.pathWithParams == path.name,
-    );
-    final removedRoutes = _navigationStack.value.sublist(indexToKeep + 1);
-    _navigationStack.value = _navigationStack.value.sublist(0, indexToKeep + 1);
-
-    // Notify about each removed route
-    for (final route in removedRoutes.reversed) {
-      notifyPop(route);
     }
     goRouter.go(path.name, extra: path.extra);
   }
@@ -130,8 +95,6 @@ class RouterService with ObservableRouter {
     // When restoring from URL, extra is typically not available.
     // We use the resolvedRoute directly, which might or might not have extra depending on how it was created before serialization.
     // If RouteData came from AppRouteInformationParser, it won't have extra.
-    _navigationStack.value = [resolvedRoute];
-    notifyReplace([resolvedRoute]);
     goRouter.go(
       resolvedRoute.pathWithParams,
       extra: resolvedRoute.extra,
@@ -139,26 +102,15 @@ class RouterService with ObservableRouter {
   }
 
   void remove(Path path) {
-    if (!_existsInStack(path.name)) {
+    if (_navigationStack.value.isEmpty) {
       return;
     }
 
-    final routeToRemove = _navigationStack.value.firstWhere(
-      (r) => r.pathWithParams == path.name,
-    );
-    final wasTopRoute = routeToRemove == _navigationStack.value.last;
-    _navigationStack.value = _navigationStack.value
-        .where((r) => r.pathWithParams != path.name)
-        .toList();
-    notifyRemove(routeToRemove);
-    if (wasTopRoute && _navigationStack.value.isNotEmpty) {
-      goRouter.go(_navigationStack.value.last.pathWithParams);
+    if (_navigationStack.value.last.pathWithParams == path.name) {
+      if (goRouter.canPop()) {
+        goRouter.pop();
+      }
     }
-  }
-
-  bool _existsInStack(String path) {
-    final uri = Uri.parse(path);
-    return _navigationStack.value.any((r) => r.uri == uri);
   }
 
   bool _pathNotSupported(String path) {
@@ -167,25 +119,13 @@ class RouterService with ObservableRouter {
   }
 
   void _handlePathNotSupported() {
-    final notFoundRoute = _createRouteData(Path(name: '/404'));
-    _navigationStack.value = [..._navigationStack.value, notFoundRoute];
-    notifyPush(notFoundRoute);
     goRouter.push('/404');
-  }
-
-  RouteData _createRouteData(Path path) {
-    final uri = Uri.parse(path.name);
-    return RouteData(
-      uri: uri,
-      routePattern: findMatchingRoutePattern(uri, supportedRoutes),
-      extra: path.extra,
-    );
   }
 
   GoRouter _createGoRouter() {
     return GoRouter(
       routes: goRoutes,
-      initialLocation: _navigationStack.value.first.pathWithParams,
+      initialLocation: '/',
       errorBuilder: (context, state) {
         final notFoundRoute = supportedRoutes.firstWhere(
           (route) => route.path == '/404',
@@ -205,5 +145,17 @@ class RouterService with ObservableRouter {
         );
       },
     );
+  }
+
+  void _syncNavigationState() {
+    final routeConfiguration = goRouter.routerDelegate.currentConfiguration;
+    final uri = routeConfiguration.uri;
+    _navigationStack.value = [
+      RouteData(
+        uri: uri,
+        routePattern: findMatchingRoutePattern(uri, supportedRoutes),
+        extra: routeConfiguration.extra,
+      ),
+    ];
   }
 }

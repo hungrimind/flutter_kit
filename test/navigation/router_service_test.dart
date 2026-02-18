@@ -82,7 +82,7 @@ void main() {
 
       expect(find.byType(DetailsPage), findsOneWidget);
       expect(find.byType(HomePage), findsNothing);
-      expect(routerService.navigationStack.value.length, 2);
+      expect(routerService.navigationStack.value.length, 1);
       expect(
         routerService.navigationStack.value.last.pathWithParams,
         '/details',
@@ -129,7 +129,7 @@ void main() {
 
       expect(find.byType(SettingsPage), findsOneWidget);
       expect(find.byType(DetailsPage), findsNothing);
-      expect(routerService.navigationStack.value.length, 2);
+      expect(routerService.navigationStack.value.length, 1);
       expect(
         routerService.navigationStack.value.last.pathWithParams,
         '/settings',
@@ -182,7 +182,7 @@ void main() {
       expect(find.byType(DetailsPage), findsNothing);
       expect(find.byType(HomePage), findsNothing);
       expect(find.byType(ProductPage), findsOneWidget);
-      expect(routerService.navigationStack.value.length, 4);
+      expect(routerService.navigationStack.value.length, 1);
       expect(
         routerService.navigationStack.value.last.pathWithParams,
         '/products/456',
@@ -206,7 +206,7 @@ void main() {
         await tester.pumpAndSettle();
 
         expect(find.byType(SettingsPage), findsOneWidget);
-        expect(routerService.navigationStack.value.length, 2);
+        expect(routerService.navigationStack.value.length, 1);
         expect(
           routerService.navigationStack.value.last.pathWithParams,
           '/settings',
@@ -224,7 +224,7 @@ void main() {
         await tester.pumpAndSettle();
 
         expect(find.byType(NotFoundPage), findsOneWidget);
-        expect(routerService.navigationStack.value.length, 2);
+        expect(routerService.navigationStack.value.length, 1);
         expect(routerService.navigationStack.value.last.pathWithParams, '/404');
       },
     );
@@ -300,7 +300,7 @@ void main() {
         await tester.pumpAndSettle();
 
         expect(find.byType(PopScopePage), findsOneWidget);
-        expect(routerService.navigationStack.value.length, 2);
+        expect(routerService.navigationStack.value.length, 1);
 
         // Trigger pop through Navigator
         await tester.pageBack();
@@ -319,7 +319,7 @@ void main() {
         await tester.pumpAndSettle();
 
         expect(find.byType(PopScopePage), findsOneWidget);
-        expect(routerService.navigationStack.value.length, 2);
+        expect(routerService.navigationStack.value.length, 1);
 
         // Attempt to pop through Navigator
         await tester.pageBack();
@@ -327,7 +327,7 @@ void main() {
 
         // Verify pop was prevented
         expect(find.byType(PopScopePage), findsOneWidget);
-        expect(routerService.navigationStack.value.length, 2);
+        expect(routerService.navigationStack.value.length, 1);
       });
     });
   });
