@@ -127,7 +127,7 @@ void main() {
       expect(routerService.goRouter.state.uri.toString(), '/settings');
     });
 
-    testWidgets('Go should replace stack with new route', (
+    testWidgets('Go should clear stack and navigate to new route', (
       tester,
     ) async {
       await tester.pumpWidget(createTestApp());
@@ -146,7 +146,7 @@ void main() {
       expect(routerService.goRouter.state.uri.toString(), '/settings');
     });
 
-    testWidgets('Go followed by push should navigate through routes', (
+    testWidgets('Go followed by multiple pushes should display only top route', (
       tester,
     ) async {
       await tester.pumpWidget(createTestApp());
@@ -160,7 +160,9 @@ void main() {
       routerService.go('/');
       await tester.pumpAndSettle();
       routerService.push('/settings');
+      await tester.pumpAndSettle();
       routerService.push('/details');
+      await tester.pumpAndSettle();
       routerService.push('/products/456');
       await tester.pumpAndSettle();
 
@@ -172,13 +174,15 @@ void main() {
     });
 
     testWidgets(
-      'Go followed by push should navigate to the latest route',
+      'Go resets navigation stack before pushing new routes',
       (tester) async {
         await tester.pumpWidget(createTestApp());
         await tester.pumpAndSettle();
 
         routerService.push('/details');
+        await tester.pumpAndSettle();
         routerService.push('/products/456');
+        await tester.pumpAndSettle();
         routerService.push('/users/123/posts/789');
         await tester.pumpAndSettle();
 
