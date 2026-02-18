@@ -6,7 +6,11 @@ class RouterService {
     : goRouter = GoRouter(
         routes: routes,
         initialLocation: initialLocation,
-        onException: (context, state, router) => router.go('/404'),
+        onException: (context, state, router) {
+          if (state.uri.path != '/404') {
+            router.go('/404');
+          }
+        },
       );
 
   final List<RouteBase> routes;
