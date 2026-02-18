@@ -81,10 +81,7 @@ void main() {
 
       expect(find.byType(DetailsPage), findsOneWidget);
       expect(find.byType(HomePage), findsNothing);
-      expect(
-        routerService.goRouter.routeInformationProvider.value.uri.toString(),
-        '/details',
-      );
+      expect(routerService.goRouter.state.uri.toString(), '/details');
     });
 
     testWidgets('Back should remove last route from stack', (tester) async {
@@ -143,32 +140,35 @@ void main() {
       expect(routerService.goRouter.state.uri.toString(), '/settings');
     });
 
-    testWidgets('Go followed by multiple pushes should display only top route', (
-      tester,
-    ) async {
-      await tester.pumpWidget(createTestApp());
-      await tester.pumpAndSettle();
+    testWidgets(
+      'Go followed by multiple pushes should display only top route',
+      (
+        tester,
+      ) async {
+        await tester.pumpWidget(createTestApp());
+        await tester.pumpAndSettle();
 
-      routerService.push('/details');
-      await tester.pumpAndSettle();
+        routerService.push('/details');
+        await tester.pumpAndSettle();
 
-      expect(find.byType(DetailsPage), findsOneWidget);
+        expect(find.byType(DetailsPage), findsOneWidget);
 
-      routerService.go('/');
-      await tester.pumpAndSettle();
-      routerService.push('/settings');
-      await tester.pumpAndSettle();
-      routerService.push('/details');
-      await tester.pumpAndSettle();
-      routerService.push('/products/456');
-      await tester.pumpAndSettle();
+        routerService.go('/');
+        await tester.pumpAndSettle();
+        routerService.push('/settings');
+        await tester.pumpAndSettle();
+        routerService.push('/details');
+        await tester.pumpAndSettle();
+        routerService.push('/products/456');
+        await tester.pumpAndSettle();
 
-      expect(find.byType(SettingsPage), findsNothing);
-      expect(find.byType(DetailsPage), findsNothing);
-      expect(find.byType(HomePage), findsNothing);
-      expect(find.byType(ProductPage), findsOneWidget);
-      expect(routerService.goRouter.state.uri.toString(), '/products/456');
-    });
+        expect(find.byType(SettingsPage), findsNothing);
+        expect(find.byType(DetailsPage), findsNothing);
+        expect(find.byType(HomePage), findsNothing);
+        expect(find.byType(ProductPage), findsOneWidget);
+        expect(routerService.goRouter.state.uri.toString(), '/products/456');
+      },
+    );
 
     testWidgets(
       'Go resets navigation stack before pushing new routes',

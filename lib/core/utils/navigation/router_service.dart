@@ -39,4 +39,8 @@ class RouterService {
     }
     goRouter.pop(result);
   }
+
+  void dispose() {
+    goRouter.dispose();
+  }
 }
