@@ -4,7 +4,6 @@ import 'package:flutter_kit/core/utils/internal_notification/internal_notificati
 import 'package:flutter_kit/core/utils/locator.dart';
 import 'package:flutter_kit/core/utils/l10n/app_localizations.dart';
 import 'package:flutter_kit/core/utils/l10n/translate_extension.dart';
-import 'package:flutter_kit/core/utils/navigation/best_router.dart';
 import 'package:flutter_kit/core/utils/navigation/router_service.dart';
 import 'package:flutter_kit/core/utils/l10n/translate.dart';
 import 'package:flutter_kit/startup/startup_view_model.dart';
@@ -18,13 +17,13 @@ class StartupView extends StatefulWidget {
 
 class _StartupViewState extends State<StartupView> {
   late final StartupViewModel _viewModel = StartupViewModel();
-  late final BestRouterConfig _routerConfig;
+  late final RouterService _routerService;
 
   @override
   void initState() {
     super.initState();
     _viewModel.initializeApp();
-    _routerConfig = BestRouterConfig(routerService: locator<RouterService>());
+    _routerService = locator<RouterService>();
   }
 
   @override
@@ -39,7 +38,7 @@ class _StartupViewState extends State<StartupView> {
       valueListenable: _viewModel.appStateNotifier,
       builder: (context, state, _) {
         return MaterialApp.router(
-          routerConfig: _routerConfig,
+          routerConfig: _routerService.goRouter,
           onGenerateTitle: (context) => context.translate.appName,
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,

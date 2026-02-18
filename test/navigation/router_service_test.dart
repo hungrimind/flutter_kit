@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:flutter_kit/core/utils/navigation/best_router.dart';
 import 'package:flutter_kit/core/utils/navigation/router_service.dart';
 import 'package:go_router/go_router.dart';
 
@@ -60,9 +59,7 @@ void main() {
     });
 
     Widget createTestApp() {
-      return MaterialApp.router(
-        routerConfig: BestRouterConfig(routerService: routerService),
-      );
+      return MaterialApp.router(routerConfig: routerService.goRouter);
     }
 
     testWidgets('Initial route should be home', (tester) async {
