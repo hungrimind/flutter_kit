@@ -2,17 +2,39 @@ import 'package:flutter/material.dart';
 import 'package:flutter_kit/core/utils/navigation/route_data.dart';
 import 'package:flutter_kit/core/utils/navigation/navigation_observable.dart';
 import 'package:flutter_kit/core/utils/navigation/utils.dart';
+import 'package:go_router/go_router.dart';
 
 /// Service responsible for managing navigation state using MVVM pattern
 class RouterService with ObservableRouter {
   RouterService({required this.supportedRoutes}) {
     _navigationStack.value = [_createRouteData(Path(name: '/'))];
+    goRouter = _createGoRouter();
+    goRouter.addListener(_syncFromGoRouter);
   }
 
   final _navigationStack = ValueNotifier<List<RouteData>>([]);
   ValueNotifier<List<RouteData>> get navigationStack => _navigationStack;
 
   final List<RouteEntry> supportedRoutes;
+  late final GoRouter goRouter;
+  bool _isServiceNavigationInProgress = false;
+
+  List<RouteBase> get goRoutes => supportedRoutes
+      .where((route) => route.path != '/404')
+      .map(
+        (route) => GoRoute(
+          path: route.path,
+          builder: (context, state) => route.builder(
+            state.pageKey,
+            RouteData(
+              uri: state.uri,
+              routePattern: route.path,
+              extra: state.extra,
+            ),
+          ),
+        ),
+      )
+      .toList();
 
   void goTo(Path path) {
     if (_pathNotSupported(path.name)) {
@@ -23,6 +45,9 @@ class RouterService with ObservableRouter {
     final newRoute = _createRouteData(path);
     _navigationStack.value = [..._navigationStack.value, newRoute];
     notifyPush(newRoute);
+    _runServiceNavigation(
+      () => goRouter.push(path.name, extra: path.extra),
+    );
   }
 
   void replace(Path path) {
@@ -37,6 +62,9 @@ class RouterService with ObservableRouter {
       newRoute,
     ];
     notifyReplace([newRoute]);
+    _runServiceNavigation(
+      () => goRouter.replace(path.name, extra: path.extra),
+    );
   }
 
   void back() {
@@ -51,6 +79,11 @@ class RouterService with ObservableRouter {
       _navigationStack.value.length - 1,
     );
     notifyPop(poppedRoute);
+    _runServiceNavigation(() {
+      if (goRouter.canPop()) {
+        goRouter.pop();
+      }
+    });
   }
 
   void replaceAll(List<Path> routeDatas) {
@@ -66,6 +99,13 @@ class RouterService with ObservableRouter {
     }
     _navigationStack.value = newRoutes;
     notifyReplace(newRoutes);
+    _runServiceNavigation(() {
+      if (routeDatas.isEmpty) return;
+      goRouter.go(routeDatas.first.name, extra: routeDatas.first.extra);
+      for (final route in routeDatas.skip(1)) {
+        goRouter.push(route.name, extra: route.extra);
+      }
+    });
   }
 
   void backUntil(Path path) {
@@ -83,6 +123,7 @@ class RouterService with ObservableRouter {
     for (final route in removedRoutes.reversed) {
       notifyPop(route);
     }
+    _runServiceNavigation(() => goRouter.go(path.name, extra: path.extra));
   }
 
   /// Rebuilds the navigation stack to end at the specified route.
@@ -98,6 +139,12 @@ class RouterService with ObservableRouter {
     // If RouteData came from AppRouteInformationParser, it won't have extra.
     _navigationStack.value = [resolvedRoute];
     notifyReplace([resolvedRoute]);
+    _runServiceNavigation(
+      () => goRouter.go(
+        resolvedRoute.pathWithParams,
+        extra: resolvedRoute.extra,
+      ),
+    );
   }
 
   void remove(Path path) {
@@ -108,10 +155,16 @@ class RouterService with ObservableRouter {
     final routeToRemove = _navigationStack.value.firstWhere(
       (r) => r.pathWithParams == path.name,
     );
+    final wasTopRoute = routeToRemove == _navigationStack.value.last;
     _navigationStack.value = _navigationStack.value
         .where((r) => r.pathWithParams != path.name)
         .toList();
     notifyRemove(routeToRemove);
+    if (wasTopRoute && _navigationStack.value.isNotEmpty) {
+      _runServiceNavigation(
+        () => goRouter.go(_navigationStack.value.last.pathWithParams),
+      );
+    }
   }
 
   bool _existsInStack(String path) {
@@ -128,6 +181,7 @@ class RouterService with ObservableRouter {
     final notFoundRoute = _createRouteData(Path(name: '/404'));
     _navigationStack.value = [..._navigationStack.value, notFoundRoute];
     notifyPush(notFoundRoute);
+    _runServiceNavigation(() => goRouter.push('/404'));
   }
 
   RouteData _createRouteData(Path path) {
@@ -137,5 +191,74 @@ class RouterService with ObservableRouter {
       routePattern: findMatchingRoutePattern(uri, supportedRoutes),
       extra: path.extra,
     );
+  }
+
+  GoRouter _createGoRouter() {
+    return GoRouter(
+      routes: goRoutes,
+      initialLocation: _navigationStack.value.first.pathWithParams,
+      errorBuilder: (context, state) {
+        final notFoundRoute = supportedRoutes.firstWhere(
+          (route) => route.path == '/404',
+          orElse: () => RouteEntry(
+            path: '/404',
+            builder: (_, __) =>
+                const Scaffold(body: Center(child: Text('Route not found'))),
+          ),
+        );
+        return notFoundRoute.builder(
+          state.pageKey,
+          RouteData(
+            uri: state.uri,
+            routePattern: '/404',
+            extra: state.extra,
+          ),
+        );
+      },
+    );
+  }
+
+  void _runServiceNavigation(VoidCallback callback) {
+    _isServiceNavigationInProgress = true;
+    try {
+      callback();
+    } finally {
+      _isServiceNavigationInProgress = false;
+    }
+  }
+
+  void _syncFromGoRouter() {
+    if (_isServiceNavigationInProgress || _navigationStack.value.isEmpty) {
+      return;
+    }
+
+    final uri = goRouter.routeInformationProvider.value.uri;
+    final path = uri.toString();
+
+    if (_navigationStack.value.last.pathWithParams == path) {
+      return;
+    }
+
+    final existingIndex = _navigationStack.value.indexWhere(
+      (route) => route.pathWithParams == path,
+    );
+    if (existingIndex >= 0) {
+      final removedRoutes = _navigationStack.value.sublist(existingIndex + 1);
+      _navigationStack.value = _navigationStack.value.sublist(
+        0,
+        existingIndex + 1,
+      );
+      for (final route in removedRoutes.reversed) {
+        notifyPop(route);
+      }
+      return;
+    }
+
+    final newRoute = RouteData(
+      uri: uri,
+      routePattern: findMatchingRoutePattern(uri, supportedRoutes),
+    );
+    _navigationStack.value = [..._navigationStack.value, newRoute];
+    notifyPush(newRoute);
   }
 }

@@ -87,6 +87,10 @@ void main() {
         routerService.navigationStack.value.last.pathWithParams,
         '/details',
       );
+      expect(
+        routerService.goRouter.routeInformationProvider.value.uri.toString(),
+        '/details',
+      );
     });
 
     testWidgets('Back should remove last route from stack', (tester) async {
@@ -105,6 +109,10 @@ void main() {
       expect(find.byType(DetailsPage), findsNothing);
       expect(routerService.navigationStack.value.length, 1);
       expect(routerService.navigationStack.value.last.pathWithParams, '/');
+      expect(
+        routerService.goRouter.routeInformationProvider.value.uri.toString(),
+        '/',
+      );
     });
 
     testWidgets('Replace should replace last route in stack', (tester) async {
