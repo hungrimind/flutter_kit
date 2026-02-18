@@ -9,7 +9,6 @@ class RouterService with ObservableRouter {
   RouterService({required this.supportedRoutes}) {
     _navigationStack.value = [_createRouteData(Path(name: '/'))];
     goRouter = _createGoRouter();
-    goRouter.addListener(_syncFromGoRouter);
   }
 
   final _navigationStack = ValueNotifier<List<RouteData>>([]);
@@ -17,7 +16,6 @@ class RouterService with ObservableRouter {
 
   final List<RouteEntry> supportedRoutes;
   late final GoRouter goRouter;
-  bool _isServiceNavigationInProgress = false;
 
   List<RouteBase> get goRoutes => supportedRoutes
       .where((route) => route.path != '/404')
@@ -45,9 +43,7 @@ class RouterService with ObservableRouter {
     final newRoute = _createRouteData(path);
     _navigationStack.value = [..._navigationStack.value, newRoute];
     notifyPush(newRoute);
-    _runServiceNavigation(
-      () => goRouter.push(path.name, extra: path.extra),
-    );
+    goRouter.push(path.name, extra: path.extra);
   }
 
   void replace(Path path) {
@@ -62,9 +58,7 @@ class RouterService with ObservableRouter {
       newRoute,
     ];
     notifyReplace([newRoute]);
-    _runServiceNavigation(
-      () => goRouter.replace(path.name, extra: path.extra),
-    );
+    goRouter.replace(path.name, extra: path.extra);
   }
 
   void back() {
@@ -79,14 +73,16 @@ class RouterService with ObservableRouter {
       _navigationStack.value.length - 1,
     );
     notifyPop(poppedRoute);
-    _runServiceNavigation(() {
-      if (goRouter.canPop()) {
-        goRouter.pop();
-      }
-    });
+    if (goRouter.canPop()) {
+      goRouter.pop();
+    }
   }
 
   void replaceAll(List<Path> routeDatas) {
+    if (routeDatas.isEmpty) {
+      return;
+    }
+
     final newRoutes = <RouteData>[];
     for (final routeData in routeDatas) {
       if (_pathNotSupported(routeData.name)) {
@@ -99,13 +95,10 @@ class RouterService with ObservableRouter {
     }
     _navigationStack.value = newRoutes;
     notifyReplace(newRoutes);
-    _runServiceNavigation(() {
-      if (routeDatas.isEmpty) return;
-      goRouter.go(routeDatas.first.name, extra: routeDatas.first.extra);
-      for (final route in routeDatas.skip(1)) {
-        goRouter.push(route.name, extra: route.extra);
-      }
-    });
+    goRouter.go(routeDatas.first.name, extra: routeDatas.first.extra);
+    for (final route in routeDatas.skip(1)) {
+      goRouter.push(route.name, extra: route.extra);
+    }
   }
 
   void backUntil(Path path) {
@@ -123,7 +116,7 @@ class RouterService with ObservableRouter {
     for (final route in removedRoutes.reversed) {
       notifyPop(route);
     }
-    _runServiceNavigation(() => goRouter.go(path.name, extra: path.extra));
+    goRouter.go(path.name, extra: path.extra);
   }
 
   /// Rebuilds the navigation stack to end at the specified route.
@@ -139,11 +132,9 @@ class RouterService with ObservableRouter {
     // If RouteData came from AppRouteInformationParser, it won't have extra.
     _navigationStack.value = [resolvedRoute];
     notifyReplace([resolvedRoute]);
-    _runServiceNavigation(
-      () => goRouter.go(
-        resolvedRoute.pathWithParams,
-        extra: resolvedRoute.extra,
-      ),
+    goRouter.go(
+      resolvedRoute.pathWithParams,
+      extra: resolvedRoute.extra,
     );
   }
 
@@ -161,9 +152,7 @@ class RouterService with ObservableRouter {
         .toList();
     notifyRemove(routeToRemove);
     if (wasTopRoute && _navigationStack.value.isNotEmpty) {
-      _runServiceNavigation(
-        () => goRouter.go(_navigationStack.value.last.pathWithParams),
-      );
+      goRouter.go(_navigationStack.value.last.pathWithParams);
     }
   }
 
@@ -181,7 +170,7 @@ class RouterService with ObservableRouter {
     final notFoundRoute = _createRouteData(Path(name: '/404'));
     _navigationStack.value = [..._navigationStack.value, notFoundRoute];
     notifyPush(notFoundRoute);
-    _runServiceNavigation(() => goRouter.push('/404'));
+    goRouter.push('/404');
   }
 
   RouteData _createRouteData(Path path) {
@@ -216,67 +205,5 @@ class RouterService with ObservableRouter {
         );
       },
     );
-  }
-
-  void _runServiceNavigation(VoidCallback callback) {
-    _isServiceNavigationInProgress = true;
-    try {
-      callback();
-    } finally {
-      _isServiceNavigationInProgress = false;
-    }
-  }
-
-  void _syncFromGoRouter() {
-    if (_isServiceNavigationInProgress) {
-      return;
-    }
-
-    final uri = goRouter.routeInformationProvider.value.uri;
-    final path = uri.toString();
-    final targetDepth = goRouter.routerDelegate.currentConfiguration.matches.length;
-    final currentStack = _navigationStack.value;
-    final updatedStack = [...currentStack];
-    final removedRoutes = <RouteData>[];
-
-    while (updatedStack.length > targetDepth && updatedStack.isNotEmpty) {
-      removedRoutes.add(updatedStack.removeLast());
-    }
-
-    final resolvedRoute = RouteData(
-      uri: uri,
-      routePattern: findMatchingRoutePattern(uri, supportedRoutes),
-    );
-
-    if (updatedStack.isEmpty) {
-      _navigationStack.value = [resolvedRoute];
-      notifyReplace([resolvedRoute]);
-      return;
-    }
-
-    if (updatedStack.length < targetDepth) {
-      updatedStack.add(resolvedRoute);
-      _navigationStack.value = updatedStack;
-      notifyPush(resolvedRoute);
-      return;
-    }
-
-    final lastRoute = updatedStack.last;
-    if (lastRoute.pathWithParams == path) {
-      if (removedRoutes.isNotEmpty) {
-        _navigationStack.value = updatedStack;
-        for (final route in removedRoutes) {
-          notifyPop(route);
-        }
-      }
-      return;
-    }
-
-    updatedStack[updatedStack.length - 1] = resolvedRoute;
-    _navigationStack.value = updatedStack;
-    for (final route in removedRoutes) {
-      notifyPop(route);
-    }
-    notifyReplace([resolvedRoute]);
   }
 }
