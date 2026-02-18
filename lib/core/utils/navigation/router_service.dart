@@ -17,40 +17,26 @@ class RouterService {
   final String initialLocation;
   final GoRouter goRouter;
 
-  void goTo(String location, {Object? extra}) {
-    goRouter.push(location, extra: extra);
+  void go(String location, {Object? extra}) {
+    goRouter.go(location, extra: extra);
+  }
+
+  Future<T?> push<T>(String location, {Object? extra}) {
+    return goRouter.push<T>(location, extra: extra);
   }
 
   void replace(String location, {Object? extra}) {
     goRouter.replace(location, extra: extra);
   }
 
-  void back() {
+  bool canPop() {
+    return goRouter.canPop();
+  }
+
+  void pop<T extends Object?>([T? result]) {
     if (!goRouter.canPop()) {
       return;
     }
-    goRouter.pop();
-  }
-
-  void replaceAll(List<String> locations) {
-    if (locations.isEmpty) {
-      return;
-    }
-
-    goRouter.go(locations.first);
-    for (final location in locations.skip(1)) {
-      goRouter.push(location);
-    }
-  }
-
-  void backUntil(String location) {
-    goRouter.go(location);
-  }
-
-  void remove(String location) {
-    final targetPath = Uri.parse(location).path;
-    if (goRouter.state.uri.path == targetPath && goRouter.canPop()) {
-      goRouter.pop();
-    }
+    goRouter.pop(result);
   }
 }

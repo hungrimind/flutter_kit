@@ -79,7 +79,7 @@ void main() {
 
       expect(find.byType(HomePage), findsOneWidget);
 
-      routerService.goTo('/details');
+      routerService.push('/details');
       await tester.pumpAndSettle();
 
       expect(find.byType(DetailsPage), findsOneWidget);
@@ -94,12 +94,12 @@ void main() {
       await tester.pumpWidget(createTestApp());
       await tester.pumpAndSettle();
 
-      routerService.goTo('/details');
+      routerService.push('/details');
       await tester.pumpAndSettle();
 
       expect(find.byType(DetailsPage), findsOneWidget);
 
-      routerService.back();
+      routerService.pop();
       await tester.pumpAndSettle();
 
       expect(find.byType(HomePage), findsOneWidget);
@@ -114,7 +114,7 @@ void main() {
       await tester.pumpWidget(createTestApp());
       await tester.pumpAndSettle();
 
-      routerService.goTo('/details');
+      routerService.push('/details');
       await tester.pumpAndSettle();
 
       expect(find.byType(DetailsPage), findsOneWidget);
@@ -127,18 +127,18 @@ void main() {
       expect(routerService.goRouter.state.uri.toString(), '/settings');
     });
 
-    testWidgets('Replace all should clear stack and set new route', (
+    testWidgets('Go should replace stack with new route', (
       tester,
     ) async {
       await tester.pumpWidget(createTestApp());
       await tester.pumpAndSettle();
 
-      routerService.goTo('/details');
+      routerService.push('/details');
       await tester.pumpAndSettle();
 
       expect(find.byType(DetailsPage), findsOneWidget);
 
-      routerService.replaceAll(['/settings']);
+      routerService.go('/settings');
       await tester.pumpAndSettle();
 
       expect(find.byType(SettingsPage), findsOneWidget);
@@ -146,23 +146,22 @@ void main() {
       expect(routerService.goRouter.state.uri.toString(), '/settings');
     });
 
-    testWidgets('Replace all should clear stack and set new routes', (
+    testWidgets('Go followed by push should navigate through routes', (
       tester,
     ) async {
       await tester.pumpWidget(createTestApp());
       await tester.pumpAndSettle();
 
-      routerService.goTo('/details');
+      routerService.push('/details');
       await tester.pumpAndSettle();
 
       expect(find.byType(DetailsPage), findsOneWidget);
 
-      routerService.replaceAll([
-        '/',
-        '/settings',
-        '/details',
-        '/products/456',
-      ]);
+      routerService.go('/');
+      await tester.pumpAndSettle();
+      routerService.push('/settings');
+      routerService.push('/details');
+      routerService.push('/products/456');
       await tester.pumpAndSettle();
 
       expect(find.byType(SettingsPage), findsNothing);
@@ -173,19 +172,21 @@ void main() {
     });
 
     testWidgets(
-      'Replace all with less routes than before should clear stack and set new routes',
+      'Go followed by push should navigate to the latest route',
       (tester) async {
         await tester.pumpWidget(createTestApp());
         await tester.pumpAndSettle();
 
-        routerService.goTo('/details');
-        routerService.goTo('/products/456');
-        routerService.goTo('/users/123/posts/789');
+        routerService.push('/details');
+        routerService.push('/products/456');
+        routerService.push('/users/123/posts/789');
         await tester.pumpAndSettle();
 
         expect(find.byType(UserPostPage), findsOneWidget);
 
-        routerService.replaceAll(['/', '/settings']);
+        routerService.go('/');
+        await tester.pumpAndSettle();
+        routerService.push('/settings');
         await tester.pumpAndSettle();
 
         expect(find.byType(SettingsPage), findsOneWidget);
@@ -199,7 +200,7 @@ void main() {
         await tester.pumpWidget(createTestApp());
         await tester.pumpAndSettle();
 
-        routerService.goTo('/invalid-route');
+        routerService.push('/invalid-route');
         await tester.pumpAndSettle();
 
         expect(find.byType(NotFoundPage), findsOneWidget);
@@ -212,7 +213,7 @@ void main() {
         await tester.pumpWidget(createTestApp());
         await tester.pumpAndSettle();
 
-        routerService.goTo('/details?id=123&category=books');
+        routerService.push('/details?id=123&category=books');
         await tester.pumpAndSettle();
 
         expect(find.text('Details: 123 - books'), findsOneWidget);
@@ -226,7 +227,7 @@ void main() {
         await tester.pumpWidget(createTestApp());
         await tester.pumpAndSettle();
 
-        routerService.goTo('/products/456');
+        routerService.push('/products/456');
         await tester.pumpAndSettle();
 
         expect(find.text('Product: 456'), findsOneWidget);
@@ -241,7 +242,7 @@ void main() {
         await tester.pumpWidget(createTestApp());
         await tester.pumpAndSettle();
 
-        routerService.goTo('/users/123/posts/789');
+        routerService.push('/users/123/posts/789');
         await tester.pumpAndSettle();
 
         expect(find.text('User 123 - Post 789'), findsOneWidget);
@@ -257,7 +258,7 @@ void main() {
         await tester.pumpWidget(createTestApp());
         await tester.pumpAndSettle();
 
-        routerService.goTo('/products/456?color=red&size=large');
+        routerService.push('/products/456?color=red&size=large');
         await tester.pumpAndSettle();
 
         expect(find.text('Product: 456 (red, large)'), findsOneWidget);
@@ -274,7 +275,7 @@ void main() {
         await tester.pumpAndSettle();
 
         // Navigate to PopScope page
-        routerService.goTo('/pop-scope');
+        routerService.push('/pop-scope');
         await tester.pumpAndSettle();
 
         expect(find.byType(PopScopePage), findsOneWidget);
@@ -290,7 +291,7 @@ void main() {
         await tester.pumpAndSettle();
 
         // Navigate to PopScope page with canPop set to false
-        routerService.goTo('/pop-scope?canPop=false');
+        routerService.push('/pop-scope?canPop=false');
         await tester.pumpAndSettle();
 
         expect(find.byType(PopScopePage), findsOneWidget);
