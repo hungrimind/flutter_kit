@@ -228,37 +228,55 @@ class RouterService with ObservableRouter {
   }
 
   void _syncFromGoRouter() {
-    if (_isServiceNavigationInProgress || _navigationStack.value.isEmpty) {
+    if (_isServiceNavigationInProgress) {
       return;
     }
 
     final uri = goRouter.routeInformationProvider.value.uri;
     final path = uri.toString();
+    final targetDepth = goRouter.routerDelegate.currentConfiguration.matches.length;
+    final currentStack = _navigationStack.value;
+    final updatedStack = [...currentStack];
+    final removedRoutes = <RouteData>[];
 
-    if (_navigationStack.value.last.pathWithParams == path) {
+    while (updatedStack.length > targetDepth && updatedStack.isNotEmpty) {
+      removedRoutes.add(updatedStack.removeLast());
+    }
+
+    final resolvedRoute = RouteData(
+      uri: uri,
+      routePattern: findMatchingRoutePattern(uri, supportedRoutes),
+    );
+
+    if (updatedStack.isEmpty) {
+      _navigationStack.value = [resolvedRoute];
+      notifyReplace([resolvedRoute]);
       return;
     }
 
-    final existingIndex = _navigationStack.value.indexWhere(
-      (route) => route.pathWithParams == path,
-    );
-    if (existingIndex >= 0) {
-      final removedRoutes = _navigationStack.value.sublist(existingIndex + 1);
-      _navigationStack.value = _navigationStack.value.sublist(
-        0,
-        existingIndex + 1,
-      );
-      for (final route in removedRoutes.reversed) {
-        notifyPop(route);
+    if (updatedStack.length < targetDepth) {
+      updatedStack.add(resolvedRoute);
+      _navigationStack.value = updatedStack;
+      notifyPush(resolvedRoute);
+      return;
+    }
+
+    final lastRoute = updatedStack.last;
+    if (lastRoute.pathWithParams == path) {
+      if (removedRoutes.isNotEmpty) {
+        _navigationStack.value = updatedStack;
+        for (final route in removedRoutes) {
+          notifyPop(route);
+        }
       }
       return;
     }
 
-    final newRoute = RouteData(
-      uri: uri,
-      routePattern: findMatchingRoutePattern(uri, supportedRoutes),
-    );
-    _navigationStack.value = [..._navigationStack.value, newRoute];
-    notifyPush(newRoute);
+    updatedStack[updatedStack.length - 1] = resolvedRoute;
+    _navigationStack.value = updatedStack;
+    for (final route in removedRoutes) {
+      notifyPop(route);
+    }
+    notifyReplace([resolvedRoute]);
   }
 }

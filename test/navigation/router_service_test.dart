@@ -136,6 +136,26 @@ void main() {
       );
     });
 
+    testWidgets('External goRouter.replace should keep stack depth', (
+      tester,
+    ) async {
+      await tester.pumpWidget(createTestApp());
+      await tester.pumpAndSettle();
+
+      routerService.goTo(Path(name: '/details'));
+      await tester.pumpAndSettle();
+
+      routerService.goRouter.replace('/settings');
+      await tester.pumpAndSettle();
+
+      expect(find.byType(SettingsPage), findsOneWidget);
+      expect(routerService.navigationStack.value.length, 2);
+      expect(
+        routerService.navigationStack.value.last.pathWithParams,
+        '/settings',
+      );
+    });
+
     testWidgets('Replace all should clear stack and set new route', (
       tester,
     ) async {
@@ -186,6 +206,27 @@ void main() {
       expect(
         routerService.navigationStack.value.last.pathWithParams,
         '/products/456',
+      );
+    });
+
+    testWidgets('External goRouter.go should reset stack to target', (
+      tester,
+    ) async {
+      await tester.pumpWidget(createTestApp());
+      await tester.pumpAndSettle();
+
+      routerService.goTo(Path(name: '/details'));
+      routerService.goTo(Path(name: '/products/456'));
+      await tester.pumpAndSettle();
+
+      routerService.goRouter.go('/settings');
+      await tester.pumpAndSettle();
+
+      expect(find.byType(SettingsPage), findsOneWidget);
+      expect(routerService.navigationStack.value.length, 1);
+      expect(
+        routerService.navigationStack.value.last.pathWithParams,
+        '/settings',
       );
     });
 
