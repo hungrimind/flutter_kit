@@ -8,7 +8,7 @@ import 'package:flutter_kit/core/utils/internal_notification/notify_service.dart
 
 final modules = [
   Module<RouterService>(
-    builder: () => RouterService(supportedRoutes: routes),
+    builder: () => RouterService(routes: routes),
     lazy: false,
   ),
   Module<NotifyService>(builder: () => NotifyService(), lazy: false),

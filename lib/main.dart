@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_kit/core/utils/navigation/url_strategy/url_strategy.dart';
 import 'package:flutter_kit/startup/startup_view.dart';
+import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  configureUrlStrategy();
+  usePathUrlStrategy();
   runApp(const StartupView());
 }
