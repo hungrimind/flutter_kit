@@ -1,3 +1,4 @@
+import 'package:flutter_kit/config/route_config.dart';
 import 'package:flutter_kit/core/utils/navigation/router_service.dart';
 
 class NotFoundViewModel {
@@ -7,6 +8,6 @@ class NotFoundViewModel {
     : _routerService = routerService;
 
   void navigateToHome() {
-    _routerService.go('/');
+    _routerService.go(RoutePaths.home);
   }
 }

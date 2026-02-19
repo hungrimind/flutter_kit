@@ -1,20 +1,19 @@
+import 'package:flutter_kit/config/route_config.dart';
 import 'package:go_router/go_router.dart';
 
 /// Service responsible for context-free navigation in view models.
 class RouterService {
-  RouterService({required this.routes, this.initialLocation = '/'})
+  RouterService({required this.routes})
     : goRouter = GoRouter(
         routes: routes,
-        initialLocation: initialLocation,
         onException: (context, state, router) {
-          if (state.uri.path != '/404') {
-            router.go('/404');
+          if (state.uri.path != RoutePaths.notFound) {
+            router.go(RoutePaths.notFound);
           }
         },
       );
 
   final List<RouteBase> routes;
-  final String initialLocation;
   final GoRouter goRouter;
 
   void go(String location, {Object? extra}) {
