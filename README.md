@@ -1,5 +1,8 @@
 # Hungrimind Flutter Boilerplate
 
+> **Hungrimind has shut down.** This kit is now free and open to everyone. It is
+> no longer actively maintained, but you are welcome to use it, fork it, and build on it.
+
 ## Overview
 
 The Hungrimind Flutter Boilerplate is built for developers and teams who care about scalable, testable, and maintainable Flutter applications. Whether building solo or as part of a team, this boilerplate provides a solid foundation using the MVVM architecture and consistent patterns.
@@ -8,9 +11,46 @@ Crafted by the team at Hungrimind — with deep experience across Flutter, and l
 
 ## What's Included
 
-*   **💻 CLI:** Our command line tool to speed up your development.
-*   **📄 Documentation:** Step-by-step guides to help you use, customize, and expand the boilerplate to fit your project.
-*   **💬 Support:** We use Discord to collect all feedback about the boilerplate, documentation, and anything related. Please join us there if you have any questions or feedback.
+*   **💻 CLI:** Our [command line tool](https://github.com/hungrimind/hungrimind-cli) that creates a new app from this kit.
+*   **🤖 Agent rules:** `CLAUDE.md`, `agents.md`, `.claude/skills/`, and `.cursor/rules/` describe the architecture and conventions for AI coding tools.
+
+## Getting Started
+
+You need [Flutter](https://docs.flutter.dev/get-started/install) and Node.js 18+ installed.
+
+### With the CLI (recommended)
+
+```bash
+npm install -g github:hungrimind/hungrimind-cli
+hungrimind flutter create my_app --org com.mycompany
+cd my_app
+flutter run
+```
+
+Replace `my_app` with your project name (lowercase with underscores) and
+`com.mycompany` with your organization identifier.
+
+The CLI runs `flutter create` for you, replaces the generated `lib/` and `test/`
+with this kit's, copies the kit's config files (`analysis_options.yaml`, agent
+rules, etc.) on top, merges the kit's `pubspec.yaml` into yours, renames
+`flutter_kit` to your project name, adds network permissions on Android and
+macOS, and runs `flutter pub get`.
+
+### Without the CLI
+
+1. Run `flutter create my_app --org com.mycompany`.
+2. Delete the generated `lib/` and `test/`, then copy everything from this repo
+   into `my_app/` except the platform folders (`android/`, `ios/`, `macos/`,
+   `web/`, `linux/`, `windows/`) and `pubspec.yaml`.
+3. Copy `environment`, `dependencies`, `dev_dependencies`, and the `flutter`
+   section from this repo's `pubspec.yaml` into yours.
+4. Find and replace `flutter_kit` with `my_app` (and `flutterKit` with `myApp`)
+   across the copied files.
+5. Add `<uses-permission android:name="android.permission.INTERNET"/>` to
+   `android/app/src/main/AndroidManifest.xml`, and
+   `<key>com.apple.security.network.client</key><true/>` to
+   `macos/Runner/DebugProfile.entitlements`.
+6. Run `flutter pub get`, then `flutter run`.
 
 ## Guiding Principles
 
