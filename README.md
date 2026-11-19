@@ -13,6 +13,7 @@ Crafted by the team at Hungrimind — with deep experience across Flutter, and l
 
 *   **💻 CLI:** Our [command line tool](https://github.com/hungrimind/hungrimind-cli) that creates a new app from this kit.
 *   **🤖 Agent rules:** `CLAUDE.md`, `agents.md`, `.claude/skills/`, and `.cursor/rules/` describe the architecture and conventions for AI coding tools.
+*   **📚 Documentation:** Guides for every part of the kit in [`docs/`](docs/README.md).
 
 ## Getting Started
 
@@ -51,6 +52,10 @@ macOS, and runs `flutter pub get`.
    `<key>com.apple.security.network.client</key><true/>` to
    `macos/Runner/DebugProfile.entitlements`.
 6. Run `flutter pub get`, then `flutter run`.
+
+## Documentation
+
+The full documentation lives in [`docs/`](docs/README.md). New to the kit? Start with the [guided tour](docs/get-started/guided-tour.md).
 
 ## Guiding Principles
 
